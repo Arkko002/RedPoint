@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Chat";
+}
+
+
+<div class="chat mid-bg">
+    <ul id="discussion"></ul>
+</div>
+
+<div class="textinputwrap">
+    <input id="message" class="textinputbox dark-bg transition-responsive" type="text" placeholder="Type message." autofocus>
+    <button type="button" class="redbutton red-bg transition-responsive" id="sendmessage" value="send">SEND</button>
+</div>
+
+<div class="searchwrap">
+    <input class="redbutton red-bg transition-responsive" type="button" id="search" value="Search" />
+    <input type="text" class="textinputbox dark-bg transition-responsive" id="searchText" placeholder="Type search term." />
+    <input type="hidden" id="fromUser" />
+    <ul id="searchResult"></ul>
+</div>
+
+<div class="serverwrap">
+    <div id="serverlist"></div>
+    <ul id="channellist"></ul>
+</div>
+
+<div class="server_add">
+    <button type="button" id="server_add_btn">ADD SERVER</button>
+</div>
+
+<div class="modal fade" id="server_modal" role="dialog" data-url="@Url.Action("AddServer", "Chat")"></div>
+
+@section scripts {
+    <script src=""></script>
+}
+

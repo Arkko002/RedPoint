@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ],
+  "files": [
+    "ServerHub.ts",
+    "ChatHub.ts",
+    "Models.ts",
+    "ChannelHub.ts",
+    "ISignalR.ts",
+    "Tools.ts"
+  ],
+  "compileOnSave": true
+
+}
