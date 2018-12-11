@@ -9,7 +9,7 @@ namespace RedPoint.Data
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
 
@@ -18,7 +18,6 @@ namespace RedPoint.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<IdentityUser>().ToTable("Users");
             modelBuilder.Entity<ApplicationUser>().ToTable("Users");
         }
 

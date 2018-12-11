@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RedPoint.Controllers
 {
-    [Authorize]
+    #if DEBUG
+    #else
+        [Authorize] 
+    #endif
     public class ChatController : Controller
-    {
+    {       
         // GET: Chat
         [HttpGet]
         public ActionResult Index()

@@ -1,76 +1,83 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Diagnostics;
-//using System.Linq;
-//using System.Web;
-//using RedPoint.Exceptions;
-//using RedPoint.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Web;
+using RedPoint.Data;
+using RedPoint.Exceptions;
+using RedPoint.Models;
+using RedPoint.Models.Chat_Models;
 
-//namespace RedPoint.Infrastructure
-//{
+namespace RedPoint.Infrastructure
+{
 
-//    ///<summary>
-//    ///Provides methods to manage and retrieve data from database table 'UserStubs'
-//    ///</summary>
-//    public class UserStubManager
-//    {
-//       readonly ApplicationDbContext _db = new ApplicationDbContext();
+    ///<summary>
+    ///Provides methods to manage and retrieve data from database table 'UserStubs'
+    ///</summary>
+    public class UserStubManager
+    {
+        private readonly ApplicationDbContext _db;
 
-//        ///<summary>
-//        ///Creates and returns UserStub for the provided ApplicationUser
-//        ///</summary>
-//        public UserStub CreateUserStub(ApplicationUser user)
-//        {
-//            UserStub userStub = new UserStub()
-//            {
-//                AppUserId = user.Id,
-//                AppUserName = user.UserName
-//            };
+        public UserStubManager(ApplicationDbContext db)
+        {
+            _db = db;
+        }
 
-//            try
-//            {
-//                _db.UserStubs.Add(userStub);
-//                _db.SaveChanges();
-//            }
-//            catch (Exception ex)
-//            {
-//                Debug.Print(ex.Source + " " + ex.GetType().ToString() + " " + ex.Message);
-//            }
+        ///<summary>
+        ///Creates and returns UserStub for the provided ApplicationUser
+        ///</summary>
+        public UserStub CreateUserStub(ApplicationUser user)
+        {
+            UserStub userStub = new UserStub()
+            {
+                AppUserId = user.Id,
+                AppUserName = user.UserName
+            };
 
-//            return userStub;
-//        }
+            try
+            {
+                _db.UserStubs.Add(userStub);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Source + " " + ex.GetType().ToString() + " " + ex.Message);
+            }
 
-//        /// <summary>
-//        /// Creates and returns UserStub for the provided ApplicationUser Id
-//        /// </summary>
-//        /// <param name="userId"></param>
-//        /// <returns></returns>
-//        public UserStub CreateUserStub(string userId)
-//        {
-//            ApplicationUser user = _db.Users.FirstOrDefault(u => u.Id == userId);
+            return userStub;
+        }
 
-//            if(user is null)
-//            {
-//                throw new ApplicationUserNotFoundException("ID: " + userId);
-//            }
+        /// <summary>
+        /// Creates and returns UserStub for the provided ApplicationUser Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public UserStub CreateUserStub(string userId)
+        {
+            ApplicationUser user = _db.Users.FirstOrDefault(u => u.Id == userId);
 
-//            UserStub userStub = new UserStub()
-//            {
-//                AppUserId = user.Id,
-//                AppUserName = user.UserName
-//            };
-            
-//            try
-//            {
-//                _db.UserStubs.Add(userStub);
-//                _db.SaveChanges();
-//            }
-//            catch(Exception ex)
-//            {
-//                Debug.Print(ex.Source + " " + ex.GetType().ToString() + " " + ex.Message);
-//            }
+            if (user is null)
+            {
+                throw new ApplicationUserNotFoundException("ID: " + userId);
+            }
 
-//            return userStub;
-//        }
-//    }
-//}
+            UserStub userStub = new UserStub()
+            {
+                AppUserId = user.Id,
+                AppUserName = user.UserName
+            };
+
+            try
+            {
+                _db.UserStubs.Add(userStub);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Source + " " + ex.GetType().ToString() + " " + ex.Message);
+            }
+
+            return userStub;
+        }
+    }
+}

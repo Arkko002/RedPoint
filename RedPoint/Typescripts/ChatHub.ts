@@ -3,7 +3,7 @@
 
 $(() =>
 {
-    var chatHub = $.connection.chatHub;
+    var chatHub = new SignalR.HubConnectionBuilder()
 
     chatHub.client.getMessagesFromDb = (msgList) =>
     {

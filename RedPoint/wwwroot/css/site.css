@@ -1,153 +1,37 @@
-﻿html {
-	width: 100%;
-	height: 100%;
-}
-
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
 body {
-	width: 100%;
-	height: 100%;
-	box-sizing: border-box;
-	margin: 0;
-	color: #FFEAEA;
-	display: grid;
-	grid-template-columns: auto 1fr auto;
-	grid-template-rows: 1fr auto;
-	overflow: hidden;
-	font-family: bahnschrift;
-	font-size: 15pt;
+    padding-top: 50px;
+    padding-bottom: 20px;
 }
 
-.chat {
-	width: auto;
-	height: auto;
-	grid-column: 2/3;
-	grid-row: 1/2;
-	margin-left: 2px;
-	border-radius: 0 0 3px 3px;
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
-.textinputbox {
-	display: inline-block;
-	z-index: 0;
-	height: auto;
-	min-height: 30px;
-	width: auto;
-	margin-right: -3px;
-	box-sizing: content-box;
-	border-radius: 3px 0 0 3px;
-	border: none;
-	outline: none;
-	color: #FFEAEA;
-	padding: 0 0 0 5px;
-	font-family: bahnschrift;
-	font-size: 15pt;
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
 }
 
-	.textinputbox:focus {
-		outline: none;
-		background: #C45555;
-		color: #1B232E;
-		box-shadow: inset -22px 0 20px -20px rgba(0, 0, 0, 0.4);
-	}
-
-	.textinputbox::placeholder{
-		color: #FFEAEA;
-		opacity: 0.4;
-	}
-
-		.textinputbox::placeholder:focus {
-			color: #1B232E;
-		}
-
-.redbutton {
-	color: #FFEAEA;
-	z-index: 1;
-	float: right;
-	height: 30px;
-	border: none;
-	border-radius: 3px;
-	width: 80px;
-	font-family: bahnschrift;
-	font-size: 15pt;
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
 }
 
-	.redbutton:hover {
-		transform: scale(1.05);
-	}
-
-	.redbutton:focus {
-		outline: none;
-	}
-
-.textinputwrap {
-	grid-column: 2/3;
-	grid-row: 2/3;
-	display: grid;
-	grid-template-columns: 1fr auto;
-	box-sizing: border-box;
-	padding: 2px 0 2px 2px;
+/* QR code generator */
+#qrCode {
+    margin: 15px;
 }
 
-.loginwrap {
-	position: fixed;
-	list-style: none;
-	display: none;
-}
-
-.searchwrap {
-	grid-column: 3/4;
-	grid-row: 1/2;
-	box-sizing: border-box;
-	padding: 2px;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-.serverwrap {
-	grid-column: 1/2;
-	grid-row: 1/3;
-	display: grid;
-	grid-template-columns: 48px auto;
-	width: 50px;
-	background: linear-gradient(to right, #415066 0px, #415066 50px, #2E3A4A 50px)#415066;
-	margin: 2px 0 2px 2px;
-	border-radius: 3px;
-	overflow: hidden;
-	transition: cubic-bezier(0.2, 0, 0.2, 1) 0.4s;
-}
-
-	.serverwrap:hover {
-		width: 280px;
-	}
-
-	.serverwrap ul {
-		width: 180px;
-	}
-
-.messagebox {
-	padding: 10px;
-	background: rgb(153, 33, 33);
-	box-shadow: inset 0 10px 0 rgba(0, 0, 0, 0.4);
-	float: left;
-}
-
-#searchResult {
-	list-style: none;
-	border-radius: 3px;
-}
-
-.dark-bg {
-	background: #1B232E;
-}
-
-.mid-bg {
-	background: #415066;
-}
-
-.red-bg {
-	background: #C45555;
-}
-
-.transition-responsive {
-	transition: cubic-bezier(0.2, 0, 0.2, 1) 0.2s;
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
 }
