@@ -25,5 +25,11 @@ namespace RedPoint.Controllers
         {
             return PartialView();
         }
+
+        [HttpGet]
+        public PartialViewResult AddChannel()
+        {
+            return PartialView();
+        }
     }
 }

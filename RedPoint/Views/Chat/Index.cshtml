@@ -29,9 +29,11 @@
 </div>
 
 <div class="modal fade" id="server_modal" role="dialog" data-url="@Url.Action("AddServer", "Chat")"></div>
+<div class="modal fade" id="channel_modal" role="dialog" data-url="@Url.Action("AddChannel", "Chat")"></div>
 
 @section scripts {
-    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
-    <script src="@Url.Content("js/ChatHub.js")"></script>
+    <script src="lib/jquery/dist/jquery.js"></script>
+    <script src="lib/signalr/dist/browser/signalr.js"></script>
+    <script src="js/chat.js"></script>
 }
 

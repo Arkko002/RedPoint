@@ -1,27 +1,27 @@
 ﻿///<reference path="ISignalR.ts"/>
 ///<reference path="Tools.ts"/>
+import * as signalr from "@aspnet/signalr";
 
-$(() => {
-    var serverHub = $.connection.serverHub;
-    
-    serverHub.client.addServer = (server: ServerStub): void =>
-    {
-        //TODO
-        //$("#serverlist").append()
-    }
+const serverHub = new signalr.HubConnectionBuilder()
+    .withUrl("/server")
+    .build();
 
-    serverHub.client.removeServer = (server: ServerStub): void =>
-    {
+serverHub.start().then(() => {
+    document.getElementById("server_add_btn").addEventListener("click",
+        event => {
+            var serverName = document.getElementById("server_add_name").textContent;
+            var serverDescription = document.getElementById("server_add_description").textContent;
 
-    }
-
-    $.connection.hub.start().done(() =>
-    {
-        $("#server_add_btn").click(() =>
-        {
-            serverHub.server.createServer($("#server_add_name").val().toString(),
-                $("#server_add_description").val().toString(),
-                null);
+            //TODO Add images
+            serverHub.invoke("CreateServer", serverName, serverDescription, null);
         });
-    });
+});
+
+serverHub.on("AddServer", (server: ServerStub): void => {
+    //TODO
+    //$("#serverlist").append()
+});
+
+serverHub.on("RemoveServer", (server: ServerStub): void => {
+
 });

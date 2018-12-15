@@ -3,17 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="~/Content/Site.css" />
+    <link type="text/css" rel="stylesheet" href="~/css/site.css" />
     <title>@ViewBag.Title - RedPoint</title>
-    <script src="~/lib/modernizr/"></script>
 </head>
 <body class="dark-bg ">
 <div class="loginwrap">
     
     @Html.Partial("_LoginPartial")
 </div>
-    <script src="~/lib/jquery/"></script>
-    <script src="~/lib/bootstrap/"></script>
+    <script src="lib/jquery/dist/jquery.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
     @RenderBody()
     @RenderSection("scripts", required: false)
 </body>

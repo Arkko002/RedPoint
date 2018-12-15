@@ -3,7 +3,7 @@
     ViewBag.Title = "_ChannelPartial";
 }
 
-<h2>_ChannelPartial</h2>
+<h2>Add channel</h2>
 
 <input type="text" maxlength="50" id="channel_add_name"/><br/>
 <input type="text" maxlength="150" id="channel_add_description"/><br/>
@@ -11,5 +11,6 @@
 
 @section scripts
 {
-
+    <script src="lib/signalr/dist/browser/signalr.js"></script>
+    <script src="js/ChannelHub.js"></script>
 }
