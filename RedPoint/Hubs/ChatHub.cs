@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using RedPoint.Data;
 using RedPoint.Infrastructure;
 using RedPoint.Models.Users_Permissions_Models;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace RedPoint.Hubs
 {
@@ -22,26 +22,12 @@ namespace RedPoint.Hubs
     {
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private ApplicationDbContext _db;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHttpContextAccessor _httpContext;
+        private UserManager<ApplicationUser> _userManager;
 
-
-        public ChatHub(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContext, ApplicationDbContext db)
+        public ChatHub(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
-            _userManager = userManager;
-            _httpContext = httpContext;
             _db = db;
-        }
-
-        public void CheckIfUserLoggedIn()
-        {
-            ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
-
-            if (user is null)
-            {
-                Clients.Caller.UserNotLoggedIn("/account/login");
-            }
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -49,16 +35,16 @@ namespace RedPoint.Hubs
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="channelId"></param>
-        public void Send(string msg, int channelId)
+        public async Task Send(string msg, int channelId)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
             var channel = _db.Channels.Find(channelId);
             if (channel is null)
             {
                 _logger.Warn("{0} (ID: {1}) tried to write in nonexistent channel (Channel ID: {2))", user.UserName, user.Id, channelId);
-                Clients.Caller.ChannelDoesntExist();
+                await Clients.Caller.ChannelDoesntExist();
                 return;
             }
 
@@ -66,7 +52,7 @@ namespace RedPoint.Hubs
             if (!permissionsManager.CheckUserGroupsPermissions(user, channel, new[] { "CanWrite" }))
             {
                 _logger.Warn("{0} (ID: {1}) tried to write in channel without write permission (Channel ID: {2))", user.UserName, user.Id, channelId);
-                Clients.Caller.UserCantWrite();
+                await Clients.Caller.UserCantWrite();
                 return;
             }
 
@@ -86,7 +72,7 @@ namespace RedPoint.Hubs
             channel.Messages.Add(message);
             _db.SaveChanges();
 
-            Clients.Group(channelId.ToString()).AddNewMessage(message);
+            await Clients.Group(channelId.ToString()).AddNewMessage(message);
         }
 
         /// <summary>
@@ -95,101 +81,101 @@ namespace RedPoint.Hubs
         /// <param name="text"></param>
         /// <param name="channel"></param>
         /// <param name="user"></param>
-        public void Search(string text, ChannelStub channel, UserStub user)
+        public async Task Search(string text, ChannelStub channel, UserStub user)
         {
-            Message[] msgArr = _db.Messages.Where(m => (m.Text == text &&
-                                                        m.ChannelStub == channel &&
-                                                        m.UserStub == user)).ToArray();
+            //Message[] msgArr = _db.Messages.Where(m => (m.Text == text &&
+            //                                            m.ChannelStub == channel &&
+            //                                            m.UserStub == user)).ToArray();
 
-            //IQueryable<Message> q = _db.Messages;
+            IQueryable<Message> q = _db.Messages;
 
-            //if (!(text is null))
-            //{
-            //    q = q.Where(m => m.Text == text);
-            //}
-            //if ((channel is null))
-            //{
-            //    q = q.Where(m => m.ChannelStub == channel);
-            //}
+            if (!(text is null))
+            {
+                q = q.Where(m => m.Text == text);
+            }
+            if ((channel is null))
+            {
+                q = q.Where(m => m.ChannelStub == channel);
+            }
 
-            //if (!(user is null))
-            //{
-            //    q = q.Where(m => m.UserStub == user);
-            //}
+            if (!(user is null))
+            {
+                q = q.Where(m => m.UserStub == user);
+            }
 
-            //var result = q.ToList();
+            var msgArr = q.ToArray();
 
-            Clients.Caller.ShowSearchResult(msgArr);
+            await Clients.Caller.ShowSearchResult(msgArr);
         }
 
         /// <summary>
         /// Returns UserStub list with UserStub.AppUserName containing given parameter
         /// </summary>
         /// <param name="nick"></param>
-        public void UserAutocomplete(string nick)
+        public async Task UserAutocomplete(string nick)
         {
             var userList = _db.UserStubs.Where(u => u.AppUserName.StartsWith(nick)).ToList();
 
-            Clients.Caller.ShowUserAutocomplete(userList);
+            await Clients.Caller.ShowUserAutocomplete(userList);
         }
 
         /// <summary>
         /// Gets last 50 Messages from Channel and sends them to Caller
         /// </summary>
         /// <param name="channelId"></param>
-        public void ChannelChanged(int channelId)
+        public async Task ChannelChanged(int channelId)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
             var channel = _db.Channels.Find(channelId);
             if (channel is null)
             {
                 _logger.Warn("{0} (ID: {1}) tried to join nonexistent channel (Channel ID: {2))", user.UserName, user.Id, channelId);
-                Clients.Caller.ChannelDoesntExist();
+                await Clients.Caller.ChannelDoesntExist();
                 return;
             }
 
-            Groups.RemoveFromGroupAsync(Context.ConnectionId, user.CurrentChannelId.ToString());
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.CurrentChannelId.ToString());
             user.CurrentChannelId = channelId;
-            Groups.AddToGroupAsync(Context.ConnectionId, channelId.ToString());
+            await Groups.AddToGroupAsync(Context.ConnectionId, channelId.ToString());
             _db.SaveChanges();
 
             var lastMsgs = channel.Messages.Skip(Math.Max(0, channel.Messages.Count() - 50));
 
-            Clients.Caller.GetMessagesFromDb(lastMsgs);
+            await Clients.Caller.GetMessagesFromDb(lastMsgs);
         }
 
-        public void ServerChanged(int serverId)
+        public async Task ServerChanged(int serverId)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
             var server = _db.Servers.Find(serverId);
             if (server is null)
             {
                 _logger.Warn("{0} (ID: {1}) tried to join nonexistent server (Server ID: {2))", user.UserName, user.Id, serverId);
-                Clients.Caller.ServerDoesntExist();
+                await Clients.Caller.ServerDoesntExist();
                 return;
             }
 
             var channels = server.Channels.ToList();
 
-            Clients.Caller.GetChannnelList(channels);
+            await Clients.Caller.GetChannnelList(channels);
         }
     }
 
     public interface IChatHub
     {
-        void AddNewMessage(Message message);
-        void ChannelDoesntExist();
-        void GetChannnelList(List<Channel> channels);
-        void GetMessagesFromDb(IEnumerable<Message> lastMsgs);
-        void GetServerList(List<Server> list);
-        void ServerDoesntExist();
-        void ShowSearchResult(Message[] msgList);
-        void ShowUserAutocomplete(List<UserStub> userList);
-        void UserCantWrite();
-        void UserNotLoggedIn(string v);
+        Task AddNewMessage(Message message);
+        Task ChannelDoesntExist();
+        Task GetChannnelList(List<Channel> channels);
+        Task GetMessagesFromDb(IEnumerable<Message> lastMsgs);
+        Task GetServerList(List<Server> list);
+        Task ServerDoesntExist();
+        Task ShowSearchResult(Message[] msgList);
+        Task ShowUserAutocomplete(List<UserStub> userList);
+        Task UserCantWrite();
+        Task UserNotLoggedIn(string v);
     }
 }

@@ -10,6 +10,7 @@ using RedPoint.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RedPoint.Hubs;
+using RedPoint.Models;
 
 namespace RedPoint
 {
@@ -34,9 +35,10 @@ namespace RedPoint
 
             services.Configure<IdentityOptions>(options =>
             {
+                
+
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
@@ -44,31 +46,22 @@ namespace RedPoint
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.AllowedForNewUsers = true;
-                
+
 
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.AddCors(options => options.AddPolicy("CorsPolicy",
-                builder =>
-                {
-                    builder.AllowAnyMethod().AllowAnyHeader()
-                        .WithOrigins("https://localhost:44381")
-                        .AllowCredentials();
-                }));
-
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,24 +79,23 @@ namespace RedPoint
             }
 
             app.UseHttpsRedirection();
-            app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseCors("CorsPolicy");
             app.UseAuthentication();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
 
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chat");
                 routes.MapHub<ServerHub>("/server");
                 routes.MapHub<ChannelHub>("/channel");
+            });
+
+           
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

@@ -5,6 +5,6 @@
 
 <h2>Index</h2>
 
-@Html.Partial("_LoginPartial");
+@Html.ActionLink("Chat", "Index", "Chat")
 
-@Html.ActionLink("Chat", "Index", "Chat");
+@await Html.PartialAsync("_LoginPartial")

@@ -9,7 +9,6 @@ const chatHub = new signalr.HubConnectionBuilder()
     .configureLogging(signalr.LogLevel.Trace)
     .build();
 chatHub.start().then(() => {
-    chatHub.invoke("CheckIfUserLoggedIn");
     document.getElementById("sendmessage").addEventListener("click", event => {
         //TODO CHANNEL ID
         var message = document.getElementById("message").textContent;
