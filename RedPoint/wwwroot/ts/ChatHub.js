@@ -26,8 +26,15 @@ chatHub.on("GetMessagesFromDb", (msgList) => {
             .append(`<li class="messagebox"><strong>${htmlEncode(msgList[i].user.userName)}:</strong><br> ${htmlEncode(msgList[i].text)}</li>`);
     }
 });
+//TODO Server list
 chatHub.on("GetServerList", (serverList) => {
+    var serverListLength = serverList.length;
+    for (var i = 0; i < serverListLength; i++) {
+        $("#serverlist")
+            .append('<li class="serverlist"></li>');
+    }
 });
+//TODO Channel list
 chatHub.on("GetChannelList", (channelList) => {
     var channelListLength = channelList.length;
     for (var i = 0; i < channelListLength; i++) {

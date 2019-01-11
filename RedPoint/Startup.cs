@@ -88,6 +88,7 @@ namespace RedPoint
                 routes.MapHub<ChatHub>("/chat");
                 routes.MapHub<ServerHub>("/server");
                 routes.MapHub<ChannelHub>("/channel");
+                routes.MapHub<ServerBrowserHub>("/serverbrowser");
             });
 
            

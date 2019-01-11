@@ -32,12 +32,17 @@ chatHub.on("GetMessagesFromDb",
         }
     });
 
-
+//TODO Server list
 chatHub.on("GetServerList",
     (serverList: Array<ServerStub>) => {
-
+        var serverListLength = serverList.length;
+        for (var i = 0; i < serverListLength; i++) {
+            $("#serverlist")
+                .append('<li class="serverlist"></li>')
+        }
     });
 
+//TODO Channel list
 chatHub.on("GetChannelList",
     (channelList: Array<ChannelStub>): void => {
         var channelListLength = channelList.length;

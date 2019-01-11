@@ -27,5 +27,11 @@ namespace RedPoint.Controllers
         {
             return PartialView();
         }
+
+        [HttpGet]
+        public PartialViewResult BrowseServers()
+        {
+            return PartialView();
+        }
     }
 }

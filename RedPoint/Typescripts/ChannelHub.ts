@@ -8,10 +8,10 @@ const channelHub = new signalr.HubConnectionBuilder()
     .build();
 
 channelHub.start().then(() => {
-    document.getElementById("channel_add_button").addEventListener("click",
+    document.getElementById("channeladd_button").addEventListener("click",
         event => {
-            var channelName = document.getElementById("channel_add_name").textContent;
-            var channelDescription = document.getElementById("channel_add_description").textContent;
+            var channelName = document.getElementById("channeladd_name").textContent;
+            var channelDescription = document.getElementById("channeladd_description").textContent;
             channelHub.invoke("AddChannel", channelName, channelDescription);
         });
 });

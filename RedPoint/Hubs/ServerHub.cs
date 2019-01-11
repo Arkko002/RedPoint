@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,21 +21,26 @@ namespace RedPoint.Hubs
     public class ServerHub : Hub<IServerHub>
     {
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly ApplicationDbContext _db;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHttpContextAccessor _httpContext;
+        private ApplicationDbContext _db;
+        private UserManager<ApplicationUser> _userManager;
 
-        public ServerHub(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContext, ApplicationDbContext db)
+        public ServerHub(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             _userManager = userManager;
-            _httpContext = httpContext;
             _db = db;
         }
 
-        public void AddServer(string name, string description, Bitmap image)
+        /// <summary>
+        /// Creates a Server and adds it to database
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="image"></param>
+        /// <param name="isVisible"></param>
+        public void AddServer(string name, string description, Bitmap image, bool isVisible)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
             PermissionsManager permissionsManager = new PermissionsManager();
 
             if (!permissionsManager.CheckUserGroupsPermissions(user, new[] { "CanManageServers" }))
@@ -44,11 +50,11 @@ namespace RedPoint.Hubs
                 return;
             }
 
-
             Server server = new Server()
             {
                 Name = name,
-                Description = description
+                Description = description,
+                IsVisible = isVisible
             };
 
             image.Save(AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name + "_Thumbnail");
@@ -86,17 +92,22 @@ namespace RedPoint.Hubs
                 Id = server.Id,
                 Name = server.Name,
                 Description = description,
-                ImagePath = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name + "_Thumbnail"
+                ImagePath = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name + "_Thumbnail",
+                IsVisible = isVisible
             };
             server.ServerStub = serverStub;
 
             Clients.Group(server.Name).AddServer(serverStub);
         }
 
+        /// <summary>
+        /// Removes the Server with given id from database
+        /// </summary>
+        /// <param name="id"></param>
         public void RemoveServer(int id)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
             PermissionsManager permissionsManager = new PermissionsManager();
 
@@ -119,10 +130,14 @@ namespace RedPoint.Hubs
             Clients.Group(server.Name).RemoveServer(server.ServerStub);
         }
 
+        /// <summary>
+        /// Adds user to the Server's list of users
+        /// </summary>
+        /// <param name="id"></param>
         public void JoinServer(int id)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
 
             var server = _db.Servers.Find(id);
@@ -143,10 +158,14 @@ namespace RedPoint.Hubs
             Clients.Caller.JoinServer(id);
         }
 
+        /// <summary>
+        /// Remove's user from the Server's list of users
+        /// </summary>
+        /// <param name="id"></param>
         public void LeaveServer(int id)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
 
             var server = _db.Servers.Find(id);

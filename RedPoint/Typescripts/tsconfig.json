@@ -18,7 +18,8 @@
     "Models.ts",
     "ChannelHub.ts",
     "ISignalR.ts",
-    "Tools.ts"
+    "Tools.ts",
+    "ServerBrowserHub.ts"
   ],
   "compileOnSave": true
 

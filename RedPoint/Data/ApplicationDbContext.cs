@@ -26,6 +26,7 @@ namespace RedPoint.Data
         public DbSet<UserStub> UserStubs { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Server> Servers { get; set; }
+        public DbSet<ServerStub> ServerStubs { get; set; }
     }
     
 }

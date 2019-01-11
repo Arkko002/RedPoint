@@ -7,6 +7,9 @@ using System.Web;
 
 namespace RedPoint.Models.Chat_Models
 {
+    /// <summary>
+    /// Server class that contains channel's list and user's list
+    /// </summary>
     public class Server
     {
         public int Id { get; set; }
@@ -20,6 +23,9 @@ namespace RedPoint.Models.Chat_Models
         public List<Channel> Channels { get; set; }
 
         public ServerStub ServerStub { get; set; }
+
+        //Determines if server is visible in the server browser
+        public bool IsVisible { get; set; }
     }
 
     /// <summary>
@@ -31,5 +37,8 @@ namespace RedPoint.Models.Chat_Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string ImagePath { get; set; }
+
+        //Determines if server is visible in the server browser
+        public bool IsVisible { get; set; }
     }
 }

@@ -18,14 +18,12 @@ namespace RedPoint.Hubs
     public class ChannelHub : Hub<IChannelHub>
     {
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly ApplicationDbContext _db;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHttpContextAccessor _httpContext;
+        private ApplicationDbContext _db;
+        private UserManager<ApplicationUser> _userManager;
 
-        public ChannelHub(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContext, ApplicationDbContext db)
+        public ChannelHub(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             _userManager = userManager;
-            _httpContext = httpContext;
             _db = db;
         }
 
@@ -38,7 +36,7 @@ namespace RedPoint.Hubs
         public void AddChannel(string name, string description, int serverId)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
             PermissionsManager permissionsManager = new PermissionsManager();
 
             Server server = _db.Servers.Find(serverId);
@@ -82,7 +80,7 @@ namespace RedPoint.Hubs
         public void RemoveChannel(int channelId, int serverId)
         {
             ApplicationUser user =
-                _userManager.FindByIdAsync(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
             PermissionsManager permissionsManager = new PermissionsManager();
 
             Server server = _db.Servers.Find(serverId);

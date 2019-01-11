@@ -25,15 +25,17 @@
 </div>
 
 <div class="server_add">
-    <button type="button" id="server_add_btn">ADD SERVER</button>
+    <button type="button" id="serveradd_btn">ADD SERVER</button>
 </div>
 
 <div class="modal fade" id="server_modal" role="dialog" data-url="@Url.Action("AddServer", "Chat")"></div>
 <div class="modal fade" id="channel_modal" role="dialog" data-url="@Url.Action("AddChannel", "Chat")"></div>
+<div class="modal fade" id="serverbrowser_modal" role="dialog" data-url="@Url.Action("BrowseServers", "Chat")"></div>
+
 
 @section scripts {
-    <script src="lib/jquery/dist/jquery.js"></script>
-    <script src="lib/signalr/dist/browser/signalr.js"></script>
-    <script src="js/chat.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
 }
 
