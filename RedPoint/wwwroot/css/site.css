@@ -137,15 +137,23 @@ body {
 }
 
 .dark-bg {
-	background: #1B232E;
+	background: #303841;
 }
 
 .mid-bg {
-	background: #415066;
+	background: #3A4750;
 }
 
 .red-bg {
-	background: #C45555;
+	background: #D72323;
+}
+
+.text-light {
+	color: #EEEEEE;
+}
+
+.text-highlight {
+	color: #D72323;
 }
 
 .transition-responsive {
