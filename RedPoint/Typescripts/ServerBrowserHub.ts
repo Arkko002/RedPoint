@@ -12,5 +12,5 @@ serverBrowserHub.start().then(() => {
 
 serverBrowserHub.on("GetServerStubList",
     (serverStubList: Array<ServerStub>) => {
-        //TODO Add servers to the list in BrowseServers.cshtml
+        //TODO Add servers to the list in BrowseServers.cshtml 
     });

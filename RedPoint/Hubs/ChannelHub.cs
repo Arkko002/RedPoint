@@ -46,7 +46,7 @@ namespace RedPoint.Hubs
                 return;
             }
 
-            if (!permissionsManager.CheckUserGroupsPermissions(user, server, new[] { "CanManageChannels" })) return;
+            if (!permissionsManager.CheckUserServerPermissions(user, server, new[] {PermissionTypes.CanManageServers})) return;
 
             Channel channel = new Channel()
             {
@@ -90,7 +90,7 @@ namespace RedPoint.Hubs
                 return;
             }
 
-            if (!permissionsManager.CheckUserGroupsPermissions(user, server, new[] { "CanManageChannels" })) return;
+            if (!permissionsManager.CheckUserServerPermissions(user, server, new[] { PermissionTypes.CanManageServers })) return;
 
             Channel channel = _db.Channels.Find(channelId);
             if (channel is null)

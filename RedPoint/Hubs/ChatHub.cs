@@ -49,7 +49,7 @@ namespace RedPoint.Hubs
             }
 
             PermissionsManager permissionsManager = new PermissionsManager();
-            if (!permissionsManager.CheckUserGroupsPermissions(user, channel, new[] { "CanWrite" }))
+            if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
             {
                 _logger.Warn("{0} (ID: {1}) tried to write in channel without write permission (Channel ID: {2))", user.UserName, user.Id, channelId);
                 await Clients.Caller.UserCantWrite();
@@ -141,9 +141,18 @@ namespace RedPoint.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, channelId.ToString());
             _db.SaveChanges();
 
-            var lastMsgs = channel.Messages.Skip(Math.Max(0, channel.Messages.Count() - 50));
+            PermissionsManager permissionsManager = new PermissionsManager();
+            if (permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanView }))
+            {
+                var lastMsgs = channel.Messages.Skip(Math.Max(0, channel.Messages.Count() - 50));
 
-            await Clients.Caller.GetMessagesFromDb(lastMsgs);
+                await Clients.Caller.GetMessagesFromDb(lastMsgs);
+            }
+
+            if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
+            {
+                await Clients.Caller.UserCantWrite();
+            }
         }
 
         public async Task ServerChanged(int serverId)

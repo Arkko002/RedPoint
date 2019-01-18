@@ -7,9 +7,9 @@ const serverHub = new signalr.HubConnectionBuilder()
     .withUrl("/server")
     .build();
 serverHub.start().then(() => {
-    document.getElementById("server_add_btn").addEventListener("click", event => {
-        var serverName = document.getElementById("server_add_name").textContent;
-        var serverDescription = document.getElementById("server_add_description").textContent;
+    document.getElementById("serveradd_btn").addEventListener("click", event => {
+        var serverName = document.getElementById("serveradd_name").textContent;
+        var serverDescription = document.getElementById("serveradd_description").textContent;
         //TODO Add images
         serverHub.invoke("CreateServer", serverName, serverDescription, null);
     });

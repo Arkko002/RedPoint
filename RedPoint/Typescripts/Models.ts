@@ -6,7 +6,7 @@
 class ServerStub {
     id: number;
     name: string;
-    description: string,
+    description: string;
     image: HTMLImageElement;
 }
 

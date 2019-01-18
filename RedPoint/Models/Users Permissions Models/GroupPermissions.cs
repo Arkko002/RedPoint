@@ -18,4 +18,16 @@ namespace RedPoint.Models.Users_Permissions_Models
         public bool CanManageServers { get; set; }
         public bool CanManageChannels { get; set; }
     }
+
+    public enum PermissionTypes
+    {
+        IsSuperAdmin,
+        IsAdmin,
+        CanWrite,
+        CanView,
+        CanSendLinks,
+        CanAttachFiles,
+        CanManageServers,
+        CanManageChannels
+    }
 }

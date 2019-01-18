@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RedPoint.Models.Chat_Models;
 
 namespace RedPoint.Models.Users_Permissions_Models
@@ -16,7 +17,7 @@ namespace RedPoint.Models.Users_Permissions_Models
         /// <param name="serverId"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public bool CheckUserGroupsPermissions(ApplicationUser user, Server server, string[] permissions)
+        public bool CheckUserServerPermissions(ApplicationUser user, Server server, PermissionTypes[] permissions)
         {
             if (CheckIfSuperAdmin(user))
             {
@@ -39,7 +40,8 @@ namespace RedPoint.Models.Users_Permissions_Models
             {
                 foreach (var group in groups)
                 {
-                    if ((bool)group.GetType().GetProperty(perm).GetValue(group))
+                    var groupPerms = group.GroupPermissions;
+                    if ((bool)groupPerms.GetType().GetProperty(perm.ToString()).GetValue(groupPerms, null))
                     {
                         hasPermission = true;
                     }
@@ -55,7 +57,7 @@ namespace RedPoint.Models.Users_Permissions_Models
         /// <param name="user"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public bool CheckUserGroupsPermissions(ApplicationUser user, string[] permissions)
+        public bool CheckUserPermissions(ApplicationUser user, string[] permissions)
         {
             if (CheckIfSuperAdmin(user))
             {
@@ -85,7 +87,7 @@ namespace RedPoint.Models.Users_Permissions_Models
         /// <param name="channel"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public bool CheckUserGroupsPermissions(ApplicationUser user, Channel channel, string[] permissions)
+        public bool CheckUserChannelPermissions(ApplicationUser user, Channel channel, PermissionTypes[] permissions)
         {
             if(CheckIfSuperAdmin(user))
             {
@@ -104,7 +106,7 @@ namespace RedPoint.Models.Users_Permissions_Models
             {
                 foreach (var group in groups)
                 {
-                    if ((bool)group.GroupPermissions.GetType().GetProperty(perm).GetValue(group))
+                    if ((bool)group.GroupPermissions.GetType().GetProperty(perm.ToString()).GetValue(group))
                     {
                         hasPermission = true;
                     }

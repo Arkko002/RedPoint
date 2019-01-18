@@ -43,7 +43,7 @@ namespace RedPoint.Hubs
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
             PermissionsManager permissionsManager = new PermissionsManager();
 
-            if (!permissionsManager.CheckUserGroupsPermissions(user, new[] { "CanManageServers" }))
+            if (!permissionsManager.CheckUserPermissions(user, new[] { "CanManageServers" }))
             {
                 _logger.Warn("{0} (ID: {1}) tried to create server without permission", user.UserName, user.Id);
                 Clients.Caller.NoAddPermission();
@@ -111,7 +111,7 @@ namespace RedPoint.Hubs
 
             PermissionsManager permissionsManager = new PermissionsManager();
 
-            if (!permissionsManager.CheckUserGroupsPermissions(user, new[] { "CanManageServers" }))
+            if (!permissionsManager.CheckUserPermissions(user, new[] { "CanManageServers" }))
             {
                 _logger.Warn("{0} (ID: {1}) tried to remove server without permission (Server ID:{2})", user.UserName, user.Id, id);
                 Clients.Caller.NoRemovePermission();
