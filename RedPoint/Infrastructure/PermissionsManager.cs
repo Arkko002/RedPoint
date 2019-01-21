@@ -24,7 +24,7 @@ namespace RedPoint.Models.Users_Permissions_Models
                 return true;
             }
            
-            List<Group> groups = user.Groups.Where(g => g.ServerId == server.Id).ToList();
+            List<Group> groups = user.Groups.Where(g => g.Server.Id == server.Id).ToList();
             if (groups.Count == 0)
             {
                 return false;

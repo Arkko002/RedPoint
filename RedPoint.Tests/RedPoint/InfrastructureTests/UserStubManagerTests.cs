@@ -15,7 +15,6 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
     class UserStubManagerTests
     {
         private ApplicationDbContext _db;
-        private UserStubManager _stubManager;
 
         [SetUp]
         public void SetUp()
@@ -25,12 +24,10 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
                 .Options;
 
             _db = new ApplicationDbContext(options);
-
-            _stubManager = new UserStubManager(_db);
         }
 
         [Test]
-        public void CreateUserStub_ApplicationUser()
+        public void CheckIfUserStubExists()
         {
             //arrange
             ApplicationUser user = new ApplicationUser()
@@ -40,41 +37,20 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
             };
 
             //act
-            var userStub = _stubManager.CreateUserStub(user);
-            var dbUserStub = _db.UserStubs.Find(userStub.Id);
+            UserStubManager.CheckIfUserStubExists(user, _db);
+            var dbUserStub = _db.UserStubs.Find(user.UserStub.Id);
 
             //assert
-            Assert.IsInstanceOf<UserStub>(userStub);
+            Assert.IsInstanceOf<UserStub>(user.UserStub);
             Assert.IsInstanceOf<UserStub>(dbUserStub);
         }
 
-        [Test]
-        public void CreateUserStub_ApplicationUserId()
-        {
-            //arrange
-            ApplicationUser user = new ApplicationUser()
-            {
-                UserName = "Test",
-                Id = "TestId"                
-            };
 
-            _db.Users.Add(user);
-            _db.SaveChanges();
-
-            //act
-            var userStub = _stubManager.CreateUserStub(user.Id);
-            var dbUserStub = _db.UserStubs.Find(userStub.Id);
-
-            //assert
-            Assert.IsInstanceOf<UserStub>(userStub);
-            Assert.IsInstanceOf<UserStub>(dbUserStub);
-        }
-
-        [Test]
-        public void CreateUserStub_ApplicationUserNotFound()
-        {
-            //assert
-            Assert.Throws<ApplicationUserNotFoundException>(() => _stubManager.CreateUserStub("NoUser"));
-        }
+        //[Test]
+        //public void CreateUserStub_ApplicationUserNotFound()
+        //{
+        //    //assert
+        //    Assert.Throws<ApplicationUserNotFoundException>(() => _stubManager.CreateUserStub("NoUser"));
+        //}
     }
 }

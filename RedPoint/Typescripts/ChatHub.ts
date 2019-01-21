@@ -24,11 +24,12 @@ chatHub.start().then(() => {
 chatHub.on("GetMessagesFromDb",
     (msgList: Array<Message>) => {
         var msgListLength = msgList.length;
+        var discussion = document.getElementById("discussion")
         for (var i = 0; i < msgListLength; i++) {
-            $("#discussion")
-                .append(
-                    `<li class="messagebox"><strong>${htmlEncode(msgList[i].user.userName)}:</strong><br> ${
-                    htmlEncode(msgList[i].text)}</li>`);
+            var message = document.createElement("li");
+            message.className = "messagebox";
+            message.textContent = htmlEncode(msgList[i].user.userName + ": " + msgList[i].text)
+            discussion.appendChild(message);
         }
     });
 
@@ -42,29 +43,39 @@ chatHub.on("GetServerList",
         }
     });
 
-//TODO Channel list
+
 chatHub.on("GetChannelList",
     (channelList: Array<ChannelStub>): void => {
         var channelListLength = channelList.length;
+        var channelListElement = document.getElementById("channellist");
         for (var i = 0; i < channelListLength; i++) {
-            $("#channellist")
-                .append('<li class="channellist"><strong><br></li>');
+            var btn = document.createElement("button");
+            btn.textContent = htmlEncode(channelList[i].name);
+
+            //ID format example: ChannelName_1
+            btn.id = channelList[i].name + "_" + channelList[i].id
+            channelListElement.appendChild(btn);
         }
     });
 
 chatHub.on("AddNewMessage",
     (msg: Message): void => {
-        $("#discussion")
-            .append(`<li><strong>${htmlEncode(msg.user.userName)}</strong>: ${htmlEncode(msg.text)}</li>`);
+        var discussion = document.getElementById("discussion");
+        var message = document.createElement("li");
+        message.textContent = htmlEncode(msg.user.userName + ": " + msg.text);
+        discussion.appendChild(message);
     });
 
 chatHub.on("ShowSearchResult",
     (msgList: Array<Message>): void => {
         var msgListLength = msgList.length;
+        var searchResult = document.getElementById("searchResult");
+
         for (var i = 0; i < msgListLength; i++) {
-            var message = msgList[i];
-            $("#discussion")
-                .append(`<li class="messagebox"><strong>${htmlEncode(message.user.userName)}:</strong><br> ${htmlEncode(message.text)}</li>`);
+            var message = document.createElement("li");
+            message.className = "messagebox";
+            message.textContent = htmlEncode(msgList[i].user.userName + ": " + msgList[i].text)
+            searchResult.appendChild(message);
         }
     });
 
@@ -74,6 +85,11 @@ chatHub.on("ShowUserAutocomplete",
     });
 
 document.getElementById("message").focus();
+
+//TODO Move modals to DOM if possible
+//document.getElementById("serveradd_btn").onclick = () => {
+    
+//};
 
 $("#server_add_btn").click(() =>
 {

@@ -19,7 +19,6 @@ serverHub.start().then(() => {
 
 serverHub.on("AddServer", (server: ServerStub): void => {
     //TODO
-    //$("#serverlist").append()
 });
 
 serverHub.on("RemoveServer", (server: ServerStub): void => {

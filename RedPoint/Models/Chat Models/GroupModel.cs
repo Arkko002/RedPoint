@@ -10,7 +10,7 @@ namespace RedPoint.Models.Chat_Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int ServerId { get; set; }
+        public ServerStub Server { get; set; }
 
         //Used to store user's IDs
         public List<UserStub> Users { get; set; }

@@ -16,7 +16,6 @@ serverHub.start().then(() => {
 });
 serverHub.on("AddServer", (server) => {
     //TODO
-    //$("#serverlist").append()
 });
 serverHub.on("RemoveServer", (server) => {
 });

@@ -8,9 +8,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using RedPoint.Data;
+using RedPoint.Infrastructure;
 using RedPoint.Models.Users_Permissions_Models;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
+using System.Threading.Tasks;
 
 namespace RedPoint.Hubs
 {
@@ -23,11 +25,13 @@ namespace RedPoint.Hubs
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private ApplicationDbContext _db;
         private UserManager<ApplicationUser> _userManager;
+        private HubUserInputValidator _inputValidator;
 
         public ServerHub(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             _userManager = userManager;
             _db = db;
+            _inputValidator = new HubUserInputValidator(_db);
         }
 
         /// <summary>
@@ -37,7 +41,7 @@ namespace RedPoint.Hubs
         /// <param name="description"></param>
         /// <param name="image"></param>
         /// <param name="isVisible"></param>
-        public void AddServer(string name, string description, Bitmap image, bool isVisible)
+        public async Task AddServer(string name, string description, Bitmap image, bool isVisible)
         {
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
@@ -46,7 +50,7 @@ namespace RedPoint.Hubs
             if (!permissionsManager.CheckUserPermissions(user, new[] { "CanManageServers" }))
             {
                 _logger.Warn("{0} (ID: {1}) tried to create server without permission", user.UserName, user.Id);
-                Clients.Caller.NoAddPermission();
+                await Clients.Caller.NoAddPermission();
                 return;
             }
 
@@ -83,7 +87,7 @@ namespace RedPoint.Hubs
             defChannel.Groups.Add(defGroup);
             server.Channels.Add(defChannel);
             server.Users.Add(user.UserStub);
-            Groups.AddToGroupAsync(Context.ConnectionId, server.Name);
+            await Groups.AddToGroupAsync(Context.ConnectionId, server.Name);
 
             _db.SaveChanges();
 
@@ -97,14 +101,14 @@ namespace RedPoint.Hubs
             };
             server.ServerStub = serverStub;
 
-            Clients.Group(server.Name).AddServer(serverStub);
+            await Clients.Group(server.Name).AddServer(serverStub);
         }
 
         /// <summary>
         /// Removes the Server with given id from database
         /// </summary>
         /// <param name="id"></param>
-        public void RemoveServer(int id)
+        public async Task RemoveServer(int id)
         {
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
@@ -114,37 +118,37 @@ namespace RedPoint.Hubs
             if (!permissionsManager.CheckUserPermissions(user, new[] { "CanManageServers" }))
             {
                 _logger.Warn("{0} (ID: {1}) tried to remove server without permission (Server ID:{2})", user.UserName, user.Id, id);
-                Clients.Caller.NoRemovePermission();
+                await Clients.Caller.NoRemovePermission();
                 return;
             }
-            var server = _db.Servers.Find(id);
 
-            if (server is null)
+
+            Server server;
+            if (_inputValidator.CheckIfServerExists(id, out server) == UserInputError.NoServer)
             {
                 _logger.Warn("{0} (ID: {1}) tried to delete nonexsistent server (Server ID: {2))", user.UserName, user.Id, id);
-                Clients.Caller.ServerDoesntExist();
+                await Clients.Caller.ServerDoesntExist();
                 return;
             }
 
             _db.Servers.Remove(server);
-            Clients.Group(server.Name).RemoveServer(server.ServerStub);
+            await Clients.Group(server.Name).RemoveServer(server.ServerStub);
         }
 
         /// <summary>
         /// Adds user to the Server's list of users
         /// </summary>
         /// <param name="id"></param>
-        public void JoinServer(int id)
+        public async Task JoinServer(int id)
         {
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
-
-            var server = _db.Servers.Find(id);
-            if (server is null)
+            Server server;
+            if (_inputValidator.CheckIfServerExists(id, out server) == UserInputError.NoServer)            
             {
                 _logger.Warn("{0} (ID: {1}) tried to join nonexsistent server (Server ID: {2))", user.UserName, user.Id, id);
-                Clients.Caller.ServerDoesntExist();
+                await Clients.Caller.ServerDoesntExist();
                 return;
             }
 
@@ -152,54 +156,56 @@ namespace RedPoint.Hubs
 
             server.Groups[0].Users.Add(user.UserStub);
 
-            Groups.AddToGroupAsync(Context.ConnectionId, server.Name);
+            await Groups.AddToGroupAsync(Context.ConnectionId, server.Name);
             _db.SaveChanges();
 
-            Clients.Caller.JoinServer(id);
+            await Clients.Caller.JoinServer(id);
         }
 
         /// <summary>
         /// Remove's user from the Server's list of users
         /// </summary>
         /// <param name="id"></param>
-        public void LeaveServer(int id)
+        public async Task LeaveServer(int id)
         {
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
 
-            var server = _db.Servers.Find(id);
-            if (server is null)
+            Server server;
+            switch (_inputValidator.CheckServerLeave(id, user, out server))
             {
-                _logger.Warn("{0} (ID: {1}) tried to join nonexsistent server (Server ID: {2))", user.UserName, user.Id, id);
-                Clients.Caller.ServerDoesntExist();
-                return;
+                case UserInputError.InputValid:
+                        server.Groups[0].Users.Remove(user.UserStub);
+
+                        await Groups.RemoveFromGroupAsync(Context.ConnectionId, server.Name);
+                        server.Users.Remove(user.UserStub);
+                        _db.SaveChanges();
+
+                        await Clients.Caller.LeaveServer(id);
+                    break;
+                    
+                case UserInputError.NoServer:
+                        _logger.Warn("{0} (ID: {1}) tried to join nonexsistent server (Server ID: {2))", user.UserName, user.Id, id);
+                        await Clients.Caller.ServerDoesntExist();
+                    break;
+
+                case UserInputError.ServerLeave_UserNotInServer:
+                        _logger.Error("{0} (ID: {1}) tried to leave server that he wasn't in(Server ID: {2))", user.UserName, user.Id, id);
+                    break;
+                    
             }
-
-            if (!server.Users.Contains(user.UserStub))
-            {
-                _logger.Warn("{0} (ID: {1}) tried to leave server that he wasn't in(Server ID: {2))", user.UserName, user.Id, id);
-                return;
-            }
-
-            server.Groups[0].Users.Remove(user.UserStub);
-
-            Groups.RemoveFromGroupAsync(Context.ConnectionId, server.Name);
-            server.Users.Remove(user.UserStub);
-            _db.SaveChanges();
-
-            Clients.Caller.LeaveServer(id);
         }
     }
 
     public interface IServerHub
     {
-        void RemoveServer(ServerStub serverStub);
-        void AddServer(ServerStub serverStub);
-        void LeaveServer(int id);
-        void JoinServer(int id);
-        void NoAddPermission();
-        void NoRemovePermission();
-        void ServerDoesntExist();
+        Task RemoveServer(ServerStub serverStub);
+        Task AddServer(ServerStub serverStub);
+        Task LeaveServer(int id);
+        Task JoinServer(int id);
+        Task NoAddPermission();
+        Task NoRemovePermission();
+        Task ServerDoesntExist();
     }
 }

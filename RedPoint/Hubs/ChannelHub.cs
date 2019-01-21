@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using RedPoint.Models.Chat_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using RedPoint.Data;
+using RedPoint.Infrastructure;
 
 namespace RedPoint.Hubs
 {
@@ -20,11 +22,13 @@ namespace RedPoint.Hubs
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private ApplicationDbContext _db;
         private UserManager<ApplicationUser> _userManager;
+        private HubUserInputValidator _inputValidator;
 
         public ChannelHub(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             _userManager = userManager;
             _db = db;
+            _inputValidator = new HubUserInputValidator(_db);
         }
 
         /// <summary>
@@ -33,14 +37,14 @@ namespace RedPoint.Hubs
         /// <param name="name"></param>
         /// <param name="description"></param>
         /// <param name="serverId"></param>
-        public void AddChannel(string name, string description, int serverId)
+        public async Task AddChannel(string name, string description, int serverId)
         {
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
             PermissionsManager permissionsManager = new PermissionsManager();
 
-            Server server = _db.Servers.Find(serverId);
-            if (server is null)
+            Server server;
+            if (_inputValidator.CheckIfServerExists(serverId, out server) == UserInputError.NoServer)
             {
                 _logger.Warn("{0} (ID: {1}) tried to create channel in a server without permission (Server ID: {2))", user.UserName, user.Id, serverId);
                 return;
@@ -69,7 +73,7 @@ namespace RedPoint.Hubs
 
             channel.ChannelStub = channelStub;
 
-            Clients.Group(server.Name).AddChannel(channelStub);
+            await Clients.Group(server.Name).AddChannel(channelStub);
         }
 
         /// <summary>
@@ -77,38 +81,39 @@ namespace RedPoint.Hubs
         /// </summary>
         /// <param name="channelId"></param>
         /// <param name="serverId"></param>
-        public void RemoveChannel(int channelId, int serverId)
+        public async Task RemoveChannel(string channelId, int serverId)
         {
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+            
+
+            Server server;
+            Channel channel;
+            if (_inputValidator.CheckIfServerExists(serverId, out server) == UserInputError.NoServer)
+            {
+                _logger.Error("{0} (ID: {1}) tried to remove channel in a nonexistent server (Server ID: {2))", user.UserName, user.Id, serverId);
+                return;
+            }
+
+            if (_inputValidator.CheckIfChannelExists(channelId, out channel) == UserInputError.NoChannel)
+            {
+                _logger.Error("{0} (ID: {1}) tried to remove nonexistent channel (Channel ID: {2))", user.UserName, user.Id, serverId);
+                return;
+            }
+
             PermissionsManager permissionsManager = new PermissionsManager();
-
-            Server server = _db.Servers.Find(serverId);
-            if (server is null)
-            {
-                _logger.Warn("{0} (ID: {1}) tried to remove channel in a nonexistent server (Server ID: {2))", user.UserName, user.Id, serverId);
-                return;
-            }
-
             if (!permissionsManager.CheckUserServerPermissions(user, server, new[] { PermissionTypes.CanManageServers })) return;
-
-            Channel channel = _db.Channels.Find(channelId);
-            if (channel is null)
-            {
-                _logger.Warn("{0} (ID: {1}) tried to remove nonexistent channel (Channel ID: {2))", user.UserName, user.Id, serverId);
-                return;
-            }
 
             server.Channels.Remove(channel);
             _db.SaveChanges();
 
-            Clients.Group(server.Name).RemoveChannel(channel.ChannelStub);
+            await Clients.Group(server.Name).RemoveChannel(channel.ChannelStub);
         }
     }
 
     public interface IChannelHub
     {
-        void AddChannel(ChannelStub channel);
-        void RemoveChannel(ChannelStub channelStub);
+        Task AddChannel(ChannelStub channel);
+        Task RemoveChannel(ChannelStub channelStub);
     }
 }

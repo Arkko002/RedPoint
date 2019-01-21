@@ -14,70 +14,32 @@ namespace RedPoint.Infrastructure
     ///<summary>
     ///Provides methods to manage and retrieve data from database table 'UserStubs'
     ///</summary>
-    public class UserStubManager
+    public static class UserStubManager
     {
-        private readonly ApplicationDbContext _db;
-
-        public UserStubManager(ApplicationDbContext db)
-        {
-            _db = db;
-        }
-
-        ///<summary>
-        ///Creates and returns UserStub for the provided ApplicationUser
-        ///</summary>
-        public UserStub CreateUserStub(ApplicationUser user)
-        {
-            UserStub userStub = new UserStub()
-            {
-                AppUserId = user.Id,
-                AppUserName = user.UserName
-            };
-
-            try
-            {
-                _db.UserStubs.Add(userStub);
-                _db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Debug.Print(ex.Source + " " + ex.GetType().ToString() + " " + ex.Message);
-            }
-
-            return userStub;
-        }
-
         /// <summary>
-        /// Creates and returns UserStub for the provided ApplicationUser Id
+        /// Checks if ApplicationUser has an UserStub assigned, creates one if not
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public UserStub CreateUserStub(string userId)
+        /// <param name="user"></param>
+        public static void CheckIfUserStubExists(ApplicationUser user, ApplicationDbContext db)
         {
-            ApplicationUser user = _db.Users.FirstOrDefault(u => u.Id == userId);
-
-            if (user is null)
+            if (user.UserStub is null)
             {
-                throw new ApplicationUserNotFoundException("ID: " + userId);
+                user.UserStub = new UserStub()
+                {
+                    AppUserId = user.Id,
+                    AppUserName = user.UserName
+                };
+
+                try
+                {
+                    db.UserStubs.Add(user.UserStub);
+                    db.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    Debug.Print(e.ToString());
+                }
             }
-
-            UserStub userStub = new UserStub()
-            {
-                AppUserId = user.Id,
-                AppUserName = user.UserName
-            };
-
-            try
-            {
-                _db.UserStubs.Add(userStub);
-                _db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Debug.Print(ex.Source + " " + ex.GetType().ToString() + " " + ex.Message);
-            }
-
-            return userStub;
         }
     }
 }

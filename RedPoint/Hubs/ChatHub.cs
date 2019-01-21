@@ -23,11 +23,13 @@ namespace RedPoint.Hubs
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private ApplicationDbContext _db;
         private UserManager<ApplicationUser> _userManager;
+        private HubUserInputValidator _inputValidator;
 
         public ChatHub(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             _db = db;
             _userManager = userManager;
+            _inputValidator = new HubUserInputValidator(_db);
         }
 
         /// <summary>
@@ -35,44 +37,51 @@ namespace RedPoint.Hubs
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="channelId"></param>
-        public async Task Send(string msg, int channelId)
+        public async Task Send(string msg, string channelId)
         {
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+            UserStubManager.CheckIfUserStubExists(user, _db);
 
-            var channel = _db.Channels.Find(channelId);
-            if (channel is null)
+            Channel channel;
+            switch (_inputValidator.CheckCreatedMessage(user, msg, channelId, out channel))
             {
-                _logger.Warn("{0} (ID: {1}) tried to write in nonexistent channel (Channel ID: {2))", user.UserName, user.Id, channelId);
-                await Clients.Caller.ChannelDoesntExist();
-                return;
-            }
+                case UserInputError.InputValid:
+                    PermissionsManager permissionsManager = new PermissionsManager();
+                    if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
+                    {
+                        _logger.Fatal("{0} (ID: {1}) tried to write in channel without write permission (Channel ID: {2))", user.UserName, user.Id, channelId);
+                        await Clients.Caller.UserCantWrite();
+                        return;
+                    }
 
-            PermissionsManager permissionsManager = new PermissionsManager();
-            if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
-            {
-                _logger.Warn("{0} (ID: {1}) tried to write in channel without write permission (Channel ID: {2))", user.UserName, user.Id, channelId);
-                await Clients.Caller.UserCantWrite();
-                return;
-            }
+                    Message message = new Message()
+                    {
+                        UserStub = user.UserStub,
+                        Text = msg,
+                        DateTimePosted = DateTime.Now
+                    };
 
-            if (user.UserStub is null)
-            {
-                var stubManager = new UserStubManager(_db);
-                user.UserStub = stubManager.CreateUserStub(user);
-            }
+                    try
+                    {
+                        channel.Messages.Add(message);
+                        await _db.SaveChangesAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
 
-            Message message = new Message()
-            {
-                UserStub = user.UserStub,
-                Text = msg,
-                DateTimePosted = DateTime.Now
-            };
+                    await Clients.Group(channelId.ToString()).AddNewMessage(message);
 
-            channel.Messages.Add(message);
-            _db.SaveChanges();
+                    break;
 
-            await Clients.Group(channelId.ToString()).AddNewMessage(message);
+                case UserInputError.NoChannel:
+                        _logger.Error("{0} (ID: {1}) tried to write in nonexistent channel (Channel ID: {2))", user.UserName, user.Id, channelId);
+                        await Clients.Caller.ChannelDoesntExist();
+                    break;                 
+            }                     
         }
 
         /// <summary>
@@ -123,35 +132,39 @@ namespace RedPoint.Hubs
         /// Gets last 50 Messages from Channel and sends them to Caller
         /// </summary>
         /// <param name="channelId"></param>
-        public async Task ChannelChanged(int channelId)
+        public async Task ChannelChanged(string channelId)
         {
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
-            var channel = _db.Channels.Find(channelId);
-            if (channel is null)
+            Channel channel;
+
+            switch (_inputValidator.CheckIfChannelExists(channelId, out channel))
             {
-                _logger.Warn("{0} (ID: {1}) tried to join nonexistent channel (Channel ID: {2))", user.UserName, user.Id, channelId);
-                await Clients.Caller.ChannelDoesntExist();
-                return;
-            }
+                case UserInputError.InputValid:                 
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.CurrentChannelId.ToString());
+                    user.CurrentChannelId = channel.Id;
+                    await Groups.AddToGroupAsync(Context.ConnectionId, channelId.ToString());
+                    _db.SaveChanges();
 
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.CurrentChannelId.ToString());
-            user.CurrentChannelId = channelId;
-            await Groups.AddToGroupAsync(Context.ConnectionId, channelId.ToString());
-            _db.SaveChanges();
+                    PermissionsManager permissionsManager = new PermissionsManager();
+                    if (permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanView }))
+                    {
+                        var lastMsgs = channel.Messages.Skip(Math.Max(0, channel.Messages.Count() - 50));
 
-            PermissionsManager permissionsManager = new PermissionsManager();
-            if (permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanView }))
-            {
-                var lastMsgs = channel.Messages.Skip(Math.Max(0, channel.Messages.Count() - 50));
+                        await Clients.Caller.GetMessagesFromDb(lastMsgs);
+                    }
 
-                await Clients.Caller.GetMessagesFromDb(lastMsgs);
-            }
+                    if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
+                    {
+                        await Clients.Caller.UserCantWrite();
+                    }
+                    break;
 
-            if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
-            {
-                await Clients.Caller.UserCantWrite();
+                case UserInputError.NoChannel:
+                    _logger.Error("{0} (ID: {1}) tried to join nonexistent channel (Channel ID: {2))", user.UserName, user.Id, channelId);
+                    await Clients.Caller.ChannelDoesntExist();
+                    break;
             }
         }
 
@@ -160,17 +173,22 @@ namespace RedPoint.Hubs
             ApplicationUser user =
                 _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
-            var server = _db.Servers.Find(serverId);
-            if (server is null)
+            Server server;
+            
+            switch (_inputValidator.CheckIfServerExists(serverId, out server))
             {
-                _logger.Warn("{0} (ID: {1}) tried to join nonexistent server (Server ID: {2))", user.UserName, user.Id, serverId);
-                await Clients.Caller.ServerDoesntExist();
-                return;
+                case UserInputError.InputValid:                   
+                        var channels = server.Channels.ToList();
+                        await Clients.Caller.GetChannnelList(channels);
+                    break;
+                    
+
+                case UserInputError.NoServer:
+                        _logger.Error("{0} (ID: {1}) tried to join nonexistent server (Server ID: {2))", user.UserName, user.Id, serverId);
+                        await Clients.Caller.ServerDoesntExist();
+                    break;
+                    
             }
-
-            var channels = server.Channels.ToList();
-
-            await Clients.Caller.GetChannnelList(channels);
         }
     }
 
