@@ -3,7 +3,7 @@
 import * as signalr from "@aspnet/signalr";
 
 const serverHub = new signalr.HubConnectionBuilder()
-    .withUrl("/server")
+    .withUrl("/serverhub")
     .build();
 
 serverHub.start().then(() => {

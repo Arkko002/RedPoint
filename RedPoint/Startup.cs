@@ -34,9 +34,7 @@ namespace RedPoint
             });
 
             services.Configure<IdentityOptions>(options =>
-            {
-                
-
+            {                
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
@@ -85,10 +83,10 @@ namespace RedPoint
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("/chat");
-                routes.MapHub<ServerHub>("/server");
-                routes.MapHub<ChannelHub>("/channel");
-                routes.MapHub<ServerBrowserHub>("/serverbrowser");
+                routes.MapHub<ChatHub>("/chathub");
+                routes.MapHub<ServerHub>("/serverhub");
+                routes.MapHub<ChannelHub>("/channelhub");
+                routes.MapHub<ServerBrowserHub>("/serverbrowserhub");
             });
 
            

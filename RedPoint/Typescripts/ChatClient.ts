@@ -4,7 +4,7 @@ import * as $ from "jquery";
 import * as signalr from "@aspnet/signalr";
 
 const chatHub = new signalr.HubConnectionBuilder()
-    .withUrl("/chat")
+    .withUrl("/chathub")
     .configureLogging(signalr.LogLevel.Trace)
     .build();
 
