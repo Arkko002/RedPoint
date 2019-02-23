@@ -1,4 +1,5 @@
-﻿html {
+﻿/*General layout*/
+html {
 	width: 100%;
 	height: 100%;
 }
@@ -6,9 +7,8 @@
 body {
 	width: 100%;
 	height: 100%;
-	box-sizing: border-box;
 	margin: 0;
-	color: #FFEAEA;
+	color: #2E3A4A;
 	display: grid;
 	grid-template-columns: auto 1fr auto;
 	grid-template-rows: 1fr auto;
@@ -16,7 +16,7 @@ body {
 	font-family: bahnschrift;
 	font-size: 15pt;
 }
-
+/*How things look in CHAT*/
 .chat {
 	width: auto;
 	height: auto;
@@ -27,20 +27,18 @@ body {
 }
 
 .textinputbox {
-	display: inline-block;
 	z-index: 0;
 	height: auto;
-	min-height: 30px;
 	width: auto;
-	margin-right: -3px;
 	box-sizing: content-box;
-	border-radius: 3px 0 0 3px;
+	border-radius: 3px;
 	border: none;
 	outline: none;
-	color: #FFEAEA;
-	padding: 0 0 0 5px;
+	color: #EEEEEE;
+	padding: 5px;
 	font-family: bahnschrift;
 	font-size: 15pt;
+	scrollbar-3dlight-color: #C45555;
 }
 
 	.textinputbox:focus {
@@ -50,12 +48,11 @@ body {
 		box-shadow: inset -22px 0 20px -20px rgba(0, 0, 0, 0.4);
 	}
 
-	.textinputbox::placeholder{
+	.textinputbox:placeholder{
 		color: #FFEAEA;
-		opacity: 0.4;
 	}
 
-		.textinputbox::placeholder:focus {
+		.textinputbox:placeholder:focus {
 			color: #1B232E;
 		}
 
@@ -63,7 +60,7 @@ body {
 	color: #FFEAEA;
 	z-index: 1;
 	float: right;
-	height: 30px;
+	height: 35px;
 	border: none;
 	border-radius: 3px;
 	width: 80px;
@@ -113,7 +110,7 @@ body {
 	margin: 2px 0 2px 2px;
 	border-radius: 3px;
 	overflow: hidden;
-	transition: cubic-bezier(0.2, 0, 0.2, 1) 0.4s;
+	transition: cubic-bezier(0.2, 0, 0.2, 1) 0.2s;
 }
 
 	.serverwrap:hover {
@@ -135,13 +132,13 @@ body {
 	list-style: none;
 	border-radius: 3px;
 }
-
+/*General styles and colour combinations*/
 .dark-bg {
-	background: #303841;
+	background: #2E3A4A;
 }
 
 .mid-bg {
-	background: #3A4750;
+	background: #415066;
 }
 
 .red-bg {
@@ -157,5 +154,5 @@ body {
 }
 
 .transition-responsive {
-	transition: cubic-bezier(0.2, 0, 0.2, 1) 0.2s;
+	transition: cubic-bezier(0.2, 0, 0.2, 1) 0.1s;
 }
