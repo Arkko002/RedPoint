@@ -11,6 +11,7 @@ using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using RedPoint.Infrastructure.Facades;
 
 namespace RedPoint.Hubs
 {
@@ -20,68 +21,27 @@ namespace RedPoint.Hubs
     #endif
     public class ChatHub : Hub<IChatHub>
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private ChatFacade _chat;
         private ApplicationDbContext _db;
-        private UserManager<ApplicationUser> _userManager;
-        private HubUserInputValidator _inputValidator;
 
         public ChatHub(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             _db = db;
-            _userManager = userManager;
-            _inputValidator = new HubUserInputValidator(_db);
+            _chat = new ChatFacade(db, userManager);
         }
 
         /// <summary>
-        /// Server method called to add Message to database
+        /// Calls ChatFacade.CreateMessage and sends the created message to clients in channel group
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="channelId"></param>
         public async Task Send(string msg, string channelId)
         {
-            ApplicationUser user =
-                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
-            UserStubManager.CheckIfUserStubExists(user, _db);
-
-            Channel channel;
-            switch (_inputValidator.CheckCreatedMessage(user, msg, channelId, out channel))
+            var message = _chat.CreateMessage(Context.UserIdentifier, msg, channelId).Result;
+            if (!(message is null))
             {
-                case UserInputError.InputValid:
-                    PermissionsManager permissionsManager = new PermissionsManager();
-                    if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
-                    {
-                        _logger.Fatal("{0} (ID: {1}) tried to write in channel without write permission (Channel ID: {2))", user.UserName, user.Id, channelId);
-                        await Clients.Caller.UserCantWrite();
-                        return;
-                    }
-
-                    Message message = new Message()
-                    {
-                        UserStub = user.UserStub,
-                        Text = msg,
-                        DateTimePosted = DateTime.Now
-                    };
-
-                    try
-                    {
-                        channel.Messages.Add(message);
-                        await _db.SaveChangesAsync();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
-
-                    await Clients.Group(channelId.ToString()).AddNewMessage(message);
-
-                    break;
-
-                case UserInputError.NoChannel:
-                        _logger.Error("{0} (ID: {1}) tried to write in nonexistent channel (Channel ID: {2))", user.UserName, user.Id, channelId);
-                        await Clients.Caller.ChannelDoesntExist();
-                    break;                 
-            }                     
+                await Clients.Group(channelId).AddNewMessage(message);
+            }        
         }
 
         /// <summary>
@@ -134,61 +94,44 @@ namespace RedPoint.Hubs
         /// <param name="channelId"></param>
         public async Task ChannelChanged(string channelId)
         {
-            ApplicationUser user =
-                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
-
-            Channel channel;
-
-            switch (_inputValidator.CheckIfChannelExists(channelId, out channel))
+            var channel = _chat.CheckChannelChange(out var user, Context.UserIdentifier, channelId);
+            if (!(channel is null))
             {
-                case UserInputError.InputValid:                 
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.CurrentChannelId.ToString());
-                    user.CurrentChannelId = channel.Id;
-                    await Groups.AddToGroupAsync(Context.ConnectionId, channelId.ToString());
-                    _db.SaveChanges();
+                PermissionsManager permissionsManager = new PermissionsManager();
+                if (permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanView }))
+                {
+                    var lastMsgs = channel.Messages.Skip(Math.Max(0, channel.Messages.Count() - 50));
 
-                    PermissionsManager permissionsManager = new PermissionsManager();
-                    if (permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanView }))
-                    {
-                        var lastMsgs = channel.Messages.Skip(Math.Max(0, channel.Messages.Count() - 50));
+                    await Clients.Caller.GetMessagesFromDb(lastMsgs);
+                }
 
-                        await Clients.Caller.GetMessagesFromDb(lastMsgs);
-                    }
+                if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
+                {
+                    await Clients.Caller.UserCantWrite();
+                }
 
-                    if (!permissionsManager.CheckUserChannelPermissions(user, channel, new[] { PermissionTypes.CanWrite }))
-                    {
-                        await Clients.Caller.UserCantWrite();
-                    }
-                    break;
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.CurrentChannelId.ToString());
+                user.CurrentChannelId = channelId;
+                await Groups.AddToGroupAsync(Context.ConnectionId, channelId);
+                await _db.SaveChangesAsync();
 
-                case UserInputError.NoChannel:
-                    _logger.Error("{0} (ID: {1}) tried to join nonexistent channel (Channel ID: {2))", user.UserName, user.Id, channelId);
-                    await Clients.Caller.ChannelDoesntExist();
-                    break;
+                return;                
             }
+
+            await Clients.Caller.ChannelDoesntExist();
         }
 
         public async Task ServerChanged(int serverId)
         {
-            ApplicationUser user =
-                _userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
-
-            Server server;
-            
-            switch (_inputValidator.CheckIfServerExists(serverId, out server))
+            var server = _chat.CheckServerChange(Context.UserIdentifier, serverId);
+            if (!(server is null))
             {
-                case UserInputError.InputValid:                   
-                        var channels = server.Channels.ToList();
-                        await Clients.Caller.GetChannnelList(channels);
-                    break;
-                    
-
-                case UserInputError.NoServer:
-                        _logger.Error("{0} (ID: {1}) tried to join nonexistent server (Server ID: {2))", user.UserName, user.Id, serverId);
-                        await Clients.Caller.ServerDoesntExist();
-                    break;
-                    
+                var channels = server.Channels.ToList();
+                await Clients.Caller.GetChannnelList(channels);
             }
+
+            await Clients.Caller.ServerDoesntExist();
+
         }
     }
 

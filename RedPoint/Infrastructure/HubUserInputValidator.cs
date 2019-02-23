@@ -68,7 +68,7 @@ namespace RedPoint.Infrastructure
             return UserInputError.InputValid;
         }
 
-        public UserInputError CheckServerLeave(int serverId, ApplicationUser user, out Server server)
+        public UserInputError CheckServerLeave(int serverId, ApplicationUser user, Server server)
         {
             server = _db.Servers.Find(serverId);
             if (server is null)
@@ -78,19 +78,10 @@ namespace RedPoint.Infrastructure
 
             if (!server.Users.Contains(user.UserStub))
             {
-                return UserInputError.ServerLeave_UserNotInServer;
+                return UserInputError.UserNotInServer;
             }
 
             return UserInputError.InputValid;
         }
-    }
-
-    public enum UserInputError
-    {
-        InputValid = 0,
-        NoChannel = 1,
-        NoServer = 2,
-        ServerLeave_UserNotInServer = 3,
-
     }
 }
