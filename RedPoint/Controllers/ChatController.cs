@@ -33,5 +33,15 @@ namespace RedPoint.Controllers
         {
             return PartialView();
         }
+
+        public PartialViewResult ViewUserSettings()
+        {
+            return PartialView();
+        }
+
+        public PartialViewResult SearchChat()
+        {
+            return PartialView();
+        }
     }
 }

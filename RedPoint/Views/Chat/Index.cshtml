@@ -12,12 +12,6 @@
     <button type="button" class="redbutton red-bg transition-responsive" id="sendmessage" value="send">SEND</button>
 </div>
 
-<div class="searchwrap">
-    <input class="redbutton red-bg transition-responsive" type="button" id="search" value="Search" />
-    <textarea class="textinputbox dark-bg transition-responsive" rows="1" id="searchText" placeholder="Type search term."></textarea>
-    <input type="hidden" id="fromUser" />
-    <ul id="searchResult"></ul>
-</div>
 
 <div class="serverwrap">
     <div id="serverlist"></div>
@@ -31,6 +25,7 @@
 <div class="modal fade" id="server_modal" role="dialog" data-url="@Url.Action("AddServer", "Chat")"></div>
 <div class="modal fade" id="channel_modal" role="dialog" data-url="@Url.Action("AddChannel", "Chat")"></div>
 <div class="modal fade" id="serverbrowser_modal" role="dialog" data-url="@Url.Action("BrowseServers", "Chat")"></div>
+<div class="modal fade" id="chatsearch_modal" role="dialog" data-url="@Url.Action("SearchChat", "Chat")"></div>
 
 
 @section scripts {
