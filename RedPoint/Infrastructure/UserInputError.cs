@@ -11,7 +11,10 @@ namespace RedPoint.Infrastructure
         NoChannel,
         NoServer,
         UserNotInServer,
-        CantWrite,
-        CantView
+        UserAlreadyInServer,
+        NoPermission_CantWrite,
+        NoPermission_CantView,
+        NoPermission_CantManageChannels,
+        NoPermission_CantManageServer
     } 
 }

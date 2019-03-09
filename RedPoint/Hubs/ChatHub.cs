@@ -3,13 +3,9 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
 using RedPoint.Data;
-using RedPoint.Infrastructure;
-using RedPoint.Models.Users_Permissions_Models;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using RedPoint.Infrastructure.Facades;
 
@@ -37,14 +33,12 @@ namespace RedPoint.Hubs
         /// <param name="channelId"></param>
         public async Task Send(string msg, string channelId)
         {
-            var message = _chat.CreateMessage(Context.UserIdentifier, msg, channelId).Result;
+            var message = await _chat.CreateMessage(Context.UserIdentifier, msg, channelId);
             if (!(message is null))
             {
                 await Clients.Group(channelId).AddNewMessage(message);
             }        
         }
-
-
 
         /// <summary>
         /// Gets last 50 Messages from Channel and sends them to Caller
@@ -52,43 +46,42 @@ namespace RedPoint.Hubs
         /// <param name="channelId"></param>
         public async Task ChannelChanged(string channelId)
         {
-            var userAndChannel = await _chat.CheckChannelChange(Context.UserIdentifier, channelId);
-            if (!(userAndChannel is null))
+            var resultTuple = await _chat.CheckChannelChange(Context.UserIdentifier, channelId);
+            if (resultTuple is null)
             {
-                PermissionsManager permissionsManager = new PermissionsManager();
-                if (permissionsManager.CheckUserChannelPermissions(userAndChannel.Value.user, userAndChannel.Value.channel, new[] { PermissionTypes.CanView }))
-                {
-                    var lastMsgs = userAndChannel.Value.channel.Messages.Skip(Math.Max(0, userAndChannel.Value.channel.Messages.Count() - 50));
-
-                    await Clients.Caller.GetMessagesFromDb(lastMsgs);
-                }
-
-                if (!permissionsManager.CheckUserChannelPermissions(userAndChannel.Value.user, userAndChannel.Value.channel, new[] { PermissionTypes.CanWrite }))
-                {
-                    await Clients.Caller.UserCantWrite();
-                }
-
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, userAndChannel.Value.user.CurrentChannelId.ToString());
-                userAndChannel.Value.user.CurrentChannelId = channelId;
-                await Groups.AddToGroupAsync(Context.ConnectionId, channelId);
-                await _db.SaveChangesAsync();
-
-                return;                
+                await Clients.Caller.ChannelDoesntExist();
+                return;
             }
 
-            await Clients.Caller.ChannelDoesntExist();
+            if (resultTuple.Value.canView)
+            {
+                var lastMsgs = resultTuple.Value.channel.Messages.Skip(Math.Max(0, resultTuple.Value.channel.Messages.Count() - 50));
+
+                await Clients.Caller.GetMessagesFromDb(lastMsgs);
+            }
+
+            if (!resultTuple.Value.canWrite)
+            {
+                await Clients.Caller.UserCantWrite();
+            }
+
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, resultTuple.Value.user.CurrentChannelId);
+            resultTuple.Value.user.CurrentChannelId = channelId;
+            await Groups.AddToGroupAsync(Context.ConnectionId, channelId);
+            await _db.SaveChangesAsync();
         }
 
         public async Task ServerChanged(int serverId)
         {
             var server = await _chat.CheckServerChange(Context.UserIdentifier, serverId);
-            if (!(server is null))
+            if (server is null)
             {
-                var channels = server.Channels.ToList();
-                await Clients.Caller.GetChannnelList(channels);
+                await Clients.Caller.ServerDoesntExist();
+                return;
             }
 
-            await Clients.Caller.ServerDoesntExist();
+            var channels = server.Channels.ToList();
+            await Clients.Caller.GetChannnelList(channels);
         }
     }
 
@@ -100,7 +93,6 @@ namespace RedPoint.Hubs
         Task GetMessagesFromDb(IEnumerable<Message> lastMsgs);
         Task GetServerList(List<Server> list);
         Task ServerDoesntExist();
-
         Task UserCantWrite();
         Task UserNotLoggedIn(string v);
     }

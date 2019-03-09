@@ -52,35 +52,6 @@ namespace RedPoint.Models.Users_Permissions_Models
         }
 
         /// <summary>
-        /// Checks user's permissions unrelated to specific servers or channels
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="permissions"></param>
-        /// <returns></returns>
-        public bool CheckUserPermissions(ApplicationUser user, string[] permissions)
-        {
-            if (CheckIfSuperAdmin(user))
-            {
-                return true;
-            }
-
-            bool hasPermission = false;
-
-            foreach (var perm in permissions)
-            {
-                foreach (var group in user.Groups)
-                {
-                    if ((bool)group.GroupPermissions.GetType().GetProperty(perm).GetValue(group))
-                    {
-                        hasPermission = true;
-                    }
-                }
-            }
-
-            return hasPermission;
-        }
-
-        /// <summary>
         /// Checks user's permissions in the given channel
         /// </summary>
         /// <param name="user"></param>
