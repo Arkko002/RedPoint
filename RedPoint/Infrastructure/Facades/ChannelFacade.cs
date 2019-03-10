@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Data;
+using RedPoint.Infrastructure.Builders;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 
@@ -27,25 +28,8 @@ namespace RedPoint.Infrastructure.Facades
             switch (_inputValidator.CheckCreatedChannel(user, serverId, out var server))
             {
                 case UserInputError.InputValid:
-                    Channel channel = new Channel()
-                    {
-                        Name = name
-                    };
-                    ChannelStub channelStub = new ChannelStub()
-                    {
-                        Id = channel.Id,
-                        Name = channel.Name
-                    };
-
-                    if (!(description is null))
-                    {
-                        channel.Description = description;
-                        channelStub.Description = description;
-                    }
-
-                    server.Channels.Add(channel);
-                    _db.SaveChanges();
-                    channel.ChannelStub = channelStub;
+                    ChannelBuilder builder = new ChannelBuilder(_db);
+                    var channel = await builder.BuildChannel(name, description, server);
 
                     return (channel: channel, server: server);
 

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Data;
+using RedPoint.Infrastructure.Builders;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 using RedPoint.Models.Users_Permissions_Models;
@@ -31,53 +32,8 @@ namespace RedPoint.Infrastructure.Facades
             switch (_inputValidator.CheckCreatedServer(user, name, description, image))
             {
                 case UserInputError.InputValid:
-                    Server server = new Server()
-                    {
-                        Name = name,
-                        Description = description,
-                        IsVisible = isVisible
-                    };
-
-                    image.Save(AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name + "_Thumbnail");
-                    server.ImagePath = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name +
-                                       "_Thumbnail";
-
-                    var defChannel = new Channel()
-                    {
-                        Description = "Your first channel",
-                        Groups = new List<Group>(),
-                        Messages = new List<Message>(),
-                        Name = "General"
-                    };
-
-                    var defGroup = new Group();
-                {
-                    defGroup.Name = "Default";
-                }
-                    defGroup.GroupPermissions = new GroupPermissions()
-                    {
-                        CanWrite = true,
-                        CanView = true,
-                        CanAttachFiles = true,
-                        CanSendLinks = true
-                    };
-
-                    defChannel.Groups.Add(defGroup);
-                    server.Channels.Add(defChannel);
-                    server.Users.Add(user.UserStub);
-
-                    ServerStub serverStub = new ServerStub()
-                    {
-                        Id = server.Id,
-                        Name = server.Name,
-                        Description = description,
-                        ImagePath =
-                            AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name + "_Thumbnail",
-                        IsVisible = isVisible
-                    };
-                    server.ServerStub = serverStub;
-
-                    await _db.SaveChangesAsync();
+                    ServerBuilder builder = new ServerBuilder(_db);
+                    var server = await builder.BuildServer(name, description, isVisible, image, user.UserStub);
                     return server;
 
                 default:

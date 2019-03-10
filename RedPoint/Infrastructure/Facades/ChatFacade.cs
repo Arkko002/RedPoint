@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Data;
+using RedPoint.Infrastructure.Builders;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 
@@ -29,23 +29,8 @@ namespace RedPoint.Infrastructure.Facades
             switch (_inputValidator.CheckCreatedMessage(user, text, channelId, out var channel))
             {
                 case UserInputError.InputValid:
-                    Message message = new Message()
-                    {
-                        UserStub = user.UserStub,
-                        Text = text,
-                        DateTimePosted = DateTime.Now
-                    };
-
-                    try
-                    {
-                        channel.Messages.Add(message);
-                        await _db.SaveChangesAsync();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
+                    MessageBuilder builder = new MessageBuilder(_db);
+                    var message = await builder.BuildMessage(user.UserStub, text, channel);
 
                     return message;
 
@@ -86,7 +71,7 @@ namespace RedPoint.Infrastructure.Facades
             ApplicationUser user = await _userManager.FindByIdAsync(userId);
 
             //TODO Check if user part of server
-            switch (_inputValidator.CheckServerOperation(user, serverId, out var server))
+            switch (_inputValidator.CheckServerChange(serverId, user, out var server))
             {
                 case UserInputError.InputValid:
                     return server;
