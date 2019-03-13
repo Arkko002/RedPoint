@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using RedPoint.Data;
-using RedPoint.Exceptions;
 using RedPoint.Infrastructure;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
@@ -44,7 +40,6 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
             Assert.IsInstanceOf<UserStub>(user.UserStub);
             Assert.IsInstanceOf<UserStub>(dbUserStub);
         }
-
 
         //[Test]
         //public void CreateUserStub_ApplicationUserNotFound()

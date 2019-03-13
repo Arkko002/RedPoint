@@ -6,8 +6,10 @@ using RedPoint.Models.Users_Permissions_Models;
 
 namespace RedPoint.Infrastructure
 {
+    //TODO DRY this
+
     /// <summary>
-    /// Provides methods for checking user input for potential errors.
+    /// Provides methods for checking user input for potential errors and security issues.
     /// </summary>
     public class HubUserInputValidator
     {
@@ -22,7 +24,7 @@ namespace RedPoint.Infrastructure
         }
 
         /// <summary>
-        /// Checks the message for potential unsafe input
+        /// Checks the message for potential unsafe input.
         /// </summary>
         /// <param name="user"></param>
         /// <param name="msg"></param>
@@ -46,7 +48,7 @@ namespace RedPoint.Infrastructure
             return UserInputError.InputValid;
         }
 
-        public UserInputError CheckChannelChange(ApplicationUser user, string channelId, out bool canWrite, out bool canView, out Channel channel)
+        public UserInputError CheckChannelChangeAsync(ApplicationUser user, string channelId, out bool canWrite, out bool canView, out Channel channel)
         {
             if (CheckIfChannelExists(channelId, out  channel) == UserInputError.NoChannel)
             {
@@ -118,6 +120,28 @@ namespace RedPoint.Infrastructure
             return UserInputError.InputValid;
         }
 
+        public UserInputError CheckServerChange(int serverId, ApplicationUser user, out Server server)
+        {
+            if (CheckIfServerExists(serverId, out server) == UserInputError.NoServer)
+            {
+                return UserInputError.NoServer;
+            }
+
+            if (!server.Users.Contains(user.UserStub))
+            {
+                return UserInputError.UserNotInServer;
+            }
+
+            return UserInputError.InputValid;
+        }
+
+        /// <summary>
+        /// Checks for general (unspecific) channel input errors that can happen regardless of the operation type.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="serverId"></param>
+        /// <param name="server"></param>
+        /// <returns></returns>
         private UserInputError CheckChannelOperation(ApplicationUser user, int serverId, out Server server)
         {
             if (CheckIfServerExists(serverId, out server) == UserInputError.NoServer)
@@ -185,7 +209,6 @@ namespace RedPoint.Infrastructure
 
         private UserInputError CheckIfServerExists(int serverId, out Server server)
         {
-            //TODO
             server = _db.Servers.Find(serverId);
             if (server is null)
             {

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
+using RedPoint.Infrastructure;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 using RedPoint.Models.Users_Permissions_Models;
@@ -11,20 +10,16 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
     [TestFixture]
     class PermissionManagerTests
     {
-        private Server server;
-        private Group userGroup;
-        private ApplicationUser user;
+        private Server _server;
+        private Group _userGroup;
+        private ApplicationUser _user;
+        private Channel _channel;
       
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
-            server = new Server();
-            userGroup = new Group();
-            server.Groups = new List<Group>();
-            server.Groups.Add(userGroup);
 
-
-            user = new ApplicationUser()
+            _user = new ApplicationUser()
             {
                 Id = "TestId",
                 UserName = "Test"
@@ -36,20 +31,62 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
                 AppUserName = "Test"
             };
 
-            user.UserStub = userStub;
-            user.Servers = new List<Server>();
-            user.Servers.Add(server);
-            user.Groups = new List<Group>();
-            user.Groups.Add(userGroup);
-            userGroup.Users = new List<UserStub>();
-            userGroup.Users.Add(userStub);
+            var userStubs = new List<UserStub>();
+            userStubs.Add(userStub);
+
+            _server = new Server()
+            {
+                Name = "TestServer",
+                Channels = new List<Channel>(),
+                Users = userStubs,
+            };
+
+            _userGroup = new Group()
+            {
+                GroupPermissions = new GroupPermissions(),
+                Name = "Default",
+                Server = new ServerStub()
+                {
+                    Id = _server.Id,
+                    Name = _server.Name,
+                },
+                Users = userStubs
+
+            };
+
+            var groupList = new List<Group>();
+            groupList.Add(_userGroup);
+
+            _channel = new Channel()
+            {
+                Name = "Channel_1",
+                Description = string.Empty,
+                ChannelStub = new ChannelStub()
+                {
+                    Name = "Channel_1",
+                    Description = string.Empty,
+                },
+                Groups = groupList
+            };
+
+            _server.Groups = new List<Group>();
+            _server.Groups.Add(_userGroup);
+
+
+            _user.UserStub = userStub;
+            _user.Servers = new List<Server>();
+            _user.Servers.Add(_server);
+            _user.Groups = new List<Group>();
+            _user.Groups.Add(_userGroup);
+            _userGroup.Users = new List<UserStub>();
+            _userGroup.Users.Add(userStub);
         }
 
         [Test]
         public void CheckUserServerPermissions_HasPermission()
         {
             //arrange
-            userGroup.GroupPermissions = new GroupPermissions()
+            _userGroup.GroupPermissions = new GroupPermissions()
             {
                 CanView = true,
             };
@@ -57,7 +94,7 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
             PermissionsManager permissionsManager = new PermissionsManager();
 
             //act
-            bool result = permissionsManager.CheckUserServerPermissions(user, server, new[] {PermissionTypes.CanView});
+            bool result = permissionsManager.CheckUserServerPermissions(_user, _server, new[] {PermissionTypes.CanView});
 
             //assert
             Assert.IsTrue(result);
@@ -67,7 +104,7 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
         public void CheckUserServerPermissions_NoPermission()
         {
             //arrange
-            userGroup.GroupPermissions = new GroupPermissions()
+            _userGroup.GroupPermissions = new GroupPermissions()
             {
                 CanView = false,
             };
@@ -75,11 +112,47 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
             PermissionsManager permissionsManager = new PermissionsManager();
 
             //act
-            bool result = permissionsManager.CheckUserServerPermissions(user, server, new[] { PermissionTypes.CanView });
+            bool result = permissionsManager.CheckUserServerPermissions(_user, _server, new[] { PermissionTypes.CanView });
 
             //assert
             Assert.IsFalse(result);
 
-        }        
+        }
+
+        [Test]
+        public void CheckUserChannelPermissions()
+        {
+            //arrange
+            _userGroup.GroupPermissions = new GroupPermissions()
+            {
+                CanView = true,
+            };
+
+            PermissionsManager permissionsManager = new PermissionsManager();
+
+            //act
+            bool result = permissionsManager.CheckUserChannelPermissions(_user, _channel, new[] { PermissionTypes.CanView });
+
+            //assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void CheckUserChannelPermissions_NoPermission()
+        {
+            //arrange
+            _userGroup.GroupPermissions = new GroupPermissions()
+            {
+                CanView = false,
+            };
+
+            PermissionsManager permissionsManager = new PermissionsManager();
+
+            //act
+            bool result = permissionsManager.CheckUserChannelPermissions(_user, _channel, new[] { PermissionTypes.CanView });
+
+            //assert
+            Assert.IsFalse(result);
+        }
     }
 }

@@ -31,6 +31,7 @@ namespace RedPoint.Infrastructure.Builders
                 channelStub.Description = description;
             }
 
+            _db.Channels.Add(channel);
             server.Channels.Add(channel);
             channel.ChannelStub = channelStub;
 
