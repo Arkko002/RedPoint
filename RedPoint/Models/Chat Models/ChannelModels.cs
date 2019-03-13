@@ -15,6 +15,19 @@ namespace RedPoint.Models.Chat_Models
         public List<Group> Groups { get; set; }
 
         public ChannelStub ChannelStub { get; set; }
+
+        public Channel()
+        {
+            Messages = new List<Message>();
+            Groups = new List<Group>();
+
+            ChannelStub = new ChannelStub()
+            {
+                Description = Description,
+                Id = Id,
+                Name = Name
+            };
+        }
     }
 
     /// <summary>

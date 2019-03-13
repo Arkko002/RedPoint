@@ -23,6 +23,8 @@ namespace RedPoint.Models.Chat_Models
             {
                 CanBeDeleted = false;
             }
+
+            Users = new List<UserStub>();
         }
     }
 }

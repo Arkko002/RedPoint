@@ -17,7 +17,6 @@ namespace RedPoint.Hubs
             _db = db;
         }
 
-
         /// <summary>
         /// Searches for given Message.Text in database
         /// </summary>

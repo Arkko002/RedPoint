@@ -8,7 +8,7 @@ using System.Web;
 namespace RedPoint.Models.Chat_Models
 {
     /// <summary>
-    /// Server class that contains channel's list and user's list
+    /// Server class that contains channels list and users list
     /// </summary>
     public class Server
     {
@@ -16,6 +16,8 @@ namespace RedPoint.Models.Chat_Models
 
         public string Name { get; set; }
         public string Description { get; set; }
+
+        //TODO Consider FILESTREAM
         public string ImagePath { get; set; }
 
         public List<UserStub> Users { get; set; }
@@ -26,6 +28,22 @@ namespace RedPoint.Models.Chat_Models
 
         //Determines if server is visible in the server browser
         public bool IsVisible { get; set; }
+
+        public Server()
+        {
+            ServerStub = new ServerStub()
+            {
+                Id = Id,
+                Description = Description,
+                ImagePath = ImagePath,
+                IsVisible = IsVisible,
+                Name = Name
+            };
+
+            Users = new List<UserStub>();
+            Groups = new List<Group>();
+            Channels = new List<Channel>();
+        }
     }
 
     /// <summary>

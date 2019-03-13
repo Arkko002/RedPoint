@@ -25,11 +25,13 @@ namespace RedPoint.Infrastructure.Builders
             {
                 UserStub = userStub,
                 Text = text,
-                DateTimePosted = DateTime.Now
+                DateTimePosted = DateTime.Now,
+                ChannelStub = channel.ChannelStub                
             };
 
             try
             {
+                _db.Messages.Add(message);
                 channel.Messages.Add(message);
                 await _db.SaveChangesAsync();
             }

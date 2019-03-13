@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="RedPoint\FakeClasses\SignalR\" />
+    <Folder Include="RedPoint\InfrastructureTests\FacadesTests\" />
     <Folder Include="WPF Client\" />
   </ItemGroup>
 

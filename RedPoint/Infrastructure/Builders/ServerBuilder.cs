@@ -18,7 +18,7 @@ namespace RedPoint.Infrastructure.Builders
             _db = db;
         }
 
-        public async Task<Server> BuildServer(string name, string description, bool isVisible, Bitmap image, UserStub userStub)
+        public async Task<Server> BuildServer(string name, string description, bool isVisible, UserStub userStub, Bitmap image = null)
         {
             Server server = new Server()
             {
@@ -27,9 +27,13 @@ namespace RedPoint.Infrastructure.Builders
                 IsVisible = isVisible
             };
 
-            image.Save(AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name + "_Thumbnail");
-            server.ImagePath = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name +
-                               "_Thumbnail";
+            //TODO
+            if (!(image is null))
+            {
+                image.Save(AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name + "_Thumbnail");
+                server.ImagePath = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name +
+                                   "_Thumbnail";
+            }
 
             var defChannel = new Channel()
             {
@@ -51,20 +55,10 @@ namespace RedPoint.Infrastructure.Builders
                 CanSendLinks = true
             };
 
+            _db.Servers.Add(server);
             defChannel.Groups.Add(defGroup);
             server.Channels.Add(defChannel);
             server.Users.Add(userStub);
-
-            ServerStub serverStub = new ServerStub()
-            {
-                Id = server.Id,
-                Name = server.Name,
-                Description = description,
-                ImagePath =
-                    AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\Images\\" + name + "_Thumbnail",
-                IsVisible = isVisible
-            };
-            server.ServerStub = serverStub;
 
             await _db.SaveChangesAsync();
             return server;

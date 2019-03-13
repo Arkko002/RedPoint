@@ -7,6 +7,7 @@ using RedPoint.Data;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 using System.Threading.Tasks;
+using RedPoint.Infrastructure;
 using RedPoint.Infrastructure.Facades;
 
 namespace RedPoint.Hubs
@@ -15,19 +16,22 @@ namespace RedPoint.Hubs
     #else
         [Authorize] 
     #endif
+    /// <summary>
+    /// Central hub of the application, provides communication with the basic chat functionality.
+    /// </summary>
     public class ChatHub : Hub<IChatHub>
     {
         private ChatFacade _chat;
         private ApplicationDbContext _db;
 
-        public ChatHub(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        public ChatHub(ApplicationDbContext db, UserManager<ApplicationUser> userManager, HubUserInputValidator inputValidator)
         {
             _db = db;
-            _chat = new ChatFacade(db, userManager);
+            _chat = new ChatFacade(db, userManager, inputValidator);
         }
 
         /// <summary>
-        /// Calls ChatFacade.CreateMessage and sends the created message to clients in channel group
+        /// Delegates the creation of message, returns the created message to all client's in the chat room on success.
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="channelId"></param>
@@ -41,7 +45,7 @@ namespace RedPoint.Hubs
         }
 
         /// <summary>
-        /// Gets last 50 Messages from Channel and sends them to Caller
+        /// Called when user changes the Channel. Gets last 50 Messages from Channel and sends them to Caller on success. 
         /// </summary>
         /// <param name="channelId"></param>
         public async Task ChannelChanged(string channelId)
@@ -71,6 +75,11 @@ namespace RedPoint.Hubs
             await _db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Called when user changes the Server. Returns the list of Server's Channels to caller on success. 
+        /// </summary>
+        /// <param name="serverId"></param>
+        /// <returns></returns>
         public async Task ServerChanged(int serverId)
         {
             var server = await _chat.CheckServerChange(Context.UserIdentifier, serverId);

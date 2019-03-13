@@ -10,6 +10,7 @@ using RedPoint.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RedPoint.Hubs;
+using RedPoint.Infrastructure;
 using RedPoint.Models;
 
 namespace RedPoint
@@ -60,6 +61,8 @@ namespace RedPoint
 
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddTransient<HubUserInputValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

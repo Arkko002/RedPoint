@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Data;
 using RedPoint.Infrastructure.Builders;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
-using RedPoint.Models.Users_Permissions_Models;
 
 namespace RedPoint.Infrastructure.Facades
 {
@@ -18,11 +15,11 @@ namespace RedPoint.Infrastructure.Facades
         private UserManager<ApplicationUser> _userManager;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public ServerFacade(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        public ServerFacade(ApplicationDbContext db, UserManager<ApplicationUser> userManager, HubUserInputValidator inputValidator)
         {
             _db = db;
             _userManager = userManager;
-            _inputValidator = new HubUserInputValidator(_db);
+            _inputValidator = inputValidator;
         }
 
         public async Task<Server> AddServer(string userId, string name, string description, bool isVisible, Bitmap image)
@@ -33,7 +30,7 @@ namespace RedPoint.Infrastructure.Facades
             {
                 case UserInputError.InputValid:
                     ServerBuilder builder = new ServerBuilder(_db);
-                    var server = await builder.BuildServer(name, description, isVisible, image, user.UserStub);
+                    var server = await builder.BuildServer(name, description, isVisible, user.UserStub, image);
                     return server;
 
                 default:

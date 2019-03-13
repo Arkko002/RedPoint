@@ -14,11 +14,11 @@ namespace RedPoint.Infrastructure.Facades
         private UserManager<ApplicationUser> _userManager;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public ChannelFacade(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        public ChannelFacade(ApplicationDbContext db, UserManager<ApplicationUser> userManager, HubUserInputValidator inputValidator)
         {
             _db = db;
             _userManager = userManager;
-            _inputValidator = new HubUserInputValidator(_db);
+            _inputValidator = inputValidator;
         }
 
         public async Task<(Channel channel, Server server)?> CreateChannel(string userId, int serverId, string name, string description)

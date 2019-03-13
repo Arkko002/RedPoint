@@ -5,6 +5,7 @@ using RedPoint.Data;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 using System.Threading.Tasks;
+using RedPoint.Infrastructure;
 using RedPoint.Infrastructure.Facades;
 
 namespace RedPoint.Hubs
@@ -17,9 +18,9 @@ namespace RedPoint.Hubs
     {
         private ServerFacade _server;
 
-        public ServerHub(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
+        public ServerHub(UserManager<ApplicationUser> userManager, ApplicationDbContext db, HubUserInputValidator inputValidator)
         {
-           _server = new ServerFacade(db, userManager);
+           _server = new ServerFacade(db, userManager, inputValidator);
         }
 
         /// <summary>

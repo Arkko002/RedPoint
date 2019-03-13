@@ -14,11 +14,11 @@ namespace RedPoint.Infrastructure.Facades
         private UserManager<ApplicationUser> _userManager;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public ChatFacade(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        public ChatFacade(ApplicationDbContext db, UserManager<ApplicationUser> userManager, HubUserInputValidator inputValidator)
         {
             _db = db;
             _userManager = userManager;
-            _inputValidator = new HubUserInputValidator(_db);
+            _inputValidator = inputValidator;
         }
 
         public async Task<Message> CreateMessage(string userId, string text, string channelId)
@@ -51,7 +51,7 @@ namespace RedPoint.Infrastructure.Facades
         public async Task<(ApplicationUser user, Channel channel, bool canView, bool canWrite)?> CheckChannelChange(string userId, string channelId)
         {
             ApplicationUser user = await _userManager.FindByIdAsync(userId);
-            switch (_inputValidator.CheckChannelChange(user, channelId, out bool canWrite, out bool canView, out var channel))
+            switch (_inputValidator.CheckChannelChangeAsync(user, channelId, out bool canWrite, out bool canView, out var channel))
             {
                 case UserInputError.InputValid:
                     return (user: user, channel: channel, canView: canView, canWrite: canWrite);

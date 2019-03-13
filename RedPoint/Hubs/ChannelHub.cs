@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using RedPoint.Models;
 using RedPoint.Models.Chat_Models;
 using RedPoint.Data;
+using RedPoint.Infrastructure;
 using RedPoint.Infrastructure.Facades;
 
 namespace RedPoint.Hubs
@@ -12,17 +13,21 @@ namespace RedPoint.Hubs
     #else
         [Authorize] 
     #endif
+
+    /// <summary>
+    /// Hub for managing the Channels.
+    /// </summary>
     public class ChannelHub : Hub<IChannelHub>
     {
         private ChannelFacade _channel;
 
-        public ChannelHub(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
+        public ChannelHub(UserManager<ApplicationUser> userManager, ApplicationDbContext db, HubUserInputValidator inputValidator)
         {
-            _channel = new ChannelFacade(db, userManager);
+            _channel = new ChannelFacade(db, userManager, inputValidator);
         }
 
         /// <summary>
-        /// Adds Channel to the database
+        /// Delegates the ChannelCreation. Sends the created Channel stub to people in Server on success.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="description"></param>
@@ -40,7 +45,7 @@ namespace RedPoint.Hubs
         }
 
         /// <summary>
-        /// Deletes Channel from database
+        /// Delegates the Channel removal. Sends the removed channel stub to people in Server on success.
         /// </summary>
         /// <param name="channelId"></param>
         /// <param name="serverId"></param>
