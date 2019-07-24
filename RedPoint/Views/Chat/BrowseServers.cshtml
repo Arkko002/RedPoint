@@ -2,14 +2,14 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-@*TODO: Add server list here*@
+@await Html.PartialAsync("_ListPopup")
 <input type="text" maxlength="50" id="serverbrowser_name" readonly /><br />
 <input type="text" maxlength="300" id="serverbrowser_description" readonly /><br />
-<input type="file" accept="image/*" id="serverbrowser_image" readonly/><br />
-<input type="button" id="serverbrowser_join"/>
+<input type="file" accept="image/*" id="serverbrowser_image" readonly /><br />
+<input type="button" id="serverbrowser_join" />
 
 @section scripts
-{
+    {
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/ServerBrowserHub.js"></script>
 }

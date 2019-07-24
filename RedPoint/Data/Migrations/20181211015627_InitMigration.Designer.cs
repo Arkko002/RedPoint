@@ -367,7 +367,7 @@ namespace RedPoint.Data.Migrations
 
                     b.Property<bool>("CanManageChannels");
 
-                    b.Property<bool>("CanManageServers");
+                    b.Property<bool>("CanManageServer");
 
                     b.Property<bool>("CanSendLinks");
 

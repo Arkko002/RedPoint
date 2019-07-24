@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Typescripts\ServerBrowserHub.ts" />
+    <None Remove="Typescripts\ServerBrowserClient.ts" />
+    <None Remove="Typescripts\UserSettingsClient.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,7 +52,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Typescripts\ServerBrowserHub.ts" />
+    <TypeScriptCompile Include="Typescripts\ServerBrowserClient.ts" />
+    <TypeScriptCompile Include="Typescripts\UserSettingsClient.ts" />
   </ItemGroup>
 
 </Project>
