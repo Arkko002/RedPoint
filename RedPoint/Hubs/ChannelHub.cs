@@ -9,11 +9,6 @@ using RedPoint.Infrastructure.Facades;
 
 namespace RedPoint.Hubs
 {
-    #if DEBUG
-    #else
-        [Authorize] 
-    #endif
-
     /// <summary>
     /// Hub for managing the Channels.
     /// </summary>

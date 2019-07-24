@@ -10,10 +10,6 @@ using RedPoint.Infrastructure.Facades;
 
 namespace RedPoint.Hubs
 {
-    #if DEBUG
-    #else
-        [Authorize] 
-    #endif
     public class ServerHub : Hub<IServerHub>
     {
         private ServerFacade _server;

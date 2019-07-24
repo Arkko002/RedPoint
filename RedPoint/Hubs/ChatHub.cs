@@ -12,10 +12,6 @@ using RedPoint.Infrastructure.Facades;
 
 namespace RedPoint.Hubs
 {
-    #if DEBUG
-    #else
-        [Authorize] 
-    #endif
     /// <summary>
     /// Central hub of the application, provides communication with the basic chat functionality.
     /// </summary>
