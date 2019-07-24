@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedPoint", "RedPoint\RedPoi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedPoint.Tests", "RedPoint.Tests\RedPoint.Tests.csproj", "{678CC8DC-2792-46BB-A318-C96E14A0990C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint WPF Client", "RedPoint WPF Client\RedPoint WPF Client.csproj", "{6C6B6310-1BC9-40B5-9716-171B7FBF58C0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{678CC8DC-2792-46BB-A318-C96E14A0990C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{678CC8DC-2792-46BB-A318-C96E14A0990C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{678CC8DC-2792-46BB-A318-C96E14A0990C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C6B6310-1BC9-40B5-9716-171B7FBF58C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C6B6310-1BC9-40B5-9716-171B7FBF58C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C6B6310-1BC9-40B5-9716-171B7FBF58C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C6B6310-1BC9-40B5-9716-171B7FBF58C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
