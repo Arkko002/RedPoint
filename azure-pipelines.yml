@@ -19,8 +19,9 @@ steps:
 
 - task: Npm@1
   inputs:
-    command: 'install'
-    workingDir: '$(solution)'
+    command: 'custom'
+    workingDir: '$(solution)/RedPoint'
+    customCommand: 'run-script build'
 
 - task: NuGetCommand@2
   inputs:
