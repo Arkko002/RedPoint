@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/Arkko/RedPoint/_apis/build/status/Arkko002.RedPoint?branchName=master)](https://dev.azure.com/Arkko/RedPoint/_build/latest?definitionId=1&branchName=master)
 # RedPoint
 
 ## Description
