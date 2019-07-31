@@ -90,22 +90,3 @@ document.getElementById("message").focus();
 //document.getElementById("serveradd_btn").onclick = () => {
     
 //};
-
-$("#server_add_btn").click(() =>
-{
-    var url = $("#server_modal").data("url");
-    $.get(url,
-        (data: string) => {
-            $("#server_modal").html(data);
-            $("#server_modal").modal("show");
-        });
-});
-
-$("#channel_add_button").click(() => {
-    var url = $("#channel_modal").data("url");
-    $.get(url,
-        (data: string) => {
-            $("#channel_modal").html(data);
-            $("#channel_modal").modal("show");
-        });
-});
