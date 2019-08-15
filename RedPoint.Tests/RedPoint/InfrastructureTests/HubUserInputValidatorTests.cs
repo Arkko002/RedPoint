@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using RedPoint.Areas.Chat.Models;
+using RedPoint.Areas.Chat.Services;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
-using RedPoint.Infrastructure;
 using RedPoint.Models;
-using RedPoint.Models.Chat_Models;
-using RedPoint.Models.Users_Permissions_Models;
 
 namespace RedPoint.Tests.RedPoint.InfrastructureTests
 {
@@ -39,14 +39,14 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
                 Email = "test@test.com",
             };
 
-            var userStub = new UserStub()
+            var userStub = new UserDTO()
             {
                 AppUserId = userId,
                 AppUserName = _user.UserName
             };
-            _user.UserStub = userStub;
+            _user.UserDto = userStub;
 
-            var userStubs = new List<UserStub>();
+            var userStubs = new List<UserDTO>();
             userStubs.Add(userStub);
 
             _server = new Server()

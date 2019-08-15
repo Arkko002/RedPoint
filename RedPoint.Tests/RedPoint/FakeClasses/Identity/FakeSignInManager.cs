@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Models;
 
 namespace RedPoint.Tests.RedPoint.Identity

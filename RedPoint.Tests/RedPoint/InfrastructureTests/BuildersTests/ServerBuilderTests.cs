@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using RedPoint.Areas.Chat.Models;
+using RedPoint.Areas.Chat.Services.Builders;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
-using RedPoint.Infrastructure.Builders;
 using RedPoint.Models;
-using RedPoint.Models.Chat_Models;
 
 namespace RedPoint.Tests.RedPoint.InfrastructureTests.BuildersTests
 {
@@ -36,19 +37,19 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests.BuildersTests
             //arrange
             ApplicationUser user = new ApplicationUser()
             {
-                UserStub = new UserStub()
+                UserDto = new UserDTO()
             };
 
             //act
-            var server = await _builder.BuildServer("Test", "Test", true, user.UserStub, null);
+            var server = await _builder.BuildServer("Test", "Test", true, user.UserDto, null);
             var dbServer = _db.Servers.Find(server.Id);
 
             //assert
             Assert.IsInstanceOf<Server>(server);
             Assert.IsInstanceOf<Server>(dbServer);
             Assert.IsTrue(server.Name == dbServer.Name && server.Description == dbServer.Description);
-            Assert.IsTrue(server.Users.Contains(user.UserStub));
-            Assert.IsTrue(server.Users.Contains(user.UserStub));
+            Assert.IsTrue(server.Users.Contains(user.UserDto));
+            Assert.IsTrue(server.Users.Contains(user.UserDto));
         }
     }
 }

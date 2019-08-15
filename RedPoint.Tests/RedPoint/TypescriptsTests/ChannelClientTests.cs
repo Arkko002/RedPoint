@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
+using RedPoint.Areas.Chat.Hubs;
+using RedPoint.Areas.Chat.Models;
+using RedPoint.Areas.Chat.Services;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
-using RedPoint.Hubs;
-using RedPoint.Infrastructure;
 using RedPoint.Models;
-using RedPoint.Models.Chat_Models;
 
 namespace RedPoint.Tests.RedPoint.TypescriptsTests
 {

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Models;
 
 namespace RedPoint.Areas.Identity.Pages.Account

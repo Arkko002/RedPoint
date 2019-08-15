@@ -4,9 +4,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using RedPoint.Areas.Chat.Models;
+using RedPoint.Areas.Chat.Services.Builders;
 using RedPoint.Data;
-using RedPoint.Infrastructure.Builders;
-using RedPoint.Models.Chat_Models;
 
 namespace RedPoint.Tests.RedPoint.InfrastructureTests.BuildersTests
 {

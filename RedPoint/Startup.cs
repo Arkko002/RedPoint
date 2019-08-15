@@ -9,8 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using RedPoint.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RedPoint.Hubs;
-using RedPoint.Infrastructure;
+using RedPoint.Areas.Chat.Hubs;
+using RedPoint.Areas.Chat.Services;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Models;
 
 namespace RedPoint
@@ -55,11 +56,13 @@ namespace RedPoint
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddSignalR();
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<HubUserInputValidator>();
@@ -84,20 +87,24 @@ namespace RedPoint
             app.UseCookiePolicy();
             app.UseAuthentication();
 
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "areas",
+                    template: "{area:exists}/{controller}/{action=Index}/{id?}"
+                );
+
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+            
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chathub");
                 routes.MapHub<ServerHub>("/serverhub");
                 routes.MapHub<ChannelHub>("/channelhub");
                 routes.MapHub<ServerBrowserHub>("/serverbrowserhub");
-            });
-
-           
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using RedPoint.Infrastructure;
+using RedPoint.Areas.Chat.Models;
+using RedPoint.Areas.Chat.Services;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Models;
-using RedPoint.Models.Chat_Models;
-using RedPoint.Models.Users_Permissions_Models;
 
 namespace RedPoint.Tests.RedPoint.InfrastructureTests
 {
@@ -25,14 +25,14 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
                 UserName = "Test"
 
             };
-            UserStub userStub = new UserStub()
+            UserDTO userDto = new UserDTO()
             {
                 AppUserId = "TestId",
                 AppUserName = "Test"
             };
 
-            var userStubs = new List<UserStub>();
-            userStubs.Add(userStub);
+            var userStubs = new List<UserDTO>();
+            userStubs.Add(userDto);
 
             _server = new Server()
             {
@@ -73,13 +73,13 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
             _server.Groups.Add(_userGroup);
 
 
-            _user.UserStub = userStub;
+            _user.UserDto = userDto;
             _user.Servers = new List<Server>();
             _user.Servers.Add(_server);
             _user.Groups = new List<Group>();
             _user.Groups.Add(_userGroup);
-            _userGroup.Users = new List<UserStub>();
-            _userGroup.Users.Add(userStub);
+            _userGroup.Users = new List<UserDTO>();
+            _userGroup.Users.Add(userDto);
         }
 
         [Test]

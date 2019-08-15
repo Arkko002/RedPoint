@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Models;
 
 namespace RedPoint.Areas.Identity.Pages.Account

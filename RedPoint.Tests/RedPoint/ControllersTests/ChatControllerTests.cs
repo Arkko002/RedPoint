@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using RedPoint.Controllers;
+using RedPoint.Areas.Chat.Controllers;
 
 namespace RedPoint.Tests.RedPoint.ControllersTests
 {

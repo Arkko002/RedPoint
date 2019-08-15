@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
+using RedPoint.Areas.Chat.Hubs;
+using RedPoint.Areas.Chat.Models;
+using RedPoint.Areas.Chat.Services;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
-using RedPoint.Hubs;
-using RedPoint.Infrastructure;
 using RedPoint.Models;
-using RedPoint.Models.Chat_Models;
 using RedPoint.Tests.RedPoint.Identity;
 
 namespace RedPoint.Tests.RedPoint.HubsTests
@@ -42,7 +43,7 @@ namespace RedPoint.Tests.RedPoint.HubsTests
                     Id = userId,
                     Email = "test@test.com",
                     
-                    UserStub = new UserStub()
+                    UserDto = new UserDTO()
                     {
                         AppUserId = userId,
                         AppUserName = "Test"

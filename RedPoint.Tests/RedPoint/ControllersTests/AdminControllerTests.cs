@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using RedPoint.Controllers;
+using RedPoint.Areas.Admin.Controllers;
 
 namespace RedPoint.Tests.RedPoint.ControllersTests
 {

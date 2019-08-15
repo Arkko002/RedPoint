@@ -11,25 +11,32 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Typescripts\ServerBrowserClient.ts" />
-    <None Remove="Typescripts\UserSettingsClient.ts" />
+    <None Remove="Areas\Chat\Typescripts\ServerBrowserClient.ts" />
+    <None Remove="Areas\Chat\Typescripts\UserSettingsClient.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.1.6" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" PrivateAssets="All" />
     <PackageReference Include="NLog.Config" Version="4.5.11" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
     <PackageReference Include="Webpack" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="Areas\Chat\Data\" />
     <Folder Include="Areas\Identity\Services\" />
-    <Folder Include="Views\Home\" />
+    <Folder Include="Areas\MainPage\Data\" />
+    <Folder Include="Areas\MainPage\Models\" />
+    <Folder Include="Areas\MainPage\Views\Home\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,8 +58,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Typescripts\ServerBrowserClient.ts" />
-    <TypeScriptCompile Include="Typescripts\UserSettingsClient.ts" />
+    <TypeScriptCompile Include="Areas\Chat\Typescripts\ServerBrowserClient.ts" />
+    <TypeScriptCompile Include="Areas\Chat\Typescripts\UserSettingsClient.ts" />
   </ItemGroup>
 
 </Project>

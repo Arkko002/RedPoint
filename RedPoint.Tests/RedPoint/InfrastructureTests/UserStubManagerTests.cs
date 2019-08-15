@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using RedPoint.Areas.Chat.Services;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
-using RedPoint.Infrastructure;
 using RedPoint.Models;
-using RedPoint.Models.Chat_Models;
 
 namespace RedPoint.Tests.RedPoint.InfrastructureTests
 {
@@ -34,11 +34,11 @@ namespace RedPoint.Tests.RedPoint.InfrastructureTests
 
             //act
             UserStubManager.CheckIfUserStubExists(user, _db);
-            var dbUserStub = _db.UserStubs.Find(user.UserStub.Id);
+            var dbUserStub = _db.UserStubs.Find(user.UserDto.Id);
 
             //assert
-            Assert.IsInstanceOf<UserStub>(user.UserStub);
-            Assert.IsInstanceOf<UserStub>(dbUserStub);
+            Assert.IsInstanceOf<UserDTO>(user.UserDto);
+            Assert.IsInstanceOf<UserDTO>(dbUserStub);
         }
 
         //[Test]

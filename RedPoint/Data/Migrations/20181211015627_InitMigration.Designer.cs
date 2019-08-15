@@ -334,7 +334,7 @@ namespace RedPoint.Data.Migrations
                     b.ToTable("ServerStub");
                 });
 
-            modelBuilder.Entity("RedPoint.Models.Chat_Models.UserStub", b =>
+            modelBuilder.Entity("RedPoint.Models.Chat_Models.UserDTO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -431,7 +431,7 @@ namespace RedPoint.Data.Migrations
 
             modelBuilder.Entity("RedPoint.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("RedPoint.Models.Chat_Models.UserStub", "UserStub")
+                    b.HasOne("RedPoint.Models.Chat_Models.UserDTO", "UserDTO")
                         .WithMany()
                         .HasForeignKey("UserStubId");
                 });
@@ -481,7 +481,7 @@ namespace RedPoint.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ChannelStubId");
 
-                    b.HasOne("RedPoint.Models.Chat_Models.UserStub", "UserStub")
+                    b.HasOne("RedPoint.Models.Chat_Models.UserDTO", "UserDTO")
                         .WithMany()
                         .HasForeignKey("UserStubId");
                 });
@@ -497,7 +497,7 @@ namespace RedPoint.Data.Migrations
                         .HasForeignKey("ServerStubId");
                 });
 
-            modelBuilder.Entity("RedPoint.Models.Chat_Models.UserStub", b =>
+            modelBuilder.Entity("RedPoint.Models.Chat_Models.UserDTO", b =>
                 {
                     b.HasOne("RedPoint.Models.Chat_Models.Group")
                         .WithMany("Users")
