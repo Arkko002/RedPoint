@@ -38,7 +38,7 @@ body {
 	padding: 5px;
 	font-family: bahnschrift;
 	font-size: 15pt;
-	scrollbar-3dlight-color: #C45555;
+    resize: none;
 }
 
 	.textinputbox:focus {
