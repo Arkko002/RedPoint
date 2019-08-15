@@ -6,6 +6,7 @@ namespace RedPoint.Areas.MainPage.Controllers
     {
         //GET - /
         [HttpGet]
+        [Area("mainpage")]
         public ActionResult Index()
         {
             return View();

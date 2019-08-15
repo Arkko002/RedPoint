@@ -5,7 +5,7 @@
     "removeComments": false,
     "sourceMap": true,
     "target": "es6",
-    "outDir": "../wwwroot/ts",
+    "outDir": "../../../wwwroot/ts",
     "module": "commonjs"
   },
   "exclude": [

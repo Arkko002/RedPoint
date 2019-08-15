@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace RedPoint.Areas.Chat.Controllers
 {
@@ -6,6 +8,7 @@ namespace RedPoint.Areas.Chat.Controllers
     #else
         [Authorize] 
     #endif
+    [Area("chat")]
     public class ChatController : Controller
     {       
         // GET: Chat
