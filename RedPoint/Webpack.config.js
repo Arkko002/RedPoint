@@ -1,12 +1,10 @@
 ﻿const path = require("path");
+const glob = require("glob");
+
 
 module.exports = {
-    entry: {
-        chat: "./Typescripts/ChatHub.ts",
-        server: "./Typescripts/ServerHub.ts",
-        channel: "./Typescripts/ChannelHub.ts"
-    }, 
-    module: {
+    entry: glob.sync("./Areas/Chat/Typescripts/*.ts"),
+        module: {
         rules: [
             {
                 test: /\.tsx?$/,
