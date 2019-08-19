@@ -20,7 +20,9 @@
     "commonjs": "0.0.1",
     "jquery": "^3.3.1",
     "minimatch": "^3.0.4",
-    "modernizr": "^3.6.0"
+    "modernizr": "^3.6.0",
+    "vue-loader": "^15.7.1",
+    "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
     "build": "webpack --mode=development --config webpack.config.js --watch"

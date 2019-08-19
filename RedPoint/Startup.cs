@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using RedPoint.Data;
 using Microsoft.Extensions.Configuration;
@@ -105,6 +106,15 @@ namespace RedPoint
                 routes.MapHub<ServerHub>("/serverhub");
                 routes.MapHub<ChannelHub>("/channelhub");
                 routes.MapHub<ServerBrowserHub>("/serverbrowserhub");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "bluepoint-client";
+                if (env.IsDevelopment()) 
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }

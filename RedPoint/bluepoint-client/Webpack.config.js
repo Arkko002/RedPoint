@@ -1,7 +1,6 @@
 ﻿const path = require("path");
 const glob = require("glob");
 
-
 module.exports = {
     entry: glob.sync("./Areas/Chat/Typescripts/*.ts"),
         module: {
