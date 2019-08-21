@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using RedPoint.Data;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RedPoint.Areas.Chat.Hubs;
 using RedPoint.Areas.Chat.Services;
 using RedPoint.Areas.Identity.Models;
-using RedPoint.Models;
+using RedPoint.Middleware;
 
 namespace RedPoint
 {
@@ -110,10 +108,10 @@ namespace RedPoint
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "bluepoint-client";
+                spa.Options.SourcePath = "BluepointClient";
                 if (env.IsDevelopment()) 
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseVueDevelopmentServer(npmScript: "serve");
                 }
             });
         }

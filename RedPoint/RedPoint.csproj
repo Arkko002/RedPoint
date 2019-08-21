@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bluepoint-client\**" />
+    <Content Remove="bluepoint-client\**" />
+    <EmbeddedResource Remove="bluepoint-client\**" />
+    <None Remove="bluepoint-client\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\css\site.css" />
   </ItemGroup>
 
@@ -38,7 +45,6 @@
     <Folder Include="Areas\MainPage\Data\" />
     <Folder Include="Areas\MainPage\Models\" />
     <Folder Include="Areas\MainPage\Views\Home\" />
-    <Folder Include="bluepoint-client\src\main\" />
   </ItemGroup>
 
   <ItemGroup>

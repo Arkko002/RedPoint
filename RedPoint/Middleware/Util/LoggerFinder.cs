@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace RedPoint.Middleware.Util
+{ 
     internal static class LoggerFinder
     {
         public static ILogger GetOrCreateLogger(

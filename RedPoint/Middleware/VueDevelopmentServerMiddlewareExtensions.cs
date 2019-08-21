@@ -1,15 +1,17 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.AspNetCore.Builder;
 using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.SpaServices;
+using RedPoint.Middleware;
 
 namespace RedPoint.Middleware
 {
     /// <summary>
     /// Extension methods for enabling React development server middleware support.
     /// </summary>
-    public static class ReactDevelopmentServerMiddlewareExtensions
+    public static class VueDevelopmentServerMiddlewareExtensions
     {
         /// <summary>
         /// Handles requests by passing them through to an instance of the create-react-app server.
@@ -21,7 +23,7 @@ namespace RedPoint.Middleware
         /// </summary>
         /// <param name="spaBuilder">The <see cref="ISpaBuilder"/>.</param>
         /// <param name="npmScript">The name of the script in your package.json file that launches the create-react-app server.</param>
-        public static void UseReactDevelopmentServer(
+        public static void UseVueDevelopmentServer(
             this ISpaBuilder spaBuilder,
             string npmScript)
         {
@@ -34,10 +36,10 @@ namespace RedPoint.Middleware
 
             if (string.IsNullOrEmpty(spaOptions.SourcePath))
             {
-                throw new InvalidOperationException($"To use {nameof(UseReactDevelopmentServer)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
+                throw new InvalidOperationException($"To use {nameof(UseVueDevelopmentServer)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
             }
 
-            ReactDevelopmentServerMiddleware.Attach(spaBuilder, npmScript);
+            VueDevelopmentServerMiddleware.Attach(spaBuilder, npmScript);
         }
     }
 }
