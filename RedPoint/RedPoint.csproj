@@ -3,23 +3,48 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>aspnet-RedPoint-DD010B23-2A1E-4127-99C4-0E3C0A95ED43</UserSecretsId>
-    <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.5</TypeScriptToolsVersion>
+    <SpaRoot>BluepointClient\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Chat\Typescripts\**" />
     <Compile Remove="bluepoint-client\**" />
+    <Content Remove="Areas\Chat\Typescripts\**" />
     <Content Remove="bluepoint-client\**" />
+    <EmbeddedResource Remove="Areas\Chat\Typescripts\**" />
     <EmbeddedResource Remove="bluepoint-client\**" />
+    <None Remove="Areas\Chat\Typescripts\**" />
     <None Remove="bluepoint-client\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\css\site.css" />
+    <Content Remove="$(SpaRoot)**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Areas\Chat\Typescripts\ServerBrowserClient.ts" />
-    <None Remove="Areas\Chat\Typescripts\UserSettingsClient.ts" />
+    <Content Include="BluepointClient\package-lock.json" />
+    <Content Include="BluepointClient\package.json" />
+  </ItemGroup>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)dist\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\site.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,11 +88,6 @@
     <None Include="wwwroot\css\bootstrap.min.css" />
     <None Include="wwwroot\css\bootstrap.min.css.map" />
     <None Include="wwwroot\css\site.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="Areas\Chat\Typescripts\ServerBrowserClient.ts" />
-    <TypeScriptCompile Include="Areas\Chat\Typescripts\UserSettingsClient.ts" />
   </ItemGroup>
 
 </Project>

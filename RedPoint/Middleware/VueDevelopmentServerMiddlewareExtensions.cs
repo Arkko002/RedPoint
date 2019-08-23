@@ -21,25 +21,19 @@ namespace RedPoint.Middleware
         /// This feature should only be used in development. For production deployments, be
         /// sure not to enable the create-react-app server.
         /// </summary>
-        /// <param name="spaBuilder">The <see cref="ISpaBuilder"/>.</param>
+        /// <param name="appBuilder">The <see cref="IApplicationBuilder"/>.</param>
         /// <param name="npmScript">The name of the script in your package.json file that launches the create-react-app server.</param>
         public static void UseVueDevelopmentServer(
-            this ISpaBuilder spaBuilder,
-            string npmScript)
+            this IApplicationBuilder appBuilder,
+            string sourcePath = "BluepointClient",
+            string npmScript = "serve")
         {
-            if (spaBuilder == null)
+            if (appBuilder == null)
             {
-                throw new ArgumentNullException(nameof(spaBuilder));
+                throw new ArgumentNullException(nameof(appBuilder));
             }
 
-            var spaOptions = spaBuilder.Options;
-
-            if (string.IsNullOrEmpty(spaOptions.SourcePath))
-            {
-                throw new InvalidOperationException($"To use {nameof(UseVueDevelopmentServer)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
-            }
-
-            VueDevelopmentServerMiddleware.Attach(spaBuilder, npmScript);
+            VueDevelopmentServerMiddleware.Attach(appBuilder, sourcePath, npmScript);
         }
     }
 }

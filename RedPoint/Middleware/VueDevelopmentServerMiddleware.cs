@@ -4,9 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.NodeServices.Npm;
 using Microsoft.AspNetCore.NodeServices.Util;
 using Microsoft.AspNetCore.SpaServices;
@@ -22,10 +24,10 @@ namespace RedPoint.Middleware
         private static TimeSpan RegexMatchTimeout = TimeSpan.FromSeconds(5); // This is a development-time only feature, so a very long timeout is fine
 
         public static void Attach(
-            ISpaBuilder spaBuilder,
+            IApplicationBuilder appBuilder,
+            string sourcePath,
             string npmScriptName)
         {
-            var sourcePath = spaBuilder.Options.SourcePath;
             if (string.IsNullOrEmpty(sourcePath))
             {
                 throw new ArgumentException("Cannot be null or empty", nameof(sourcePath));
@@ -36,10 +38,8 @@ namespace RedPoint.Middleware
                 throw new ArgumentException("Cannot be null or empty", nameof(npmScriptName));
             }
 
-            // Start create-react-app and attach to middleware pipeline
-            var appBuilder = spaBuilder.ApplicationBuilder;
             var logger = LoggerFinder.GetOrCreateLogger(appBuilder, LogCategoryName);
-            var portTask = StartVueDevServerAsync(sourcePath, npmScriptName, logger);
+            var portTask = StartVueDevServerAsync(appBuilder, sourcePath, npmScriptName, logger);
 
             // Everything we proxy is hardcoded to target http://localhost because:
             // - the requests are always from the local machine (we're not accepting remote
@@ -49,26 +49,48 @@ namespace RedPoint.Middleware
             var targetUriTask = portTask.ContinueWith(
                 task => new UriBuilder("http", "localhost", task.Result).Uri);
 
-            SpaProxyingExtensions.UseProxyToSpaDevelopmentServer(spaBuilder, () =>
+            appBuilder.Use(async (context, next) =>
             {
-                // On each request, we create a separate startup task with its own timeout. That way, even if
-                // the first request times out, subsequent requests could still work.
-                var timeout = spaBuilder.Options.StartupTimeout;
-                return targetUriTask.WithTimeout(timeout,
-                    $"The create-react-app server did not start listening for requests " +
+                var timeout = TimeSpan.FromSeconds(60);
+                await targetUriTask.WithTimeout(timeout,
+                    $"The vue development server did not start listening for requests " +
                     $"within the timeout period of {timeout.Seconds} seconds. " +
                     $"Check the log output for error information.");
+
+                await next();
+            });
+
+            appBuilder.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/")
+                {
+                    var devServerUri = await targetUriTask;
+                    context.Response.Redirect(devServerUri.ToString());
+                }
+                else
+                {
+                    await next();
+                }
             });
         }
 
         private static async Task<int> StartVueDevServerAsync(
-            string sourcePath, string npmScriptName, ILogger logger)
+            IApplicationBuilder appBuilder,
+            string sourcePath,
+            string npmScriptName,
+            ILogger logger)
         {
             var portNumber = TcpPortFinder.FindAvailablePort();
             logger.LogInformation($"Starting create-react-app server on port {portNumber}...");
 
+            var addresses = appBuilder.ServerFeatures.Get<IServerAddressesFeature>().Addresses;
+            var envVars = new Dictionary<string, string>
+            {
+                { "ASPNET_URL", addresses.Count > 0 ? addresses.First() : "" },
+            };
+
             var npmScriptRunner = new NpmScriptRunner(
-                sourcePath, npmScriptName, $"--port {portNumber} --host localhost", null);
+                sourcePath, npmScriptName, $"--port {portNumber} --host localhost", envVars);
             npmScriptRunner.AttachToLogger(logger);
 
             using (var stdErrReader = new EventedStreamStringReader(npmScriptRunner.StdErr))

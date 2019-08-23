@@ -65,6 +65,8 @@ namespace RedPoint
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<HubUserInputValidator>();
+
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "BluepointClient/dist"; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,6 +85,7 @@ namespace RedPoint
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
 
@@ -109,9 +112,9 @@ namespace RedPoint
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "BluepointClient";
-                if (env.IsDevelopment()) 
+                if (env.IsDevelopment())
                 {
-                    spa.UseVueDevelopmentServer(npmScript: "serve");
+                    app.UseVueDevelopmentServer();
                 }
             });
         }
