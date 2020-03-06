@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using RedPoint.Areas.Chat.Hubs;
 using RedPoint.Areas.Chat.Services;
 using RedPoint.Areas.Identity.Models;
-using RedPoint.Middleware;
 
 namespace RedPoint
 {
@@ -65,8 +64,6 @@ namespace RedPoint
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<HubUserInputValidator>();
-
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "BluepointClient/dist"; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,15 +104,6 @@ namespace RedPoint
                 routes.MapHub<ServerHub>("/serverhub");
                 routes.MapHub<ChannelHub>("/channelhub");
                 routes.MapHub<ServerBrowserHub>("/serverbrowserhub");
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "BluepointClient";
-                if (env.IsDevelopment())
-                {
-                    app.UseVueDevelopmentServer();
-                }
             });
         }
     }
