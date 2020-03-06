@@ -13,7 +13,7 @@
   "dependencies": {
     "@aspnet/signalr": "^1.1.0",
     "commonjs": "0.0.1",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "minimatch": "^3.0.4",
     "modernizr": "^3.6.0",
     "vue-loader": "^15.7.1",
