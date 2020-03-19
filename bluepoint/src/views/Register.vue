@@ -1,11 +1,15 @@
 <template>
-    <RegisterForm/>
+  <div class="register-container">
+    <TheNavbar />
+    <RegisterForm />
+  </div>
 </template>
 
 <script>
-import RegisterForm from '@/components/RegisterForm.vue'
+import TheNavbar from "@/components/TheNavbar.vue";
+import RegisterForm from "@/components/RegisterForm.vue";
 
 export default {
-    name: "Register"
-}
+  name: "Register"
+};
 </script>

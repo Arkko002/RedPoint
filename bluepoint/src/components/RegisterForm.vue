@@ -12,7 +12,11 @@
 
     <p>
       <label for="passwordConfirmationInput">Password Confirmation</label>
-      <input id="passwordConfirmationInput" type="text" v-model="passwordConfirmation" />
+      <input
+        id="passwordConfirmationInput"
+        type="text"
+        v-model="passwordConfirmation"
+      />
     </p>
     <p>
       <label for="emailInput">E-mail</label>
@@ -20,7 +24,11 @@
     </p>
 
     <p>
-      <input v-bind:disabled="!requiredFieldsFilled" type="submit" value="Submit" />
+      <input
+        v-bind:disabled="!requiredFieldsFilled"
+        type="submit"
+        value="Submit"
+      />
     </p>
   </form>
 </template>

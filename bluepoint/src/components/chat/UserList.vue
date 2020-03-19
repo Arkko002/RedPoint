@@ -1,14 +1,17 @@
 <template>
-    <div class="user-container">
-        <li v-for="user in userArray" :key="user.id">
-            <!-- TODO -->       
-        </li>
-    </div>
+  <div class="user-container">
+    <li v-for="user in userArray" :key="user.id">
+      <label>
+        <input type="button" v-bind:value="user.name" />
+        <img v-bind:src="user.imagepath" />
+      </label>
+    </li>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'UserList',
-    props: ['userArray']
-}
+  name: "UserList",
+  props: ["userArray"]
+};
 </script>

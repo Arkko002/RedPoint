@@ -11,21 +11,25 @@
     </p>
 
     <p>
-      <input v-bind:disabled="!requiredFieldsFilled" type="submit" value="Submit" />
+      <input
+        v-bind:disabled="!requiredFieldsFilled"
+        type="submit"
+        value="Submit"
+      />
     </p>
   </form>
 </template>
 
 <script>
 export default {
-    name: 'SignInForm',
+  name: "SignInForm",
 
-    data() {
-        return {
-        userName: { type: String },
-        password: { type: String },
-        };
-    },
+  data() {
+    return {
+      userName: { type: String },
+      password: { type: String }
+    };
+  },
 
   computed: {
     requiredFieldsFilled: function(e) {
