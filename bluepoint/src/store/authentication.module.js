@@ -1,4 +1,4 @@
-import userService from "./user.service";
+import userService from "../common/user.service";
 import router from "../router/index";
 
 //Set user status as logged in if JWT token found in local storage

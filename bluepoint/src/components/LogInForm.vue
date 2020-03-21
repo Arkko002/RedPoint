@@ -1,8 +1,8 @@
 <template>
-  <form id="signInForm">
+  <form id="logInForm">
     <p>
       <label for="userNameInput">User Name</label>
-      <input id="userNameInput" type="text" v-model="userName" />
+      <input id="userNameInput" type="text" v-model="username" />
     </p>
 
     <p>
@@ -12,7 +12,7 @@
 
     <p>
       <input
-        v-bind:disabled="!requiredFieldsFilled"
+        v-bind:disabled="!requiredFieldsFilled || loggingIn"
         type="submit"
         value="Submit"
       />
@@ -22,27 +22,30 @@
 
 <script>
 export default {
-  name: "SignInForm",
+  name: "LogInForm",
 
   data() {
     return {
-      userName: { type: String },
+      username: { type: String },
       password: { type: String }
     };
   },
 
   computed: {
-    requiredFieldsFilled: function(e) {
+    requiredFieldsFilled() {
       if (!this.userName || !this.password) return false;
 
       return true;
+    },
+
+    loggingIn() {
+      return this.$store.state.authentication.status.loggingIn;
     }
   },
 
   methods: {
-    submitForm: function(e) {
-      //TODO Submit form to API endpoint, validate in back end
-      e.preventDefault();
+    submitForm(e) {
+      this.$store.dispatch("authentication/login", { userName, password });
     }
   }
 };

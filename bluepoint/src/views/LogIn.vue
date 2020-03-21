@@ -1,19 +1,19 @@
 <template>
   <div class="sign-in-container">
     <TheNavbar />
-    <SignInForm />
+    <LogInFrom />
   </div>
 </template>
 
 <script>
 import TheNavbar from "@/components/TheNavbar.vue";
-import SignInForm from "@/components/SignInForm.vue";
+import LogInForm from "@/components/LogInForm.vue";
 
 export default {
-  name: "SignIn",
+  name: "LogIn",
   components: {
     TheNavbar,
-    SignInForm
+    LogInForm
   }
 };
 </script>
