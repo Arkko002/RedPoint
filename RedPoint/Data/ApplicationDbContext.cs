@@ -24,10 +24,10 @@ namespace RedPoint.Data
 
         public DbSet<Message> Messages { get; set; }
         public DbSet<Channel> Channels { get; set; }
-        public DbSet<UserDTO> UserStubs { get; set; }
+        public DbSet<UserChatDto> UserStubs { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Server> Servers { get; set; }
         public DbSet<ServerStub> ServerStubs { get; set; }
     }
-    
+
 }

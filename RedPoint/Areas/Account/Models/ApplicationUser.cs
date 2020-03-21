@@ -14,7 +14,7 @@ namespace RedPoint.Areas.Identity.Models
         public List<Message> Messages { get; set; }
         public List<Group> Groups { get; set; }
         public List<Server> Servers { get; set; }
-        public UserDTO UserDto { get; set; }
+        public UserChatDto UserDto { get; set; }
         public UserSettings UserSettings { get; set; }
 
         //public ApplicationUser()

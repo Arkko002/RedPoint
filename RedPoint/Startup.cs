@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Text;
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using RedPoint.Areas.Chat.Hubs;
 using RedPoint.Areas.Chat.Services;
 using RedPoint.Areas.Identity.Models;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace RedPoint
 {
@@ -34,7 +38,7 @@ namespace RedPoint
             });
 
             services.Configure<IdentityOptions>(options =>
-            {                
+            {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
@@ -54,13 +58,32 @@ namespace RedPoint
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            
+
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = Configuration["JwtIssuer"],
+                    ValidAudience = Configuration["JwtIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])), // TODO!!! set proper key
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
             services.AddSignalR();
-            
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<HubUserInputValidator>();
@@ -97,7 +120,7 @@ namespace RedPoint
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chathub");
