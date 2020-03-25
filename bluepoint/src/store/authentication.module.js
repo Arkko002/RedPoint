@@ -26,9 +26,25 @@ export const authentication = {
         }
       );
     },
+
     logout({ commit }) {
       userService.logout();
       commit("logout");
+    },
+
+    register({ dispatch, commit }, { username, password, email }) {
+      commit("registerREquest");
+
+      userService.register(username, password).then(
+        success => {
+          commit("registerSuccess");
+          router.push("/login");
+        },
+        error => {
+          commit("registerFailure");
+          dispatch("alert/error", error, { root: true });
+        }
+      );
     }
   },
 
@@ -48,6 +64,15 @@ export const authentication = {
     logout(state) {
       state.status = {};
       state.user = null;
+    },
+    registerRequest(state) {
+      state.status = { registering: true };
+    },
+    registerSuccess(state) {
+      state.status = { registered: true };
+    },
+    registerFailure(state) {
+      state.status = {};
     }
   }
 };

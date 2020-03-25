@@ -1,6 +1,6 @@
 <template>
   <div class="chat-container">
-    <TheToolbar v-bind:user="user" />
+    <TheToolbar v-bind:user="currentUser" />
     <ServerList v-bind:serverArray="serverArray" />
     <UserList v-bind:userArray="userArray" />
     <ChatBox
@@ -27,7 +27,7 @@ export default {
 
   computed: {
     currentUser() {
-      // TODO
+      localStorage.getItem("user");
     },
 
     serverArray() {

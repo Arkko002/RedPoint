@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export const store = new Vuex.store({
   modules: {
-    authentication
+    authentication,
+    alert
   }
 });

@@ -2,7 +2,7 @@
   <form id="registerForm" @submit="submitForm">
     <p>
       <label for="userNameInput">User Name</label>
-      <input id="userNameInput" type="text" v-model="userName" />
+      <input id="userNameInput" type="text" v-model="username" />
     </p>
 
     <p>
@@ -25,7 +25,7 @@
 
     <p>
       <input
-        v-bind:disabled="!requiredFieldsFilled"
+        v-bind:disabled="!requiredFieldsFilled || registering"
         type="submit"
         value="Submit"
       />
@@ -38,7 +38,7 @@ export default {
   name: "RegisterForm",
   data() {
     return {
-      userName: { type: String },
+      username: { type: String },
       password: { type: String },
       passwordConfirmation: { type: String },
       email: { type: String }
@@ -46,18 +46,25 @@ export default {
   },
 
   computed: {
-    requiredFieldsFilled: function(e) {
+    requiredFieldsFilled() {
       if (!this.userName || !this.password) return false;
       if (this.password != this.passwordConfirmation) return false;
 
       return true;
+    },
+
+    registering() {
+      return this.$store.state.authentication.status.registering;
     }
   },
 
   methods: {
     submitForm: function(e) {
-      //TODO Submit form to API endpoint, validate in back end
-      e.preventDefault();
+      this.$storestore.dispatch("authentication/register", {
+        username,
+        password,
+        email
+      });
     }
   }
 };
