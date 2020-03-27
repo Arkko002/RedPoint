@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Transactions;
+using System.Text;
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,8 @@ using RedPoint.Areas.Identity.Models;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using RedPoint.Data.UnitOfWork;
+using RedPoint.Areas.Utilities.DtoFactories;
 
 namespace RedPoint
 {
@@ -86,7 +89,15 @@ namespace RedPoint
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddTransient<HubUserInputValidator>();
+            services.AddScoped<EntityUnitOfWork>(x => new EntityUnitOfWork(x.GetRequiredService<DbContext>()));
+            services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<,>));
+
+            //TODO find a way to register through interface, remove redundant calls if possible
+            services.AddScoped<ChannelDtoFactory>();
+            services.AddScoped<UserDtoFactory>();
+            services.AddScoped<ChannelDtoFactory>();
+
+            services.AddScoped<ChatService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
