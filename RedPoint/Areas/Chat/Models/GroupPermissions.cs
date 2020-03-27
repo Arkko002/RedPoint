@@ -1,6 +1,8 @@
-﻿namespace RedPoint.Areas.Chat.Models
+﻿using RedPoint.Data;
+
+namespace RedPoint.Areas.Chat.Models
 {
-    public class GroupPermissions
+    public class GroupPermissions : IEntity
     {
         public int Id { get; set; }
 

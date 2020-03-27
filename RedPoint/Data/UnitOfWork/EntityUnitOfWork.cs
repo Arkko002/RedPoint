@@ -9,13 +9,11 @@ namespace RedPoint.Data.UnitOfWork
     {
         private DbContext _context;
 
-        private Func<DbContext> _contextFunc;
-
         public bool HasEnded { get; private set; }
 
-        public EntityUnitOfWork(Func<DbContext> contextFunc)
+        public EntityUnitOfWork(DbContext context)
         {
-            _contextFunc = contextFunc;
+            _context = context;
         }
 
         public TDbContext GetContext<TDbContext>() where TDbContext : DbContext
@@ -23,11 +21,6 @@ namespace RedPoint.Data.UnitOfWork
             if (HasEnded)
             {
                 throw new ObjectDisposedException("Unit of Work has been disposed.");
-            }
-
-            if (_context == null)
-            {
-                _context = _contextFunc();
             }
 
             return (TDbContext)_context;

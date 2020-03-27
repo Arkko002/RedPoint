@@ -1,10 +1,12 @@
-﻿namespace RedPoint.Areas.Chat.Models.User_Settings
+﻿using RedPoint.Data;
+
+namespace RedPoint.Areas.Chat.Models.User_Settings
 {
 
     /// <summary>
     /// Container class for specialised settings classes
     /// </summary>
-    public class UserSettings
+    public class UserSettings : IEntity
     {
         public int Id { get; set; }
 
