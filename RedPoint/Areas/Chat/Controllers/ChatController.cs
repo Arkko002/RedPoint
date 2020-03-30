@@ -1,16 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RedPoint.Areas.Chat.Models;
-using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Areas.Chat.Services;
-using RedPoint.Areas.Identity.Models;
-using RedPoint.Areas.Utilities.DtoFactories;
-using RedPoint.Data;
-using RedPoint.Data.UnitOfWork;
+using RedPoint.Exceptions;
+using RedPoint.Utilities.DtoFactories;
 
 namespace RedPoint.Areas.Chat.Controllers
 {
@@ -37,7 +29,16 @@ namespace RedPoint.Areas.Chat.Controllers
         public IActionResult GetServerChannels([FromBody] int serverId,
             [FromServices] ChannelDtoFactory dtoFactory)
         {
-            var dtoList = _chatService.GetServerChannels(serverId, dtoFactory);
+            try
+            {
+                _chatService.ValidateServerRequest(serverId, User);
+            }
+            catch (RequestInvalidException)
+            {
+                return Unauthorized();
+            }
+
+            var dtoList = _chatService.GetServerChannels(dtoFactory);
 
             return Ok(dtoList);
         }
@@ -46,16 +47,37 @@ namespace RedPoint.Areas.Chat.Controllers
         public IActionResult GetServerUserList([FromBody] int serverId,
             [FromServices] UserDtoFactory dtoFactory)
         {
-            var dtoList = _chatService.GetServerUserList(serverId, dtoFactory);
+            try
+            {
+                _chatService.ValidateServerRequest(serverId, User);
+            }
+            catch (RequestInvalidException)
+            {
+                return Unauthorized();
+            }
+
+            var dtoList = _chatService.GetServerUserList(dtoFactory);
 
             return Ok(dtoList);
         }
 
         [HttpGet]
-        public IActionResult GetChannelMessages([FromBody] int channelId)
+        public IActionResult GetChannelMessages([FromBody] int channelId,
+            [FromBody] int serverId,
+            [FromServices] MessageDtoFactory dtoFactory)
         {
-            //TODO
+            try
+            {
+                _chatService.ValidateChannelRequest(channelId, serverId, User);
+            }
+            catch (RequestInvalidException)
+            {
+                return Unauthorized();
+            }
 
+            var dtoList = _chatService.GetChannelMessages(dtoFactory);
+
+            return Ok(dtoList);
         }
     }
 }
