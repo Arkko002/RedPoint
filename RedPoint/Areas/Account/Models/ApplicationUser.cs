@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.User_Settings;
+using RedPoint.Data;
 
 namespace RedPoint.Areas.Identity.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IEntity
     {
         public string CurrentChannelId { get; set; }
         public int CurrentServerId { get; set; }

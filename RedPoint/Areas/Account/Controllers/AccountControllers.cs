@@ -9,81 +9,51 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using RedPoint.Areas.Account.Services;
+using RedPoint.Exceptions;
 
 namespace RedPoint.Areas.Identity.Controllers
 {
     [Route("[controller]/[action]")]
     public class AccountController : ControllerBase
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IConfiguration _configuration;
 
-        public AccountController(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            IConfiguration configuration
-            )
+        private readonly AccountService _accountService;
+
+        public AccountController(AccountService accountService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
+
+            _accountService = accountService;
         }
 
         [HttpPost]
         public async Task<object> Login([FromBody] UserLoginDto model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
-
-            if (result.Succeeded)
+            try
             {
-                var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
-                return await GenerateJwtToken(model.Username, appUser);
+                _accountService.ValidateLoginRequest(); //TODO
+                return await _accountService.Login(model);
             }
-
-            throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+            catch (Exception e)
+            {
+                //TODO Log errors
+                return null;
+            }
         }
 
         [HttpPost]
         public async Task<object> Register([FromBody] UserRegisterDto model)
         {
-            var user = new IdentityUser
+            try
             {
-                UserName = model.Username,
-            };
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                return await GenerateJwtToken(model.Username, user);
+                _accountService.ValidateRegisterRequest(model);
+                return await _accountService.Register(model);
             }
-
-            throw new ApplicationException("UNKNOWN_ERROR");
-        }
-
-        private async Task<object> GenerateJwtToken(string username, IdentityUser user)
-        {
-            var claims = new List<Claim>
+            catch (Exception e)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
-
-            var token = new JwtSecurityToken(
-                _configuration["JwtIssuer"],
-                _configuration["JwtIssuer"],
-                claims,
-                expires: expires,
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                //TODO Log erros
+                return null;
+            }
         }
     }
 }

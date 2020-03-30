@@ -17,7 +17,11 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using RedPoint.Data.UnitOfWork;
-using RedPoint.Areas.Utilities.DtoFactories;
+using RedPoint.Utilities.DtoFactories;
+using RedPoint.Areas.Account.Services;
+using RedPoint.Areas.Account.Services.Security;
+using RedPoint.Areas.Chat.Services.Security;
+using RedPoint.Services.DtoManager;
 
 namespace RedPoint
 {
@@ -97,7 +101,12 @@ namespace RedPoint
             services.AddScoped<UserDtoFactory>();
             services.AddScoped<ChannelDtoFactory>();
 
+            services.AddScoped(typeof(IAccountRequestValidator), typeof(AccountRequestValidator));
+            services.AddScoped(typeof(IChatRequestValidator), typeof(ChatRequestValidator));
+            services.AddScoped(typeof(IDtoManager), typeof(DtoManager));
+
             services.AddScoped<ChatService>();
+            services.AddScoped<AccountService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
