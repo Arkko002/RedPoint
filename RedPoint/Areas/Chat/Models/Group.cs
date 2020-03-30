@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RedPoint.Areas.Chat.Models.Dto;
+using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
 
 namespace RedPoint.Areas.Chat.Models
@@ -8,10 +9,10 @@ namespace RedPoint.Areas.Chat.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ServerDto Server { get; set; }
+        public Server Server { get; set; }
 
         //Used to store user's IDs
-        public List<UserChatDto> Users { get; set; }
+        public List<ApplicationUser> Users { get; set; }
         public GroupPermissions GroupPermissions { get; set; }
         public bool CanBeDeleted { get; }
 
@@ -22,7 +23,7 @@ namespace RedPoint.Areas.Chat.Models
                 CanBeDeleted = false;
             }
 
-            Users = new List<UserChatDto>();
+            Users = new List<ApplicationUser>();
         }
     }
 }
