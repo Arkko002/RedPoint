@@ -1,7 +1,6 @@
-using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.Dto;
 
-namespace RedPoint.Areas.Utilities.DtoFactories
+namespace RedPoint.Utilities.DtoFactories
 {
     public interface IChatDtoFactory<T>
     {

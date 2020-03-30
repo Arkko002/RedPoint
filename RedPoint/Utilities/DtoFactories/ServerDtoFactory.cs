@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.Dto;
 
-namespace RedPoint.Areas.Utilities.DtoFactories
+namespace RedPoint.Utilities.DtoFactories
 {
     public class ServerDtoFactory : IChatDtoFactory<Server>
     {
@@ -10,6 +9,7 @@ namespace RedPoint.Areas.Utilities.DtoFactories
         {
             var serverDto = new ServerDto()
             {
+                Id = sourceObject.Id,
                 Name = sourceObject.Name,
                 Description = sourceObject.Description,
                 ImagePath = sourceObject.ImagePath,

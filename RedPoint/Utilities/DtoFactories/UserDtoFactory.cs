@@ -1,8 +1,7 @@
-using System.Security.Cryptography.X509Certificates;
 using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Areas.Identity.Models;
 
-namespace RedPoint.Areas.Utilities.DtoFactories
+namespace RedPoint.Utilities.DtoFactories
 {
     public class UserDtoFactory : IChatDtoFactory<ApplicationUser>
     {
