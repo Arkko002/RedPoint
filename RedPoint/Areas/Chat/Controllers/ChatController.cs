@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using RedPoint.Areas.Chat.Hubs;
+using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Areas.Chat.Services;
 using RedPoint.Exceptions;
 using RedPoint.Utilities.DtoFactories;
@@ -10,11 +14,13 @@ namespace RedPoint.Areas.Chat.Controllers
     [Area("chat")]
     public class ChatController : ControllerBase
     {
-        private ChatService _chatService;
+        private readonly ChatService _chatService;
+        private readonly IHubContext<ChatHub, IChatHub> _chatHub;
 
-        public ChatController(ChatService chatService)
+        public ChatController(ChatService chatService, IHubContext<ChatHub, IChatHub> chatHub)
         {
             _chatService = chatService;
+            _chatHub = chatHub;
         }
 
         [HttpGet]
@@ -25,37 +31,38 @@ namespace RedPoint.Areas.Chat.Controllers
             return Ok(dtoList);
         }
 
+        [HttpPost]
+        public IActionResult AddServer([FromBody] ServerDto server)
+        {
+            _chatService.TryAddingServer(server);
+
+            return Ok();
+        }
+
         [HttpGet]
         public IActionResult GetServerChannels([FromBody] int serverId,
             [FromServices] ChannelDtoFactory dtoFactory)
         {
-            try
-            {
-                _chatService.ValidateServerRequest(serverId, User);
-            }
-            catch (RequestInvalidException)
-            {
-                return Unauthorized();
-            }
-
+            _chatService.ValidateServerRequest(serverId, User);
             var dtoList = _chatService.GetServerChannels(dtoFactory);
 
             return Ok(dtoList);
+        }
+
+        [HttpPost]
+        public IActionResult AddChannel([FromBody] int serverId,
+            [FromBody] ChannelDto channel)
+        {
+            _chatService.TryAddingChannel(serverId, channel);
+
+            return Ok();
         }
 
         [HttpGet]
         public IActionResult GetServerUserList([FromBody] int serverId,
             [FromServices] UserDtoFactory dtoFactory)
         {
-            try
-            {
-                _chatService.ValidateServerRequest(serverId, User);
-            }
-            catch (RequestInvalidException)
-            {
-                return Unauthorized();
-            }
-
+            _chatService.ValidateServerRequest(serverId, User);
             var dtoList = _chatService.GetServerUserList(dtoFactory);
 
             return Ok(dtoList);
@@ -66,18 +73,19 @@ namespace RedPoint.Areas.Chat.Controllers
             [FromBody] int serverId,
             [FromServices] MessageDtoFactory dtoFactory)
         {
-            try
-            {
-                _chatService.ValidateChannelRequest(channelId, serverId, User);
-            }
-            catch (RequestInvalidException)
-            {
-                return Unauthorized();
-            }
-
+            _chatService.ValidateChannelRequest(channelId, serverId, User);
             var dtoList = _chatService.GetChannelMessages(dtoFactory);
 
             return Ok(dtoList);
+        }
+
+        [HttpPost]
+        public IActionResult AddMessage([FromBody] int channelId,
+            [FromBody] MessageDto message)
+        {
+            _chatService.TryAddingMessage(channelId, message);
+
+            return Ok();
         }
     }
 }

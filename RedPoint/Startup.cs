@@ -1,5 +1,4 @@
-﻿using System.Transactions;
-using System.Text;
+﻿using System.Text;
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using RedPoint.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RedPoint.Areas.Chat.Hubs;
 using RedPoint.Areas.Chat.Services;
 using RedPoint.Areas.Identity.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,9 +17,9 @@ using Microsoft.IdentityModel.Tokens;
 using RedPoint.Data.UnitOfWork;
 using RedPoint.Utilities.DtoFactories;
 using RedPoint.Areas.Account.Services;
-using RedPoint.Areas.Account.Services.Security;
-using RedPoint.Areas.Chat.Services.Security;
 using RedPoint.Services.DtoManager;
+using RedPoint.Services.Security;
+using RedPoint.Middleware;
 
 namespace RedPoint
 {
@@ -112,6 +110,8 @@ namespace RedPoint
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseGlobalExceptionMiddleware();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -119,7 +119,6 @@ namespace RedPoint
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
@@ -143,10 +142,7 @@ namespace RedPoint
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("/chathub");
-                routes.MapHub<ServerHub>("/serverhub");
-                routes.MapHub<ChannelHub>("/channelhub");
-                routes.MapHub<ServerBrowserHub>("/serverbrowserhub");
+                //TODO
             });
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
@@ -12,8 +13,12 @@ namespace RedPoint.Areas.Chat.Models
     {
         public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
+
+        [Required]
         public string Description { get; set; }
+
         public string ImagePath { get; set; }
 
         public List<ApplicationUser> Users { get; set; }
@@ -24,6 +29,21 @@ namespace RedPoint.Areas.Chat.Models
         public bool IsVisible { get; set; }
 
         public Server()
+        {
+            InitializeLists();
+        }
+
+        public Server(ServerDto serverDto)
+        {
+            Name = serverDto.Name;
+            Description = serverDto.Description;
+            ImagePath = serverDto.ImagePath;
+            IsVisible = serverDto.IsVisible;
+
+            InitializeLists();
+        }
+
+        private void InitializeLists()
         {
             Users = new List<ApplicationUser>();
             Groups = new List<Group>();

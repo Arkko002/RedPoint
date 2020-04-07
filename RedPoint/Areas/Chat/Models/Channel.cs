@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Data;
 
 namespace RedPoint.Areas.Chat.Models
@@ -15,6 +16,19 @@ namespace RedPoint.Areas.Chat.Models
         public List<Group> Groups { get; set; }
 
         public Channel()
+        {
+            InitializeLists();
+        }
+
+        public Channel(ChannelDto channelDto)
+        {
+            InitializeLists();
+
+            Name = channelDto.Name;
+            Description = channelDto.Description;
+        }
+
+        private void InitializeLists()
         {
             Messages = new List<Message>();
             Groups = new List<Group>();

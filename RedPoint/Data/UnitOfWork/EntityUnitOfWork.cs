@@ -7,7 +7,7 @@ namespace RedPoint.Data.UnitOfWork
 {
     public class EntityUnitOfWork : Disposable, IUnitOfWork
     {
-        private DbContext _context;
+        private readonly DbContext _context;
 
         public bool HasEnded { get; private set; }
 

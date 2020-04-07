@@ -1,11 +1,9 @@
-using System.Security.Claims;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Identity.Models;
-using RedPoint.Exceptions;
 
-namespace RedPoint.Areas.Chat.Services.Security
+namespace RedPoint.Services.Security
 {
-    public class ChatRequestValidator : IRequestValidator
+    public class ChatRequestValidator : IChatRequestValidator
     {
         public bool IsServerRequestValid(Server server, ApplicationUser user)
         {

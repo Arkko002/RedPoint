@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Security.Claims;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
@@ -8,22 +7,22 @@ using RedPoint.Utilities.DtoFactories;
 using RedPoint.Data.UnitOfWork;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Data;
-using RedPoint.Areas.Chat.Services.DtoManager;
-using RedPoint.Areas.Chat.Services.Security;
 using RedPoint.Exceptions;
+using RedPoint.Services.DtoManager;
+using RedPoint.Services.Security;
 
 namespace RedPoint.Areas.Chat.Services
 {
     public class ChatService
     {
-        private EntityUnitOfWork _unitOfWork;
-        private UserManager<ApplicationUser> _userManager;
-        private EntityRepository<Server, ApplicationDbContext> _serverRepo;
-        private EntityRepository<Channel, ApplicationDbContext> _channelRepo;
-        private EntityRepository<Message, ApplicationDbContext> _messageRepo;
+        private readonly EntityUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EntityRepository<Server, ApplicationDbContext> _serverRepo;
+        private readonly EntityRepository<Channel, ApplicationDbContext> _channelRepo;
+        private readonly EntityRepository<Message, ApplicationDbContext> _messageRepo;
 
-        private IDtoManager _dtoManager;
-        private IRequestValidator _requestValidator;
+        private readonly IDtoManager _dtoManager;
+        private readonly IChatRequestValidator _requestValidator;
 
 
         private Server _requestedServer;
@@ -36,7 +35,7 @@ namespace RedPoint.Areas.Chat.Services
          EntityRepository<Channel, ApplicationDbContext> channelRepo,
          EntityRepository<Message, ApplicationDbContext> messageRepo,
          IDtoManager dtoManager,
-         IRequestValidator requestValidator)
+         IChatRequestValidator requestValidator)
         {
             //TODO Reduce the size of constructor
 
@@ -56,6 +55,14 @@ namespace RedPoint.Areas.Chat.Services
             return _dtoManager.CreateDtoList<Server, ServerDto>(appUser.Servers, dtoFactory);
         }
 
+        public void TryAddingServer(ServerDto server)
+        {
+            Server newServer = new Server(server);
+
+            _serverRepo.Add(newServer);
+            _unitOfWork.Submit();
+        }
+
         public void ValidateServerRequest(int serverId, ClaimsPrincipal user)
         {
             _requestedServer = _serverRepo.Find(serverId);
@@ -72,26 +79,46 @@ namespace RedPoint.Areas.Chat.Services
             return _dtoManager.CreateDtoList<Channel, ChannelDto>(_requestedServer.Channels, dtoFactory);
         }
 
-        public List<UserChatDto> GetServerUserList(UserDtoFactory dtoFactory)
+        public void TryAddingChannel(int serverId, ChannelDto channel)
         {
-            return _dtoManager.CreateDtoList<ApplicationUser, UserChatDto>(_requestedServer.Users, dtoFactory);
+            //TODO validate
+            Channel newChannel = new Channel(channel);
+
+            _channelRepo.Add(newChannel);
+            _unitOfWork.Submit();
         }
 
         public void ValidateChannelRequest(int channelId, int serverId, ClaimsPrincipal user)
         {
             _requestedChannel = _channelRepo.Find(channelId);
+            _requestedServer = _serverRepo.Find(serverId);
             _requestingUser = _userManager.GetUserAsync(user).Result;
 
-            if (!_requestValidator.IsChannelRequestValid(_requestedChannel, _requestingUser))
+            if (!_requestValidator.IsChannelRequestValid(_requestedChannel, _requestedServer, _requestingUser))
             {
                 throw new RequestInvalidException("Invalid channel request from user.");
             }
+        }
+
+        public List<UserChatDto> GetServerUserList(UserDtoFactory dtoFactory)
+        {
+            return _dtoManager.CreateDtoList<ApplicationUser, UserChatDto>(_requestedServer.Users, dtoFactory);
         }
 
         public List<MessageDto> GetChannelMessages(MessageDtoFactory dtoFactory)
         {
             //TODO Lazy loading, return only 20-40 currently visible messages
             return _dtoManager.CreateDtoList<Message, MessageDto>(_requestedChannel.Messages, dtoFactory);
+        }
+
+        public void TryAddingMessage(int channelId, MessageDto message)
+        {
+            //TODO validate
+            ApplicationUser user = _userManager.FindByIdAsync(message.UserId).Result;
+            Message newMessage = new Message(message, user);
+
+            _messageRepo.Add(newMessage);
+            _unitOfWork.Submit();
         }
     }
 }

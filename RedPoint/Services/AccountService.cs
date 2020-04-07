@@ -1,6 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using RedPoint.Exceptions;
+using RedPoint.Services.Security;
 
 namespace RedPoint.Areas.Account.Services
 {
@@ -9,16 +18,24 @@ namespace RedPoint.Areas.Account.Services
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IAccountRequestValidator _requestValidator;
 
         public AccountService(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IAccountRequestValidator requestValidator
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _requestValidator = requestValidator;
+        }
+
+        public void ValidateLoginRequest()
+        {
+
         }
 
         public async Task<object> Login(UserLoginDto model)
@@ -32,6 +49,14 @@ namespace RedPoint.Areas.Account.Services
             }
 
             throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+        }
+
+        public void ValidateRegisterRequest(UserRegisterDto model)
+        {
+            if (!_requestValidator.IsRegisterRequestValid(model))
+            {
+                throw new RequestInvalidException();
+            }
         }
 
         public async Task<object> Register(UserRegisterDto model)

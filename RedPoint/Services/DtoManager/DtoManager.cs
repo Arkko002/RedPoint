@@ -3,7 +3,7 @@ using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Data;
 using RedPoint.Utilities.DtoFactories;
 
-namespace RedPoint.Areas.Chat.Services.DtoManager
+namespace RedPoint.Services.DtoManager
 {
     public class DtoManager : IDtoManager
     {

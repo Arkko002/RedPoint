@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace RedPoint.Areas.Account.Services.Security
+namespace RedPoint.Services.Security
 {
     public class AccountRequestValidator : IAccountRequestValidator
     {
