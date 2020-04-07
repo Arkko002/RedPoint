@@ -20,6 +20,7 @@ using RedPoint.Areas.Account.Services;
 using RedPoint.Services.DtoManager;
 using RedPoint.Services.Security;
 using RedPoint.Middleware;
+using Microsoft.Extensions.Hosting;
 
 namespace RedPoint
 {
@@ -89,7 +90,7 @@ namespace RedPoint
 
             services.AddSignalR();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddControllers();
 
             services.AddScoped<EntityUnitOfWork>(x => new EntityUnitOfWork(x.GetRequiredService<DbContext>()));
             services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<,>));
@@ -108,7 +109,7 @@ namespace RedPoint
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseGlobalExceptionMiddleware();
 
@@ -123,27 +124,17 @@ namespace RedPoint
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            app.UseRouting();
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "areas",
-                    template: "{area:exists}/{controller}/{action=Index}/{id?}"
-                );
-
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            app.UseSignalR(routes =>
+            app.UseEndpoints(endpoints =>
             {
                 //TODO
+                endpoints.MapControllers();
             });
+
         }
     }
 }
