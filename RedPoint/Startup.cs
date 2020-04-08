@@ -20,6 +20,7 @@ using RedPoint.Areas.Account.Services;
 using RedPoint.Services.DtoManager;
 using RedPoint.Services.Security;
 using RedPoint.Middleware;
+using RedPoint.Services;
 
 namespace RedPoint
 {
@@ -103,8 +104,9 @@ namespace RedPoint
             services.AddScoped(typeof(IChatRequestValidator), typeof(ChatRequestValidator));
             services.AddScoped(typeof(IDtoManager), typeof(DtoManager));
 
-            services.AddScoped<ChatService>();
-            services.AddScoped<AccountService>();
+            services.AddScoped(typeof(IChatControllerService), typeof(ChatControllerService));
+            services.AddScoped(typeof(IChatHubService), typeof(ChatHubService));
+            services.AddScoped(typeof(IAccountService), typeof(AccountService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

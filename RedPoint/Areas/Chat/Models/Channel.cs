@@ -10,6 +10,8 @@ namespace RedPoint.Areas.Chat.Models
     public class Channel : IEntity
     {
         public int Id { get; set; }
+        public UniqueIdentifier UniqueId { get; set; }
+
         public string Name { get; set; }
         public string Description { get; set; }
         public List<Message> Messages { get; set; }
@@ -17,6 +19,7 @@ namespace RedPoint.Areas.Chat.Models
 
         public Channel()
         {
+            UniqueId = new UniqueIdentifier();
             InitializeLists();
         }
 
@@ -26,6 +29,7 @@ namespace RedPoint.Areas.Chat.Models
 
             Name = channelDto.Name;
             Description = channelDto.Description;
+            UniqueId = channelDto.UniqueId;
         }
 
         private void InitializeLists()

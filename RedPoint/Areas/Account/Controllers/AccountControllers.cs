@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RedPoint.Areas.Account.Services;
 using RedPoint.Exceptions;
+using RedPoint.Services;
 
 namespace RedPoint.Areas.Identity.Controllers
 {
@@ -18,9 +19,9 @@ namespace RedPoint.Areas.Identity.Controllers
     public class AccountController : ControllerBase
     {
 
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
 
-        public AccountController(AccountService accountService)
+        public AccountController(IAccountService accountService)
         {
 
             _accountService = accountService;

@@ -10,10 +10,11 @@ using RedPoint.Data;
 using RedPoint.Exceptions;
 using RedPoint.Services.DtoManager;
 using RedPoint.Services.Security;
+using RedPoint.Services;
 
 namespace RedPoint.Areas.Chat.Services
 {
-    public class ChatService
+    public class ChatControllerService : IChatControllerService
     {
         private readonly EntityUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -29,7 +30,8 @@ namespace RedPoint.Areas.Chat.Services
         private Channel _requestedChannel;
         private ApplicationUser _requestingUser;
 
-        public ChatService(EntityUnitOfWork unitOfWork,
+        //TODO Exception handling in Try... methods
+        public ChatControllerService(EntityUnitOfWork unitOfWork,
          UserManager<ApplicationUser> userManager,
          EntityRepository<Server, ApplicationDbContext> serverRepo,
          EntityRepository<Channel, ApplicationDbContext> channelRepo,
@@ -55,14 +57,6 @@ namespace RedPoint.Areas.Chat.Services
             return _dtoManager.CreateDtoList<Server, ServerDto>(appUser.Servers, dtoFactory);
         }
 
-        public void TryAddingServer(ServerDto server)
-        {
-            Server newServer = new Server(server);
-
-            _serverRepo.Add(newServer);
-            _unitOfWork.Submit();
-        }
-
         public void ValidateServerRequest(int serverId, ClaimsPrincipal user)
         {
             _requestedServer = _serverRepo.Find(serverId);
@@ -77,15 +71,6 @@ namespace RedPoint.Areas.Chat.Services
         public List<ChannelDto> GetServerChannels(ChannelDtoFactory dtoFactory)
         {
             return _dtoManager.CreateDtoList<Channel, ChannelDto>(_requestedServer.Channels, dtoFactory);
-        }
-
-        public void TryAddingChannel(int serverId, ChannelDto channel)
-        {
-            //TODO validate
-            Channel newChannel = new Channel(channel);
-
-            _channelRepo.Add(newChannel);
-            _unitOfWork.Submit();
         }
 
         public void ValidateChannelRequest(int channelId, int serverId, ClaimsPrincipal user)
@@ -109,16 +94,6 @@ namespace RedPoint.Areas.Chat.Services
         {
             //TODO Lazy loading, return only 20-40 currently visible messages
             return _dtoManager.CreateDtoList<Message, MessageDto>(_requestedChannel.Messages, dtoFactory);
-        }
-
-        public void TryAddingMessage(int channelId, MessageDto message)
-        {
-            //TODO validate
-            ApplicationUser user = _userManager.FindByIdAsync(message.UserId).Result;
-            Message newMessage = new Message(message, user);
-
-            _messageRepo.Add(newMessage);
-            _unitOfWork.Submit();
         }
     }
 }

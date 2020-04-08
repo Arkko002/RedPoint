@@ -6,6 +6,7 @@ using RedPoint.Areas.Chat.Hubs;
 using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Areas.Chat.Services;
 using RedPoint.Exceptions;
+using RedPoint.Services;
 using RedPoint.Utilities.DtoFactories;
 
 namespace RedPoint.Areas.Chat.Controllers
@@ -14,13 +15,11 @@ namespace RedPoint.Areas.Chat.Controllers
     [Area("chat")]
     public class ChatController : ControllerBase
     {
-        private readonly ChatService _chatService;
-        private readonly IHubContext<ChatHub, IChatHub> _chatHub;
+        private readonly IChatControllerService _chatService;
 
-        public ChatController(ChatService chatService, IHubContext<ChatHub, IChatHub> chatHub)
+        public ChatController(IChatControllerService chatService)
         {
             _chatService = chatService;
-            _chatHub = chatHub;
         }
 
         [HttpGet]
@@ -31,14 +30,6 @@ namespace RedPoint.Areas.Chat.Controllers
             return Ok(dtoList);
         }
 
-        [HttpPost]
-        public IActionResult AddServer([FromBody] ServerDto server)
-        {
-            _chatService.TryAddingServer(server);
-
-            return Ok();
-        }
-
         [HttpGet]
         public IActionResult GetServerChannels([FromBody] int serverId,
             [FromServices] ChannelDtoFactory dtoFactory)
@@ -47,15 +38,6 @@ namespace RedPoint.Areas.Chat.Controllers
             var dtoList = _chatService.GetServerChannels(dtoFactory);
 
             return Ok(dtoList);
-        }
-
-        [HttpPost]
-        public IActionResult AddChannel([FromBody] int serverId,
-            [FromBody] ChannelDto channel)
-        {
-            _chatService.TryAddingChannel(serverId, channel);
-
-            return Ok();
         }
 
         [HttpGet]
@@ -77,15 +59,6 @@ namespace RedPoint.Areas.Chat.Controllers
             var dtoList = _chatService.GetChannelMessages(dtoFactory);
 
             return Ok(dtoList);
-        }
-
-        [HttpPost]
-        public IActionResult AddMessage([FromBody] int channelId,
-            [FromBody] MessageDto message)
-        {
-            _chatService.TryAddingMessage(channelId, message);
-
-            return Ok();
         }
     }
 }

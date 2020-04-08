@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RedPoint.Exceptions;
+using RedPoint.Services;
 using RedPoint.Services.Security;
 
 namespace RedPoint.Areas.Account.Services
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;

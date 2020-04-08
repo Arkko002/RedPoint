@@ -12,6 +12,8 @@ namespace RedPoint.Areas.Chat.Models
     public class Server : IEntity
     {
         public int Id { get; set; }
+        public UniqueIdentifier UniqueId { get; set; }
+
 
         [Required]
         public string Name { get; set; }
@@ -30,6 +32,7 @@ namespace RedPoint.Areas.Chat.Models
 
         public Server()
         {
+            UniqueId = new UniqueIdentifier();
             InitializeLists();
         }
 
