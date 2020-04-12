@@ -1,7 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Collections.Generic;
-using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Identity.Models;
+﻿using System.Collections.Generic;
+using RedPoint.Areas.Account.Models;
 using RedPoint.Data;
 
 namespace RedPoint.Areas.Chat.Models
@@ -16,19 +14,17 @@ namespace RedPoint.Areas.Chat.Models
 
         //Used to store user's IDs
         public List<ApplicationUser> Users { get; set; }
-        public GroupPermissions GroupPermissions { get; set; }
+        public List<PermissionType> GroupPermissions { get; set; }
         public bool CanBeDeleted { get; }
-
+        
         public Group()
         {
             UniqueId = new UniqueIdentifier();
 
-            if (Name == "Default")
-            {
-                CanBeDeleted = false;
-            }
+            if (Name == "Default") CanBeDeleted = false;
 
             Users = new List<ApplicationUser>();
+            GroupPermissions = new List<PermissionType>();
         }
     }
 }

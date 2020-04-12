@@ -1,11 +1,13 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
+using RedPoint.Data.Repository;
 using RedPoint.Data.UnitOfWork;
 
-namespace RedPoint.Services
+namespace RedPoint.Areas.Chat.Services
 {
     public class ChatHubService : IChatHubService
     {
@@ -14,6 +16,8 @@ namespace RedPoint.Services
         private readonly EntityRepository<Server, ApplicationDbContext> _serverRepo;
         private readonly EntityUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
+
+        private ApplicationUser _requestingUser;
 
         public ChatHubService(EntityUnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager,
@@ -30,8 +34,15 @@ namespace RedPoint.Services
             _messageRepo = messageRepo;
         }
 
+        public void AssignApplicationUser(ClaimsPrincipal user)
+        {
+            _requestingUser = _userManager.GetUserAsync(user).Result;
+        }
+
         public void TryAddingChannel(int serverId, ChannelDto channel)
         {
+            
+            
             //TODO validate
             var newChannel = new Channel(channel);
 

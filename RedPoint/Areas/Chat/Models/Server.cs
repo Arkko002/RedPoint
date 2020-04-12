@@ -1,35 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Identity.Models;
 using RedPoint.Data;
 
 namespace RedPoint.Areas.Chat.Models
 {
     /// <summary>
-    /// Server class that contains channels list and users list
+    ///     Server class that contains channels list and users list
     /// </summary>
-    public class Server : IEntity
+    public class Server : IEntity, IChatGroups
     {
-        public int Id { get; set; }
-        public UniqueIdentifier UniqueId { get; set; }
-
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public string Description { get; set; }
-
-        public string ImagePath { get; set; }
-
-        public List<ApplicationUser> Users { get; set; }
-        public List<Group> Groups { get; set; }
-        public List<Channel> Channels { get; set; }
-
-        //Determines if server is visible in the server browser
-        public bool IsVisible { get; set; }
-
         public Server()
         {
             UniqueId = new UniqueIdentifier();
@@ -46,6 +27,23 @@ namespace RedPoint.Areas.Chat.Models
             InitializeLists();
         }
 
+        public int Id { get; set; }
+        public UniqueIdentifier UniqueId { get; set; }
+
+
+        [Required] public string Name { get; set; }
+
+        [Required] public string Description { get; set; }
+
+        public string ImagePath { get; set; }
+
+        public List<ApplicationUser> Users { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
+        public List<Channel> Channels { get; set; }
+
+        //Determines if server is visible in the server browser
+        public bool IsVisible { get; set; }
+
         private void InitializeLists()
         {
             Users = new List<ApplicationUser>();
@@ -53,5 +51,4 @@ namespace RedPoint.Areas.Chat.Models
             Channels = new List<Channel>();
         }
     }
-
 }

@@ -1,7 +1,19 @@
+using System;
+
 namespace RedPoint.Exceptions
 {
-    public class EntityNotFoundException
+    public class EntityNotFoundException : Exception
     {
-        
+        public EntityNotFoundException()
+        {
+        }
+
+        public EntityNotFoundException(string message) : base(message)
+        {
+        }
+
+        public EntityNotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

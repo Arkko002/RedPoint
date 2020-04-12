@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace RedPoint.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
     }

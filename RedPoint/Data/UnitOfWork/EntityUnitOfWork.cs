@@ -9,29 +9,16 @@ namespace RedPoint.Data.UnitOfWork
     {
         private readonly DbContext _context;
 
-        public bool HasEnded { get; private set; }
-
         public EntityUnitOfWork(DbContext context)
         {
             _context = context;
         }
 
-        public TDbContext GetContext<TDbContext>() where TDbContext : DbContext
-        {
-            if (HasEnded)
-            {
-                throw new ObjectDisposedException("Unit of Work has been disposed.");
-            }
-
-            return (TDbContext)_context;
-        }
+        public bool HasEnded { get; private set; }
 
         public void Submit()
         {
-            if (HasEnded)
-            {
-                throw new ObjectDisposedException("Unit of Work has been disposed.");
-            }
+            if (HasEnded) throw new ObjectDisposedException("Unit of Work has been disposed.");
 
             if (_context != null)
             {
@@ -43,6 +30,13 @@ namespace RedPoint.Data.UnitOfWork
             }
         }
 
+        public TDbContext GetContext<TDbContext>() where TDbContext : DbContext
+        {
+            if (HasEnded) throw new ObjectDisposedException("Unit of Work has been disposed.");
+
+            return (TDbContext) _context;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (!HasEnded)
@@ -50,6 +44,7 @@ namespace RedPoint.Data.UnitOfWork
                 _context?.Dispose();
                 HasEnded = true;
             }
+
             base.Dispose(disposing);
         }
     }

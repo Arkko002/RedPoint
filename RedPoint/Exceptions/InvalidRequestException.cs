@@ -1,18 +1,18 @@
 using System;
 
-namespace RedPoint.Exceptions.Security
+namespace RedPoint.Exceptions
 {
-    public class RequestInvalidException : Exception
+    public class InvalidRequestException : Exception
     {
-        public RequestInvalidException()
+        public InvalidRequestException()
         {
         }
 
-        public RequestInvalidException(string message) : base(message)
+        public InvalidRequestException(string message) : base(message)
         {
         }
 
-        public RequestInvalidException(string message, Exception inner) : base(message, inner)
+        public InvalidRequestException(string message, Exception inner) : base(message, inner)
         {
         }
     }

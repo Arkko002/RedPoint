@@ -7,7 +7,7 @@ namespace RedPoint.Utilities.DtoFactories
     {
         public IDto GetDto(Message sourceObject)
         {
-            var messageDto = new MessageDto()
+            var messageDto = new MessageDto
             {
                 Id = sourceObject.Id,
                 DateTimePosted = sourceObject.DateTimePosted.ToString(),

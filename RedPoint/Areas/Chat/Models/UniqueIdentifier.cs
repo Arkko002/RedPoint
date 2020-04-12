@@ -3,19 +3,19 @@ using System.Text;
 
 namespace RedPoint.Areas.Chat.Models
 {
+    /// <summary>
+    /// Separate identifier used to prevent ID clashing in SignalR groups
+    /// </summary>
     public class UniqueIdentifier
     {
         public UniqueIdentifier()
         {
-            Random random = new Random();
-            int length = random.Next(4, 12);
+            var random = new Random();
+            var length = random.Next(4, 12);
 
-            string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            StringBuilder result = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
-            {
-                result.Append(characters[random.Next(characters.Length)]);
-            }
+            var characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            var result = new StringBuilder(length);
+            for (var i = 0; i < length; i++) result.Append(characters[random.Next(characters.Length)]);
 
             IdString = result.ToString();
         }

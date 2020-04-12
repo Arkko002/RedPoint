@@ -1,14 +1,9 @@
 using System;
 
-namespace RedPoint.Data
+namespace RedPoint.Data.UnitOfWork
 {
     public abstract class Disposable : IDisposing
     {
-        protected virtual void Dispose(bool disposing)
-        {
-
-        }
-
         public event EventHandler Disposing;
 
         public void Dispose()
@@ -16,7 +11,10 @@ namespace RedPoint.Data
             Disposing?.Invoke(this, new EventArgs());
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
 
+        protected virtual void Dispose(bool disposing)
+        {
         }
     }
 }

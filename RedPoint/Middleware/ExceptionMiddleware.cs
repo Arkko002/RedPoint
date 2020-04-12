@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using RedPoint.Models;
 
 namespace RedPoint.Middleware
@@ -31,8 +30,8 @@ namespace RedPoint.Middleware
         private static Task HandleGlobalExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            return context.Response.WriteAsync(new GlobalErrorDetails()
+            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+            return context.Response.WriteAsync(new GlobalErrorDetails
             {
                 StatusCode = context.Response.StatusCode,
                 Message = exception.Message

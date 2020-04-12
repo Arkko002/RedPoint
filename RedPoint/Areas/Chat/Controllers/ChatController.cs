@@ -1,11 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using RedPoint.Areas.Chat.Hubs;
-using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Areas.Chat.Services;
-using RedPoint.Exceptions;
 using RedPoint.Services;
 using RedPoint.Utilities.DtoFactories;
 
@@ -20,12 +15,13 @@ namespace RedPoint.Areas.Chat.Controllers
         public ChatController(IChatControllerService chatService)
         {
             _chatService = chatService;
+            _chatService.AssignApplicationUser(User);
         }
 
         [HttpGet]
         public IActionResult GetUserServers([FromServices] ServerDtoFactory dtoFactory)
         {
-            var dtoList = _chatService.GetUserServers(dtoFactory, User);
+            var dtoList = _chatService.GetUserServers(dtoFactory);
 
             return Ok(dtoList);
         }
@@ -34,8 +30,7 @@ namespace RedPoint.Areas.Chat.Controllers
         public IActionResult GetServerChannels([FromBody] int serverId,
             [FromServices] ChannelDtoFactory dtoFactory)
         {
-            _chatService.ValidateServerRequest(serverId, User);
-            var dtoList = _chatService.GetServerChannels(dtoFactory);
+            var dtoList = _chatService.GetServerChannels(serverId, dtoFactory);
 
             return Ok(dtoList);
         }
@@ -44,8 +39,7 @@ namespace RedPoint.Areas.Chat.Controllers
         public IActionResult GetServerUserList([FromBody] int serverId,
             [FromServices] UserDtoFactory dtoFactory)
         {
-            _chatService.ValidateServerRequest(serverId, User);
-            var dtoList = _chatService.GetServerUserList(dtoFactory);
+            var dtoList = _chatService.GetServerUserList(serverId, dtoFactory);
 
             return Ok(dtoList);
         }
@@ -55,8 +49,7 @@ namespace RedPoint.Areas.Chat.Controllers
             [FromBody] int serverId,
             [FromServices] MessageDtoFactory dtoFactory)
         {
-            _chatService.ValidateChannelRequest(channelId, serverId, User);
-            var dtoList = _chatService.GetChannelMessages(dtoFactory);
+            var dtoList = _chatService.GetChannelMessages(channelId, serverId, dtoFactory);
 
             return Ok(dtoList);
         }

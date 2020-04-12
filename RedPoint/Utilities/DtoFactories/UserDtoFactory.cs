@@ -1,5 +1,5 @@
+using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Identity.Models;
 
 namespace RedPoint.Utilities.DtoFactories
 {
@@ -7,7 +7,7 @@ namespace RedPoint.Utilities.DtoFactories
     {
         public IDto GetDto(ApplicationUser sourceObject)
         {
-            var userDto = new UserChatDto()
+            var userDto = new UserChatDto
             {
                 AppUserId = sourceObject.Id,
                 Username = sourceObject.UserName,

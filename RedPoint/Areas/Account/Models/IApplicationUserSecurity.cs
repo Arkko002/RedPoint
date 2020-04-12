@@ -1,4 +1,9 @@
-$HEADER$namespace $NAMESPACE$
+using System;
+
+namespace RedPoint.Areas.Account.Models
 {
-  public interface $INTERFACE$ {$END$}
+    public interface IApplicationUserSecurity
+    {
+
+    }
 }

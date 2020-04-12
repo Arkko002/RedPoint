@@ -15,14 +15,5 @@ namespace RedPoint.Areas.Chat.Models
         public bool CanManageChannels { get; set; } = false;
     }
 
-    public enum PermissionTypes
-    {
-        IsAdmin,
-        CanWrite,
-        CanView,
-        CanSendLinks,
-        CanAttachFiles,
-        CanManageServer,
-        CanManageChannels
-    }
+
 }

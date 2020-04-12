@@ -20,11 +20,12 @@ namespace RedPoint.Areas.Chat.Hubs
 
     public class ChatHub : Hub<IChatHub>
     {
-        private IChatHubService _chatService;
+        private readonly IChatHubService _chatService;
 
         public ChatHub(IChatHubService chatService)
         {
             _chatService = chatService;
+            _chatService.AssignApplicationUser(Context.User);
         }
 
         public Task AddServer(ServerDto server)
@@ -35,16 +36,16 @@ namespace RedPoint.Areas.Chat.Hubs
             return Clients.Group(server.UniqueId.IdString).ServerAdded(server);
         }
 
-        public Task AddMessage(MessageDto message, string channelUniqueId)
+        public Task AddMessage(MessageDto message, string channelUniqueId, int channelId)
         {
-            _chatService.TryAddingMessage(channelUniqueId, message);
+            _chatService.TryAddingMessage(channelId, message);
 
             return Clients.Group(channelUniqueId).MessageAdded(message);
         }
 
-        public Task AddChannel(ChannelDto channel, string serverUniqueId)
+        public Task AddChannel(ChannelDto channel, string serverUniqueId, int serverId)
         {
-            _chatService.TryAddingChannel(serverUniqueId, channel);
+            _chatService.TryAddingChannel(serverId, channel);
 
             return Clients.Group(serverUniqueId).ChannelAdded(channel);
         }

@@ -4,7 +4,7 @@ using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.User_Settings;
 using RedPoint.Data;
 
-namespace RedPoint.Areas.Identity.Models
+namespace RedPoint.Areas.Account.Models
 {
     public class ApplicationUser : IdentityUser, IEntity
     {

@@ -7,7 +7,7 @@ namespace RedPoint.Utilities.DtoFactories
     {
         public IDto GetDto(Channel sourceObject)
         {
-            var channelDto = new ChannelDto()
+            var channelDto = new ChannelDto
             {
                 Id = sourceObject.Id,
                 Name = sourceObject.Name,

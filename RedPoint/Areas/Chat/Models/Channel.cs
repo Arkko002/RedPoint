@@ -5,9 +5,9 @@ using RedPoint.Data;
 namespace RedPoint.Areas.Chat.Models
 {
     /// <summary>
-    /// Channel class that represents text chat room
+    ///     Channel class that represents text chat room
     /// </summary>
-    public class Channel : IEntity
+    public class Channel : IEntity, IChatGroups
     {
         public int Id { get; set; }
         public UniqueIdentifier UniqueId { get; set; }
@@ -15,7 +15,7 @@ namespace RedPoint.Areas.Chat.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public List<Message> Messages { get; set; }
-        public List<Group> Groups { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
 
         public Channel()
         {
@@ -31,7 +31,7 @@ namespace RedPoint.Areas.Chat.Models
             Description = channelDto.Description;
             UniqueId = channelDto.UniqueId;
         }
-
+        
         private void InitializeLists()
         {
             Messages = new List<Message>();

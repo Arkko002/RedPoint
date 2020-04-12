@@ -9,5 +9,4 @@ namespace RedPoint.Middleware
             app.UseMiddleware<ExceptionMiddleware>();
         }
     }
-
 }

@@ -9,81 +9,76 @@ namespace RedPoint.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                table: "AspNetUserClaims");
+                "FK_AspNetUserClaims_AspNetUsers_UserId",
+                "AspNetUserClaims");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                table: "AspNetUserLogins");
+                "FK_AspNetUserLogins_AspNetUsers_UserId",
+                "AspNetUserLogins");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                table: "AspNetUserRoles");
+                "FK_AspNetUserRoles_AspNetUsers_UserId",
+                "AspNetUserRoles");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                table: "AspNetUserTokens");
+                "FK_AspNetUserTokens_AspNetUsers_UserId",
+                "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                "AspNetUsers");
 
             migrationBuilder.CreateTable(
-                name: "ChannelStub",
-                columns: table => new
+                "ChannelStub",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChannelStub", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_ChannelStub", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "GroupPermissions",
-                columns: table => new
+                "GroupPermissions",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    IsSuperAdmin = table.Column<bool>(nullable: false),
-                    IsAdmin = table.Column<bool>(nullable: false),
-                    CanWrite = table.Column<bool>(nullable: false),
-                    CanView = table.Column<bool>(nullable: false),
-                    CanSendLinks = table.Column<bool>(nullable: false),
-                    CanAttachFiles = table.Column<bool>(nullable: false),
-                    CanManageServers = table.Column<bool>(nullable: false),
-                    CanManageChannels = table.Column<bool>(nullable: false)
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
+                    IsSuperAdmin = table.Column<bool>(),
+                    IsAdmin = table.Column<bool>(),
+                    CanWrite = table.Column<bool>(),
+                    CanView = table.Column<bool>(),
+                    CanSendLinks = table.Column<bool>(),
+                    CanAttachFiles = table.Column<bool>(),
+                    CanManageServers = table.Column<bool>(),
+                    CanManageChannels = table.Column<bool>()
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GroupPermissions", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_GroupPermissions", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "ServerStub",
-                columns: table => new
+                "ServerStub",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ImagePath = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerStub", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_ServerStub", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Groups",
-                columns: table => new
+                "Groups",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    ServerId = table.Column<int>(nullable: false),
+                    ServerId = table.Column<int>(),
                     GroupPermissionsId = table.Column<int>(nullable: true),
                     ApplicationUserId = table.Column<string>(nullable: true),
                     ChannelId = table.Column<int>(nullable: true)
@@ -92,20 +87,21 @@ namespace RedPoint.Data.Migrations
                 {
                     table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Groups_GroupPermissions_GroupPermissionsId",
-                        column: x => x.GroupPermissionsId,
-                        principalTable: "GroupPermissions",
-                        principalColumn: "Id",
+                        "FK_Groups_GroupPermissions_GroupPermissionsId",
+                        x => x.GroupPermissionsId,
+                        "GroupPermissions",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
+                "Messages",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DateTimePosted = table.Column<DateTime>(nullable: false),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
+                    DateTimePosted = table.Column<DateTime>(),
                     Text = table.Column<string>(nullable: true),
                     UserStubId = table.Column<int>(nullable: true),
                     ChannelStubId = table.Column<int>(nullable: true),
@@ -116,19 +112,20 @@ namespace RedPoint.Data.Migrations
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_ChannelStub_ChannelStubId",
-                        column: x => x.ChannelStubId,
-                        principalTable: "ChannelStub",
-                        principalColumn: "Id",
+                        "FK_Messages_ChannelStub_ChannelStubId",
+                        x => x.ChannelStubId,
+                        "ChannelStub",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Channels",
-                columns: table => new
+                "Channels",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ChannelStubId = table.Column<int>(nullable: true),
@@ -138,19 +135,20 @@ namespace RedPoint.Data.Migrations
                 {
                     table.PrimaryKey("PK_Channels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Channels_ChannelStub_ChannelStubId",
-                        column: x => x.ChannelStubId,
-                        principalTable: "ChannelStub",
-                        principalColumn: "Id",
+                        "FK_Channels_ChannelStub_ChannelStubId",
+                        x => x.ChannelStubId,
+                        "ChannelStub",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserStubs",
-                columns: table => new
+                "UserStubs",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     AppUserId = table.Column<string>(nullable: true),
                     AppUserName = table.Column<string>(nullable: true),
                     GroupId = table.Column<int>(nullable: true),
@@ -160,53 +158,54 @@ namespace RedPoint.Data.Migrations
                 {
                     table.PrimaryKey("PK_UserStubs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserStubs_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id",
+                        "FK_UserStubs_Groups_GroupId",
+                        x => x.GroupId,
+                        "Groups",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
+                "Users",
+                table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<string>(),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    EmailConfirmed = table.Column<bool>(),
                     PasswordHash = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    PhoneNumberConfirmed = table.Column<bool>(),
+                    TwoFactorEnabled = table.Column<bool>(),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    CurrentChannelId = table.Column<int>(nullable: false),
-                    CurrentServerIId = table.Column<int>(nullable: false),
+                    LockoutEnabled = table.Column<bool>(),
+                    AccessFailedCount = table.Column<int>(),
+                    CurrentChannelId = table.Column<int>(),
+                    CurrentServerIId = table.Column<int>(),
                     UserStubId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_UserStubs_UserStubId",
-                        column: x => x.UserStubId,
-                        principalTable: "UserStubs",
-                        principalColumn: "Id",
+                        "FK_Users_UserStubs_UserStubId",
+                        x => x.UserStubId,
+                        "UserStubs",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Servers",
-                columns: table => new
+                "Servers",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ImagePath = table.Column<string>(nullable: true),
@@ -217,199 +216,199 @@ namespace RedPoint.Data.Migrations
                 {
                     table.PrimaryKey("PK_Servers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Servers_Users_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
+                        "FK_Servers_Users_ApplicationUserId",
+                        x => x.ApplicationUserId,
+                        "Users",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Servers_ServerStub_ServerStubId",
-                        column: x => x.ServerStubId,
-                        principalTable: "ServerStub",
-                        principalColumn: "Id",
+                        "FK_Servers_ServerStub_ServerStubId",
+                        x => x.ServerStubId,
+                        "ServerStub",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Channels_ChannelStubId",
-                table: "Channels",
-                column: "ChannelStubId");
+                "IX_Channels_ChannelStubId",
+                "Channels",
+                "ChannelStubId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Channels_ServerId",
-                table: "Channels",
-                column: "ServerId");
+                "IX_Channels_ServerId",
+                "Channels",
+                "ServerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_ApplicationUserId",
-                table: "Groups",
-                column: "ApplicationUserId");
+                "IX_Groups_ApplicationUserId",
+                "Groups",
+                "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_ChannelId",
-                table: "Groups",
-                column: "ChannelId");
+                "IX_Groups_ChannelId",
+                "Groups",
+                "ChannelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_GroupPermissionsId",
-                table: "Groups",
-                column: "GroupPermissionsId");
+                "IX_Groups_GroupPermissionsId",
+                "Groups",
+                "GroupPermissionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_ServerId",
-                table: "Groups",
-                column: "ServerId");
+                "IX_Groups_ServerId",
+                "Groups",
+                "ServerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ApplicationUserId",
-                table: "Messages",
-                column: "ApplicationUserId");
+                "IX_Messages_ApplicationUserId",
+                "Messages",
+                "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ChannelId",
-                table: "Messages",
-                column: "ChannelId");
+                "IX_Messages_ChannelId",
+                "Messages",
+                "ChannelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ChannelStubId",
-                table: "Messages",
-                column: "ChannelStubId");
+                "IX_Messages_ChannelStubId",
+                "Messages",
+                "ChannelStubId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_UserStubId",
-                table: "Messages",
-                column: "UserStubId");
+                "IX_Messages_UserStubId",
+                "Messages",
+                "UserStubId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Servers_ApplicationUserId",
-                table: "Servers",
-                column: "ApplicationUserId");
+                "IX_Servers_ApplicationUserId",
+                "Servers",
+                "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Servers_ServerStubId",
-                table: "Servers",
-                column: "ServerStubId");
+                "IX_Servers_ServerStubId",
+                "Servers",
+                "ServerStubId");
 
             migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                table: "Users",
-                column: "NormalizedEmail");
+                "EmailIndex",
+                "Users",
+                "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "Users",
-                column: "NormalizedUserName",
+                "UserNameIndex",
+                "Users",
+                "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserStubId",
-                table: "Users",
-                column: "UserStubId");
+                "IX_Users_UserStubId",
+                "Users",
+                "UserStubId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserStubs_GroupId",
-                table: "UserStubs",
-                column: "GroupId");
+                "IX_UserStubs_GroupId",
+                "UserStubs",
+                "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserStubs_ServerId",
-                table: "UserStubs",
-                column: "ServerId");
+                "IX_UserStubs_ServerId",
+                "UserStubs",
+                "ServerId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserClaims_Users_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId",
-                principalTable: "Users",
+                "FK_AspNetUserClaims_Users_UserId",
+                "AspNetUserClaims",
+                "UserId",
+                "Users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserLogins_Users_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId",
-                principalTable: "Users",
+                "FK_AspNetUserLogins_Users_UserId",
+                "AspNetUserLogins",
+                "UserId",
+                "Users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserRoles_Users_UserId",
-                table: "AspNetUserRoles",
-                column: "UserId",
-                principalTable: "Users",
+                "FK_AspNetUserRoles_Users_UserId",
+                "AspNetUserRoles",
+                "UserId",
+                "Users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserTokens_Users_UserId",
-                table: "AspNetUserTokens",
-                column: "UserId",
-                principalTable: "Users",
+                "FK_AspNetUserTokens_Users_UserId",
+                "AspNetUserTokens",
+                "UserId",
+                "Users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Groups_Servers_ServerId",
-                table: "Groups",
-                column: "ServerId",
-                principalTable: "Servers",
+                "FK_Groups_Servers_ServerId",
+                "Groups",
+                "ServerId",
+                "Servers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Groups_Users_ApplicationUserId",
-                table: "Groups",
-                column: "ApplicationUserId",
-                principalTable: "Users",
+                "FK_Groups_Users_ApplicationUserId",
+                "Groups",
+                "ApplicationUserId",
+                "Users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Groups_Channels_ChannelId",
-                table: "Groups",
-                column: "ChannelId",
-                principalTable: "Channels",
+                "FK_Groups_Channels_ChannelId",
+                "Groups",
+                "ChannelId",
+                "Channels",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Messages_Users_ApplicationUserId",
-                table: "Messages",
-                column: "ApplicationUserId",
-                principalTable: "Users",
+                "FK_Messages_Users_ApplicationUserId",
+                "Messages",
+                "ApplicationUserId",
+                "Users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Messages_Channels_ChannelId",
-                table: "Messages",
-                column: "ChannelId",
-                principalTable: "Channels",
+                "FK_Messages_Channels_ChannelId",
+                "Messages",
+                "ChannelId",
+                "Channels",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Messages_UserStubs_UserStubId",
-                table: "Messages",
-                column: "UserStubId",
-                principalTable: "UserStubs",
+                "FK_Messages_UserStubs_UserStubId",
+                "Messages",
+                "UserStubId",
+                "UserStubs",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Channels_Servers_ServerId",
-                table: "Channels",
-                column: "ServerId",
-                principalTable: "Servers",
+                "FK_Channels_Servers_ServerId",
+                "Channels",
+                "ServerId",
+                "Servers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_UserStubs_Servers_ServerId",
-                table: "UserStubs",
-                column: "ServerId",
-                principalTable: "Servers",
+                "FK_UserStubs_Servers_ServerId",
+                "UserStubs",
+                "ServerId",
+                "Servers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -417,134 +416,131 @@ namespace RedPoint.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUserClaims_Users_UserId",
-                table: "AspNetUserClaims");
+                "FK_AspNetUserClaims_Users_UserId",
+                "AspNetUserClaims");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUserLogins_Users_UserId",
-                table: "AspNetUserLogins");
+                "FK_AspNetUserLogins_Users_UserId",
+                "AspNetUserLogins");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUserRoles_Users_UserId",
-                table: "AspNetUserRoles");
+                "FK_AspNetUserRoles_Users_UserId",
+                "AspNetUserRoles");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUserTokens_Users_UserId",
-                table: "AspNetUserTokens");
+                "FK_AspNetUserTokens_Users_UserId",
+                "AspNetUserTokens");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Channels_ChannelStub_ChannelStubId",
-                table: "Channels");
+                "FK_Channels_ChannelStub_ChannelStubId",
+                "Channels");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Channels_Servers_ServerId",
-                table: "Channels");
+                "FK_Channels_Servers_ServerId",
+                "Channels");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Groups_Servers_ServerId",
-                table: "Groups");
+                "FK_Groups_Servers_ServerId",
+                "Groups");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_UserStubs_Servers_ServerId",
-                table: "UserStubs");
+                "FK_UserStubs_Servers_ServerId",
+                "UserStubs");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Groups_Users_ApplicationUserId",
-                table: "Groups");
+                "FK_Groups_Users_ApplicationUserId",
+                "Groups");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                "Messages");
 
             migrationBuilder.DropTable(
-                name: "ChannelStub");
+                "ChannelStub");
 
             migrationBuilder.DropTable(
-                name: "Servers");
+                "Servers");
 
             migrationBuilder.DropTable(
-                name: "ServerStub");
+                "ServerStub");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                "Users");
 
             migrationBuilder.DropTable(
-                name: "UserStubs");
+                "UserStubs");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                "Groups");
 
             migrationBuilder.DropTable(
-                name: "Channels");
+                "Channels");
 
             migrationBuilder.DropTable(
-                name: "GroupPermissions");
+                "GroupPermissions");
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
+                "AspNetUsers",
+                table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Id = table.Column<string>(),
+                    AccessFailedCount = table.Column<int>(),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    EmailConfirmed = table.Column<bool>(),
+                    LockoutEnabled = table.Column<bool>(),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     PasswordHash = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    PhoneNumberConfirmed = table.Column<bool>(),
                     SecurityStamp = table.Column<string>(nullable: true),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(),
                     UserName = table.Column<string>(maxLength: 256, nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_AspNetUsers", x => x.Id); });
 
             migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
+                "EmailIndex",
+                "AspNetUsers",
+                "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
+                "UserNameIndex",
+                "AspNetUsers",
+                "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId",
-                principalTable: "AspNetUsers",
+                "FK_AspNetUserClaims_AspNetUsers_UserId",
+                "AspNetUserClaims",
+                "UserId",
+                "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId",
-                principalTable: "AspNetUsers",
+                "FK_AspNetUserLogins_AspNetUsers_UserId",
+                "AspNetUserLogins",
+                "UserId",
+                "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                table: "AspNetUserRoles",
-                column: "UserId",
-                principalTable: "AspNetUsers",
+                "FK_AspNetUserRoles_AspNetUsers_UserId",
+                "AspNetUserRoles",
+                "UserId",
+                "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                table: "AspNetUserTokens",
-                column: "UserId",
-                principalTable: "AspNetUsers",
+                "FK_AspNetUserTokens_AspNetUsers_UserId",
+                "AspNetUserTokens",
+                "UserId",
+                "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }

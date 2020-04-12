@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-public class UserLoginDto
+namespace RedPoint.Areas.Account.Models
 {
-    [Required]
-    public string Username { get; set; }
+    public class UserLoginDto
+    {
+        [Required] public string Username { get; set; }
 
-    [Required]
-    public string Password { get; set; }
+        [Required] public string Password { get; set; }
+    }
 }

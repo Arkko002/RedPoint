@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
-using RedPoint.Exceptions;
+using RedPoint.Areas.Account.Models;
 using RedPoint.Exceptions.Security;
 
-namespace RedPoint.Services.Security
+namespace RedPoint.Areas.Account.Services.Security
 {
     public class AccountRequestValidator : IAccountRequestValidator
     {

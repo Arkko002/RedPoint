@@ -7,7 +7,7 @@ namespace RedPoint.Utilities.DtoFactories
     {
         public IDto GetDto(Server sourceObject)
         {
-            var serverDto = new ServerDto()
+            var serverDto = new ServerDto
             {
                 Id = sourceObject.Id,
                 Name = sourceObject.Name,

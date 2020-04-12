@@ -1,4 +1,13 @@
-$HEADER$namespace $NAMESPACE$
+namespace RedPoint.Areas.Chat.Models
 {
-  public enum $ENUM$ {$END$}
+    public enum PermissionType
+    {
+        IsAdmin,
+        CanWrite,
+        CanView,
+        CanSendLinks,
+        CanAttachFiles,
+        CanManageServer,
+        CanManageChannels
+    }
 }

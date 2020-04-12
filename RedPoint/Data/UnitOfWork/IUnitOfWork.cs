@@ -1,8 +1,8 @@
-namespace RedPoint.Data
+namespace RedPoint.Data.UnitOfWork
 {
     public interface IUnitOfWork : IDisposing
     {
-        void Submit();
         bool HasEnded { get; }
+        void Submit();
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace RedPoint.Areas.Chat.Models.Dto
 {
     /// <summary>
-    /// DTO class for ApplicationUser
+    ///     DTO class for ApplicationUser
     /// </summary>
     public class UserChatDto : IDto
     {

@@ -7,11 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
+using RedPoint.Areas.Account.Models;
+using RedPoint.Areas.Account.Services.Security;
 using RedPoint.Exceptions;
-using RedPoint.Exceptions.Security;
-using RedPoint.Services;
-using RedPoint.Services.Security;
+using ILogger = NLog.ILogger;
 
 namespace RedPoint.Areas.Account.Services
 {
@@ -22,17 +24,21 @@ namespace RedPoint.Areas.Account.Services
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
 
+        private readonly ILogger<AccountService> _logger;
+        
         public AccountService(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IConfiguration configuration,
-            IAccountRequestValidator requestValidator
+            IAccountRequestValidator requestValidator,
+            ILogger<AccountService> logger
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _requestValidator = requestValidator;
+            _logger = logger;
         }
         
         public async Task<object> Login(UserLoginDto model)
@@ -47,6 +53,12 @@ namespace RedPoint.Areas.Account.Services
                 return await GenerateJwtToken(model.Username, appUser);
             }
 
+            if (result.IsLockedOut)
+            {
+                _logger.LogError($"User was locked out: {model.Username}");
+                throw new ApplicationException("User was locked out.");
+            }
+            
             throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
         }
         
@@ -56,9 +68,10 @@ namespace RedPoint.Areas.Account.Services
             {
                 _requestValidator.IsLoginRequestValid(model);
             }
-            catch (RequestInvalidException e)
+            catch (InvalidRequestException e)
             {
-                throw new RequestInvalidException("Login request invalid", e);
+                _logger.LogInformation("Invalid login attempt from {0} / {1}", model.Username, e.Message);
+                throw new InvalidRequestException("Login request invalid", e);
             }
         }
         
@@ -78,6 +91,7 @@ namespace RedPoint.Areas.Account.Services
                 return await GenerateJwtToken(model.Username, user);
             }
 
+            _logger.LogError("Unknown error during user registration for {0}", model.Username);
             throw new ApplicationException("UNKNOWN_ERROR");
         }
         
@@ -87,9 +101,10 @@ namespace RedPoint.Areas.Account.Services
             {
                 _requestValidator.IsRegisterRequestValid(model);
             }
-            catch (RequestInvalidException e)
+            catch (InvalidRequestException e)
             {
-                throw new RequestInvalidException("Register request invalid", e);
+                _logger.LogInformation("Invalid registration request from {0} / {1}", model.Username, e.Message);
+                throw new InvalidRequestException("Register request invalid", e);
             }
         }
         
