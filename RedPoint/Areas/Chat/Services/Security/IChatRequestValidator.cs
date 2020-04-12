@@ -5,7 +5,7 @@ namespace RedPoint.Services.Security
 {
     public interface IChatRequestValidator
     {
-        bool IsServerRequestValid(Server server, ApplicationUser user);
-        bool IsChannelRequestValid(Channel channel, Server server, ApplicationUser user);
+        void IsServerRequestValid(Server server, ApplicationUser user);
+        void IsChannelRequestValid(Channel channel, Server server, ApplicationUser user);
     }
 }

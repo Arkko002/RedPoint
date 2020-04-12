@@ -1,43 +1,45 @@
-using System.Security.Claims;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Areas.Identity.Models;
-using RedPoint.Utilities.DtoFactories;
-using RedPoint.Data.UnitOfWork;
-using RedPoint.Areas.Chat.Models;
 using RedPoint.Data;
+using RedPoint.Data.UnitOfWork;
 using RedPoint.Exceptions;
+using RedPoint.Exceptions.Security;
+using RedPoint.Services;
 using RedPoint.Services.DtoManager;
 using RedPoint.Services.Security;
-using RedPoint.Services;
+using RedPoint.Utilities.DtoFactories;
 
 namespace RedPoint.Areas.Chat.Services
 {
     public class ChatControllerService : IChatControllerService
     {
-        private readonly EntityUnitOfWork _unitOfWork;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly EntityRepository<Server, ApplicationDbContext> _serverRepo;
         private readonly EntityRepository<Channel, ApplicationDbContext> _channelRepo;
-        private readonly EntityRepository<Message, ApplicationDbContext> _messageRepo;
 
         private readonly IDtoManager _dtoManager;
+        private readonly EntityRepository<Message, ApplicationDbContext> _messageRepo;
         private readonly IChatRequestValidator _requestValidator;
+        private readonly EntityRepository<Server, ApplicationDbContext> _serverRepo;
+        private readonly EntityUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private Channel _requestedChannel;
 
 
         private Server _requestedServer;
-        private Channel _requestedChannel;
         private ApplicationUser _requestingUser;
 
         //TODO Exception handling in Try... methods
         public ChatControllerService(EntityUnitOfWork unitOfWork,
-         UserManager<ApplicationUser> userManager,
-         EntityRepository<Server, ApplicationDbContext> serverRepo,
-         EntityRepository<Channel, ApplicationDbContext> channelRepo,
-         EntityRepository<Message, ApplicationDbContext> messageRepo,
-         IDtoManager dtoManager,
-         IChatRequestValidator requestValidator)
+            UserManager<ApplicationUser> userManager,
+            EntityRepository<Server, ApplicationDbContext> serverRepo,
+            EntityRepository<Channel, ApplicationDbContext> channelRepo,
+            EntityRepository<Message, ApplicationDbContext> messageRepo,
+            IDtoManager dtoManager,
+            IChatRequestValidator requestValidator)
         {
             //TODO Reduce the size of constructor
 
@@ -62,9 +64,13 @@ namespace RedPoint.Areas.Chat.Services
             _requestedServer = _serverRepo.Find(serverId);
             _requestingUser = _userManager.GetUserAsync(user).Result;
 
-            if (!_requestValidator.IsServerRequestValid(_requestedServer, _requestingUser))
+            try
             {
-                throw new RequestInvalidException("Invalid server request from user.");
+                _requestValidator.IsServerRequestValid(_requestedServer, _requestingUser);
+            }
+            catch (RequestInvalidException e)
+            {
+                throw new RequestInvalidException("Invalid server request from user.", e);
             }
         }
 
@@ -79,9 +85,13 @@ namespace RedPoint.Areas.Chat.Services
             _requestedServer = _serverRepo.Find(serverId);
             _requestingUser = _userManager.GetUserAsync(user).Result;
 
-            if (!_requestValidator.IsChannelRequestValid(_requestedChannel, _requestedServer, _requestingUser))
+            try
             {
-                throw new RequestInvalidException("Invalid channel request from user.");
+                _requestValidator.IsChannelRequestValid(_requestedChannel, _requestedServer, _requestingUser);
+            }
+            catch (RequestInvalidException e)
+            {
+                throw new RequestInvalidException("Invalid server request from user.", e);
             }
         }
 

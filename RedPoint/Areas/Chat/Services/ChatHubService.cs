@@ -9,17 +9,17 @@ namespace RedPoint.Services
 {
     public class ChatHubService : IChatHubService
     {
-        private readonly EntityUnitOfWork _unitOfWork;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly EntityRepository<Server, ApplicationDbContext> _serverRepo;
         private readonly EntityRepository<Channel, ApplicationDbContext> _channelRepo;
         private readonly EntityRepository<Message, ApplicationDbContext> _messageRepo;
+        private readonly EntityRepository<Server, ApplicationDbContext> _serverRepo;
+        private readonly EntityUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public ChatHubService(EntityUnitOfWork unitOfWork,
-        UserManager<ApplicationUser> userManager,
-        EntityRepository<Server, ApplicationDbContext> serverRepo,
-        EntityRepository<Channel, ApplicationDbContext> channelRepo,
-        EntityRepository<Message, ApplicationDbContext> messageRepo)
+            UserManager<ApplicationUser> userManager,
+            EntityRepository<Server, ApplicationDbContext> serverRepo,
+            EntityRepository<Channel, ApplicationDbContext> channelRepo,
+            EntityRepository<Message, ApplicationDbContext> messageRepo)
         {
             //TODO Reduce the size of constructor
 
@@ -33,7 +33,7 @@ namespace RedPoint.Services
         public void TryAddingChannel(int serverId, ChannelDto channel)
         {
             //TODO validate
-            Channel newChannel = new Channel(channel);
+            var newChannel = new Channel(channel);
 
             _channelRepo.Add(newChannel);
             _unitOfWork.Submit();
@@ -42,8 +42,8 @@ namespace RedPoint.Services
         public void TryAddingMessage(int channelId, MessageDto message)
         {
             //TODO validate
-            ApplicationUser user = _userManager.FindByIdAsync(message.UserId).Result;
-            Message newMessage = new Message(message, user);
+            var user = _userManager.FindByIdAsync(message.UserId).Result;
+            var newMessage = new Message(message, user);
 
             _messageRepo.Add(newMessage);
             _unitOfWork.Submit();
@@ -51,7 +51,7 @@ namespace RedPoint.Services
 
         public void TryAddingServer(ServerDto server)
         {
-            Server newServer = new Server(server);
+            var newServer = new Server(server);
 
             _serverRepo.Add(newServer);
             _unitOfWork.Submit();

@@ -11,11 +11,8 @@ namespace RedPoint.Services.DtoManager
             where TEntity : IEntity
             where TDto : IDto
         {
-            List<TDto> dtoList = new List<TDto>();
-            foreach (TEntity item in sourceList)
-            {
-                dtoList.Add((TDto)dtoFactory.GetDto(item));
-            }
+            var dtoList = new List<TDto>();
+            foreach (var item in sourceList) dtoList.Add((TDto) dtoFactory.GetDto(item));
 
             return dtoList;
         }

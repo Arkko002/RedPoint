@@ -1,27 +1,30 @@
-using System.Text;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RedPoint.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RedPoint.Areas.Chat.Services;
-using RedPoint.Areas.Identity.Models;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using RedPoint.Data.UnitOfWork;
-using RedPoint.Utilities.DtoFactories;
+using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Account.Services;
-using RedPoint.Services.DtoManager;
-using RedPoint.Services.Security;
+using RedPoint.Areas.Account.Services.Security;
+using RedPoint.Areas.Chat.Hubs;
+using RedPoint.Areas.Chat.Models;
+using RedPoint.Areas.Chat.Services;
+using RedPoint.Areas.Chat.Services.Security;
+using RedPoint.Data;
+using RedPoint.Data.Repository;
+using RedPoint.Data.UnitOfWork;
 using RedPoint.Middleware;
 using RedPoint.Services;
-using Microsoft.Extensions.Hosting;
+using RedPoint.Services.DtoManager;
+using RedPoint.Utilities.DtoFactories;
 
 namespace RedPoint
 {
@@ -84,7 +87,9 @@ namespace RedPoint
                 {
                     ValidIssuer = Configuration["JwtIssuer"],
                     ValidAudience = Configuration["JwtIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])), // TODO!!! set proper key
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["JwtKey"])), // TODO!!! set proper key
                     ClockSkew = TimeSpan.Zero
                 };
             });
@@ -93,14 +98,14 @@ namespace RedPoint
 
             services.AddControllers();
 
-            services.AddScoped<EntityUnitOfWork>(x => new EntityUnitOfWork(x.GetRequiredService<DbContext>()));
+            services.AddScoped(x => new EntityUnitOfWork(x.GetRequiredService<DbContext>()));
             services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<,>));
-
-            //TODO find a way to register through interface, remove redundant calls if possible
-            services.AddScoped<ChannelDtoFactory>();
-            services.AddScoped<UserDtoFactory>();
-            services.AddScoped<ChannelDtoFactory>();
-
+            
+            services.AddScoped(typeof(IChatDtoFactory<Channel>), typeof(ChannelDtoFactory));
+            services.AddScoped(typeof(IChatDtoFactory<ApplicationUser>), typeof(UserDtoFactory));
+            services.AddScoped(typeof(IChatDtoFactory<Message>), typeof(MessageDtoFactory));
+            services.AddScoped(typeof(IChatDtoFactory<Server>), typeof(ServerDtoFactory));
+            
             services.AddScoped(typeof(IAccountRequestValidator), typeof(AccountRequestValidator));
             services.AddScoped(typeof(IChatRequestValidator), typeof(ChatRequestValidator));
             services.AddScoped(typeof(IDtoManager), typeof(DtoManager));
@@ -135,8 +140,8 @@ namespace RedPoint
             {
                 //TODO
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chathub");
             });
-
         }
     }
 }
