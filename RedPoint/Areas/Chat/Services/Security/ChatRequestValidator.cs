@@ -9,38 +9,41 @@ namespace RedPoint.Areas.Chat.Services.Security
 {
     public class ChatRequestValidator : IChatRequestValidator
     {
-        public void IsServerRequestValid(Server server, ApplicationUser user, PermissionType permissionType)
+        public ChatErrorType IsServerRequestValid(Server server, ApplicationUser user, PermissionType permissionType)
         {
-            IsUserInServer(server, user);
-            
+            if (!IsUserInServer(server, user))
+            {
+                return ChatErrorType.UserNotInServer;
+            }
+
             var userPermissions = GetUserPermissionsOnEntity(user, server);
+            if(!IsUserPermitted(userPermissions, permissionType))
+            {
+                return ChatErrorType.NoPermission;
+            }
             
-            CheckUserPermissions(userPermissions, permissionType);
+            return ChatErrorType.NoError;
         }
 
-        public void IsChannelRequestValid(Channel channel, Server server, ApplicationUser user, PermissionType permissionType)
+        public ChatErrorType IsChannelRequestValid(Channel channel, Server server, ApplicationUser user, PermissionType permissionType)
         {
-            IsUserInServer(server, user);
-
+            if (!IsUserInServer(server, user))
+            {
+                return ChatErrorType.UserNotInServer;
+            }
+            
             var userPermissions = GetUserPermissionsOnEntity(user, channel);
-            CheckUserPermissions(userPermissions, permissionType);
+            if(!IsUserPermitted(userPermissions, permissionType))
+            {
+                return ChatErrorType.NoPermission;
+            }
+            
+            return ChatErrorType.NoError;
         }
 
-        private void IsUserInServer(Server server, ApplicationUser user)
+        private bool IsUserInServer(Server server, ApplicationUser user)
         {
-            if (!server.Users.Contains(user))
-            {
-                throw new InvalidServerRequestException("User is not part of the server");
-            }
-        }
-        
-        private void CheckUserPermissions(IEnumerable<PermissionType> userPermissions,
-            PermissionType expectedPermissions)
-        {
-            if (!userPermissions.Any(x => x == expectedPermissions || x == PermissionType.IsAdmin))
-            {
-                throw new LackOfPermissionException($"User lacks {expectedPermissions} permission");
-            }
+            return server.Users.Contains(user);
         }
         
         private IEnumerable<PermissionType> GetUserPermissionsOnEntity(ApplicationUser user, IChatGroups entity)
@@ -54,6 +57,12 @@ namespace RedPoint.Areas.Chat.Services.Security
             }
 
             return userPermissions;
+        }
+        
+        private bool IsUserPermitted(IEnumerable<PermissionType> userPermissions,
+            PermissionType expectedPermissions)
+        {
+            return userPermissions.Any(x => x == expectedPermissions || x == PermissionType.IsAdmin);
         }
     }
 }

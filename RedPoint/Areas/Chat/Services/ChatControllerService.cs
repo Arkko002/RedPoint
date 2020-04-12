@@ -10,6 +10,7 @@ using RedPoint.Areas.Chat.Services.Security;
 using RedPoint.Data;
 using RedPoint.Data.Repository;
 using RedPoint.Exceptions;
+using RedPoint.Exceptions.Security;
 using RedPoint.Services.DtoManager;
 using RedPoint.Utilities.DtoFactories;
 
@@ -25,7 +26,7 @@ namespace RedPoint.Areas.Chat.Services
         private readonly IChatRequestValidator _requestValidator;
 
         private readonly UserManager<ApplicationUser> _userManager;
-        private ApplicationUser _requestingUser;
+        private ApplicationUser _user;
 
         private readonly ILogger<ChatControllerService> _logger;
         
@@ -49,79 +50,111 @@ namespace RedPoint.Areas.Chat.Services
 
         public void AssignApplicationUser(ClaimsPrincipal user)
         {
-            _requestingUser = _userManager.GetUserAsync(user).Result;
+            _user = _userManager.GetUserAsync(user).Result;
         }
         
         public List<ServerDto> GetUserServers(IChatDtoFactory<Server> dtoFactory)
         {
-            return _dtoManager.CreateDtoList<Server, ServerDto>(_requestingUser.Servers, dtoFactory);
+            return _dtoManager.CreateDtoList<Server, ServerDto>(_user.Servers, dtoFactory);
         }
-
         
         public List<ChannelDto> GetServerChannels(int serverId, IChatDtoFactory<Channel> dtoFactory)
         {
-            var requestedServer = _serverRepo.Find(serverId);
-
-            return _dtoManager.CreateDtoList<Channel, ChannelDto>(requestedServer.Channels, dtoFactory);
+            var server = TryFindingServer(serverId);
+            
+            List<Channel> userPermittedChannels = new List<Channel>();
+            foreach (var channel in server.Channels)
+            {
+                //TODO flow control
+                if (ValidateChannelRequest(channel, server, PermissionType.CanView) == ChatErrorType.NoError)
+                {
+                    userPermittedChannels.Add(channel);
+                }
+            }
+            
+            return _dtoManager.CreateDtoList<Channel, ChannelDto>(userPermittedChannels, dtoFactory);
         }
-
         
         public List<UserChatDto> GetServerUserList(int serverId, IChatDtoFactory<ApplicationUser> dtoFactory)
         {
-            var requestedServer = TryFindingServerAndValidateRequest(serverId);
+            var server = TryFindingServer(serverId);
+            ValidateServerRequest(server, PermissionType.CanView);
 
-            return _dtoManager.CreateDtoList<ApplicationUser, UserChatDto>(requestedServer.Users, dtoFactory);
+            return _dtoManager.CreateDtoList<ApplicationUser, UserChatDto>(server.Users, dtoFactory);
         }
 
-        private Server TryFindingServerAndValidateRequest(int serverId, PermissionType permissionType)
-        {
-            Server requestedServer = _serverRepo.Find(serverId);
-
-            if (requestedServer == null)
-            {
-                _logger.LogError("Non-existing server (ID: {0}) requested by {1}", serverId, _requestingUser.Id);
-                throw new EntityNotFoundException("No server found.");
-            }
-
-            ValidateServerRequest(requestedServer);
-
-            return requestedServer;
-        }
         
         public List<MessageDto> GetChannelMessages(int channelId, int serverId, IChatDtoFactory<Message> dtoFactory)
         {
-            var requestedChannel = _channelRepo.Find(channelId);
-            var requestedServer = _serverRepo.Find(serverId);
+            var channel = TryFindingChannel(channelId);
+            var server = TryFindingServer(serverId);
             
-            ValidateChannelRequest(requestedChannel, requestedServer);
+            ValidateChannelRequest(channel, server, PermissionType.CanView);
             
             //TODO Lazy loading, return only 20-40 currently visible messages
-            return _dtoManager.CreateDtoList<Message, MessageDto>(requestedChannel.Messages, dtoFactory);
+            return _dtoManager.CreateDtoList<Message, MessageDto>(channel.Messages, dtoFactory);
         }
         
-        private void ValidateServerRequest(Server requestedServer, PermissionType permissionType)
+        private Server TryFindingServer(int serverId)
         {
-            try
+            Server server = _serverRepo.Find(serverId);
+
+            if (server == null)
             {
-                _requestValidator.IsServerRequestValid(requestedServer, _requestingUser, permissionType);
+                _logger.LogError($"Non-existing server (ID: {serverId}) requested by {_user.Id}");
+                HandleChatError(ChatErrorType.ServerNotFound);
             }
-            catch (Exception e)
+
+            return server;
+        }
+
+        private Channel TryFindingChannel(int channelId)
+        {
+            Channel channel = _channelRepo.Find(channelId);
+            
+            if (channel == null)
             {
-                _logger.LogError("Invalid server request: ({0}) by {1}", e.Message, _requestingUser.Id);
-                throw new InvalidRequestException("Invalid server request from user.", e);
+                _logger.LogError($"Non-existing channel (ID: {channelId}) requested by {_user.Id}");
+                HandleChatError(ChatErrorType.ChannelNotFound);
             }
+
+            return channel;
         }
         
-        private void ValidateChannelRequest(Channel requestedChannel, Server requestedServer)
+        private ChatErrorType ValidateServerRequest(Server server, PermissionType permissionType)
         {
-            try
+            var errorType = _requestValidator.IsServerRequestValid(server, _user, permissionType);
+            HandleChatError(errorType);
+            
+            return errorType;
+        }
+        
+        private ChatErrorType ValidateChannelRequest(Channel channel, Server server, PermissionType permissionType)
+        {
+            var errorType = _requestValidator.IsChannelRequestValid(channel, server, _user, permissionType);
+            HandleChatError(errorType);
+            
+            return errorType;
+        }
+
+        private void HandleChatError(ChatErrorType errorType)
+        {
+            switch (errorType)
             {
-                _requestValidator.IsChannelRequestValid(requestedChannel, requestedServer, _requestingUser);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Invalid channel request: ({0}) by {1}", e.Message, _requestingUser.Id);
-                throw new InvalidRequestException("Invalid server request from user.", e);
+                case ChatErrorType.UserNotInServer:
+                    throw new InvalidServerRequestException($"{_user.UserName} is not part of the server.");
+                
+                case ChatErrorType.ServerNotFound:
+                    throw new EntityNotFoundException("No server found.");
+                
+                case ChatErrorType.ChannelNotFound:
+                    throw new EntityNotFoundException("No channel found.");
+
+                case ChatErrorType.NoPermission:
+                    throw new LackOfPermissionException($"{_user.UserName} has no required permission.");
+
+                case ChatErrorType.NoError:
+                    return;
             }
         }
     }
