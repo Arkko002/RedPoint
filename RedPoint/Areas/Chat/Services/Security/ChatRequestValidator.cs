@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Exceptions.Security;
@@ -9,36 +10,44 @@ namespace RedPoint.Areas.Chat.Services.Security
 {
     public class ChatRequestValidator : IChatRequestValidator
     {
-        public ChatErrorType IsServerRequestValid(Server server, ApplicationUser user, PermissionType permissionType)
+        public ChatError IsServerRequestValid(Server server, ApplicationUser user, PermissionType permissionType)
         {
             if (!IsUserInServer(server, user))
             {
-                return ChatErrorType.UserNotInServer;
+                return new ChatError(ChatErrorType.UserNotInServer,
+                    LogLevel.Warning,
+                    $"ID: {user.Id} tried to access server {server.Id} without joining first");
             }
 
             var userPermissions = GetUserPermissionsOnEntity(user, server);
             if(!IsUserPermitted(userPermissions, permissionType))
             {
-                return ChatErrorType.NoPermission;
+                return new ChatError(ChatErrorType.NoPermission,
+                    LogLevel.Warning,
+                    $"ID: {user.Id} tried to access server {server.Id} without permission");
             }
             
-            return ChatErrorType.NoError;
+            return new ChatError(ChatErrorType.NoError);
         }
 
-        public ChatErrorType IsChannelRequestValid(Channel channel, Server server, ApplicationUser user, PermissionType permissionType)
+        public ChatError IsChannelRequestValid(Channel channel, Server server, ApplicationUser user, PermissionType permissionType)
         {
             if (!IsUserInServer(server, user))
             {
-                return ChatErrorType.UserNotInServer;
+                return new ChatError(ChatErrorType.UserNotInServer,
+                    LogLevel.Warning,
+                    $"ID: {user.Id} tried to access server {server.Id} without joining first");
             }
             
             var userPermissions = GetUserPermissionsOnEntity(user, channel);
             if(!IsUserPermitted(userPermissions, permissionType))
             {
-                return ChatErrorType.NoPermission;
+                return new ChatError(ChatErrorType.NoPermission,
+                    LogLevel.Warning,
+                    $"ID: {user.Id} tried to access channel {channel.Id} without permission");
             }
             
-            return ChatErrorType.NoError;
+            return new ChatError(ChatErrorType.NoError);
         }
 
         private bool IsUserInServer(Server server, ApplicationUser user)

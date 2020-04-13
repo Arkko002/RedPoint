@@ -66,7 +66,7 @@ namespace RedPoint.Areas.Chat.Services
             foreach (var channel in server.Channels)
             {
                 //TODO flow control
-                if (ValidateChannelRequest(channel, server, PermissionType.CanView) == ChatErrorType.NoError)
+                if (ValidateChannelRequest(channel, server, PermissionType.CanView).ErrorType == ChatErrorType.NoError)
                 {
                     userPermittedChannels.Add(channel);
                 }
@@ -78,7 +78,12 @@ namespace RedPoint.Areas.Chat.Services
         public List<UserChatDto> GetServerUserList(int serverId, IChatDtoFactory<ApplicationUser> dtoFactory)
         {
             var server = TryFindingServer(serverId);
-            ValidateServerRequest(server, PermissionType.CanView);
+            var result = ValidateServerRequest(server, PermissionType.CanView);
+
+            if (result.ErrorType != ChatErrorType.NoError)
+            {
+                HandleChatError(result);
+            }
 
             return _dtoManager.CreateDtoList<ApplicationUser, UserChatDto>(server.Users, dtoFactory);
         }
@@ -89,7 +94,12 @@ namespace RedPoint.Areas.Chat.Services
             var channel = TryFindingChannel(channelId);
             var server = TryFindingServer(serverId);
             
-            ValidateChannelRequest(channel, server, PermissionType.CanView);
+            var result = ValidateChannelRequest(channel, server, PermissionType.CanView);
+
+            if (result.ErrorType != ChatErrorType.NoError)
+            {
+                HandleChatError(result);
+            }
             
             //TODO Lazy loading, return only 20-40 currently visible messages
             return _dtoManager.CreateDtoList<Message, MessageDto>(channel.Messages, dtoFactory);
@@ -101,8 +111,11 @@ namespace RedPoint.Areas.Chat.Services
 
             if (server == null)
             {
-                _logger.LogError($"Non-existing server (ID: {serverId}) requested by {_user.Id}");
-                HandleChatError(ChatErrorType.ServerNotFound);
+                ChatError chatError = new ChatError(ChatErrorType.ServerNotFound,
+                    LogLevel.Warning,
+                    $"Non-existing server (ID: {serverId}) requested by {_user.Id}");
+                
+                HandleChatError(chatError);
             }
 
             return server;
@@ -114,32 +127,38 @@ namespace RedPoint.Areas.Chat.Services
             
             if (channel == null)
             {
-                _logger.LogError($"Non-existing channel (ID: {channelId}) requested by {_user.Id}");
-                HandleChatError(ChatErrorType.ChannelNotFound);
+                ChatError chatError = new ChatError(ChatErrorType.ChannelNotFound,
+                    LogLevel.Warning,
+                    $"Non-existing channel (ID: {channelId}) requested by {_user.Id}");
+                
+                HandleChatError(chatError);
             }
 
             return channel;
         }
         
-        private ChatErrorType ValidateServerRequest(Server server, PermissionType permissionType)
+        private ChatError ValidateServerRequest(Server server, PermissionType permissionType)
         {
             var errorType = _requestValidator.IsServerRequestValid(server, _user, permissionType);
-            HandleChatError(errorType);
-            
+
             return errorType;
         }
         
-        private ChatErrorType ValidateChannelRequest(Channel channel, Server server, PermissionType permissionType)
+        private ChatError ValidateChannelRequest(Channel channel, Server server, PermissionType permissionType)
         {
             var errorType = _requestValidator.IsChannelRequestValid(channel, server, _user, permissionType);
-            HandleChatError(errorType);
-            
+
             return errorType;
         }
 
-        private void HandleChatError(ChatErrorType errorType)
+        private void HandleChatError(ChatError chatError)
         {
-            switch (errorType)
+            if (chatError.LogMessage != null)
+            {
+                _logger.Log(chatError.LogLevel, chatError.LogMessage);
+            }
+            
+            switch (chatError.ErrorType)
             {
                 case ChatErrorType.UserNotInServer:
                     throw new InvalidServerRequestException($"{_user.UserName} is not part of the server.");
@@ -155,6 +174,9 @@ namespace RedPoint.Areas.Chat.Services
 
                 case ChatErrorType.NoError:
                     return;
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

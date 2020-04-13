@@ -5,7 +5,7 @@ namespace RedPoint.Areas.Chat.Services.Security
 {
     public interface IChatRequestValidator
     {
-        ChatErrorType IsServerRequestValid(Server server, ApplicationUser user, PermissionType permissionType);
-        ChatErrorType IsChannelRequestValid(Channel channel, Server server, ApplicationUser user, PermissionType permissionType);
+        ChatError IsServerRequestValid(Server server, ApplicationUser user, PermissionType permissionType);
+        ChatError IsChannelRequestValid(Channel channel, Server server, ApplicationUser user, PermissionType permissionType);
     }
 }
