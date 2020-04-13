@@ -14,6 +14,7 @@ using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Account.Services.Security;
 using RedPoint.Exceptions;
 using ILogger = NLog.ILogger;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace RedPoint.Areas.Account.Services
 {
@@ -25,7 +26,9 @@ namespace RedPoint.Areas.Account.Services
         private readonly UserManager<IdentityUser> _userManager;
 
         private readonly ILogger<AccountService> _logger;
-        
+
+        private IdentityUser _user;
+            
         public AccountService(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
@@ -41,9 +44,18 @@ namespace RedPoint.Areas.Account.Services
             _logger = logger;
         }
         
+        public void AssignApplicationUser(ClaimsPrincipal user)
+        {
+            _user = _userManager.GetUserAsync(user).Result;
+        }
+        
         public async Task<object> Login(UserLoginDto model)
         {
-            ValidateLoginRequest(model);
+            var validationResult = _requestValidator.IsLoginRequestValid(model);
+            if (validationResult.ErrorType != AccountErrorType.NoError)
+            {
+                HandleAccountError(validationResult);
+            }
             
             var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
 
@@ -55,29 +67,24 @@ namespace RedPoint.Areas.Account.Services
 
             if (result.IsLockedOut)
             {
-                _logger.LogError($"User was locked out: {model.Username}");
-                throw new ApplicationException("User was locked out.");
+                AccountError error = new AccountError(AccountErrorType.UserLockedOut,
+                    LogLevel.Warning,
+                    $"{_user.Id} was locked out of account.");
+                
             }
             
             throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
         }
         
-        private void ValidateLoginRequest(UserLoginDto model)
-        {
-            try
-            {
-                _requestValidator.IsLoginRequestValid(model);
-            }
-            catch (InvalidRequestException e)
-            {
-                _logger.LogInformation("Invalid login attempt from {0} / {1}", model.Username, e.Message);
-                throw new InvalidRequestException("Login request invalid", e);
-            }
-        }
+
         
         public async Task<object> Register(UserRegisterDto model)
         {
-            ValidateRegisterRequest(model);
+            var validationResult = _requestValidator.IsRegisterRequestValid(model);
+            if (validationResult.ErrorType != AccountErrorType.NoError)
+            {
+                HandleAccountError(validationResult);
+            }
             
             var user = new IdentityUser
             {
@@ -90,21 +97,27 @@ namespace RedPoint.Areas.Account.Services
                 await _signInManager.SignInAsync(user, false);
                 return await GenerateJwtToken(model.Username, user);
             }
-
-            _logger.LogError("Unknown error during user registration for {0}", model.Username);
+            
             throw new ApplicationException("UNKNOWN_ERROR");
         }
         
-        private void ValidateRegisterRequest(UserRegisterDto model)
+        private void HandleAccountError(AccountError accountError)
         {
-            try
+            if (accountError.LogMessage != null)
             {
-                _requestValidator.IsRegisterRequestValid(model);
+                _logger.Log(accountError.LogLevel, accountError.LogMessage);
             }
-            catch (InvalidRequestException e)
+
+            switch (accountError.ErrorType)
             {
-                _logger.LogInformation("Invalid registration request from {0} / {1}", model.Username, e.Message);
-                throw new InvalidRequestException("Register request invalid", e);
+                case AccountErrorType.NoError:
+                    return;
+
+                case AccountErrorType.PasswordTooWeak:
+                    throw new InvalidRequestException("Provided password is too weak.");
+                
+                case AccountErrorType.UserLockedOut:
+                    throw new InvalidRequestException("User was locked out of the account.");
             }
         }
         

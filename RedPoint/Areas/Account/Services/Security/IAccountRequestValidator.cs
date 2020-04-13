@@ -4,7 +4,7 @@ namespace RedPoint.Areas.Account.Services.Security
 {
     public interface IAccountRequestValidator
     {
-        void IsRegisterRequestValid(UserRegisterDto requestDto);
-        void IsLoginRequestValid(UserLoginDto requestDto);
+        AccountError IsRegisterRequestValid(UserRegisterDto requestDto);
+        AccountError IsLoginRequestValid(UserLoginDto requestDto);
     }
 }

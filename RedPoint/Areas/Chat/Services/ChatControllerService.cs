@@ -66,7 +66,7 @@ namespace RedPoint.Areas.Chat.Services
             foreach (var channel in server.Channels)
             {
                 //TODO flow control
-                if (ValidateChannelRequest(channel, server, PermissionType.CanView).ErrorType == ChatErrorType.NoError)
+                if (_requestValidator.IsChannelRequestValid(channel, server, _user, PermissionType.CanView).ErrorType == ChatErrorType.NoError)
                 {
                     userPermittedChannels.Add(channel);
                 }
@@ -78,7 +78,7 @@ namespace RedPoint.Areas.Chat.Services
         public List<UserChatDto> GetServerUserList(int serverId, IChatDtoFactory<ApplicationUser> dtoFactory)
         {
             var server = TryFindingServer(serverId);
-            var result = ValidateServerRequest(server, PermissionType.CanView);
+            var result = _requestValidator.IsServerRequestValid(server, _user, PermissionType.CanView);
 
             if (result.ErrorType != ChatErrorType.NoError)
             {
@@ -94,7 +94,7 @@ namespace RedPoint.Areas.Chat.Services
             var channel = TryFindingChannel(channelId);
             var server = TryFindingServer(serverId);
             
-            var result = ValidateChannelRequest(channel, server, PermissionType.CanView);
+            var result = _requestValidator.IsChannelRequestValid(channel, server, _user, PermissionType.CanView);
 
             if (result.ErrorType != ChatErrorType.NoError)
             {
@@ -137,20 +137,6 @@ namespace RedPoint.Areas.Chat.Services
             return channel;
         }
         
-        private ChatError ValidateServerRequest(Server server, PermissionType permissionType)
-        {
-            var errorType = _requestValidator.IsServerRequestValid(server, _user, permissionType);
-
-            return errorType;
-        }
-        
-        private ChatError ValidateChannelRequest(Channel channel, Server server, PermissionType permissionType)
-        {
-            var errorType = _requestValidator.IsChannelRequestValid(channel, server, _user, permissionType);
-
-            return errorType;
-        }
-
         private void HandleChatError(ChatError chatError)
         {
             if (chatError.LogMessage != null)
