@@ -12,11 +12,11 @@ namespace RedPoint.Areas.Chat.Models
             DateTimePosted = DateTime.Parse(messageDto.DateTimePosted);
             Text = messageDto.Text;
             User = user;
-            UniqueId = messageDto.UniqueId;
+            HubGroupId = messageDto.HubGroupId;
         }
 
         public int Id { get; set; }
-        public UniqueIdentifier UniqueId { get; set; }
+        public HubGroupIdentifier HubGroupId { get; set; }
 
         public DateTime DateTimePosted { get; set; }
         public string Text { get; set; }

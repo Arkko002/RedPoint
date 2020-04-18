@@ -16,7 +16,7 @@ namespace RedPoint.Data
         public DbSet<Channel> Channels { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Server> Servers { get; set; }
-        public DbSet<UniqueIdentifier> UniqueIdentifiers { get; set; }
+        public DbSet<HubGroupIdentifier> UniqueIdentifiers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

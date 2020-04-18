@@ -15,6 +15,7 @@ namespace RedPoint.Areas.Chat.Services.Security
             if (!IsUserInServer(server, user))
             {
                 return new ChatError(ChatErrorType.UserNotInServer,
+                    user,
                     LogLevel.Warning,
                     $"ID: {user.Id} tried to access server {server.Id} without joining first");
             }
@@ -23,6 +24,7 @@ namespace RedPoint.Areas.Chat.Services.Security
             if(!IsUserPermitted(userPermissions, permissionType))
             {
                 return new ChatError(ChatErrorType.NoPermission,
+                    user,
                     LogLevel.Warning,
                     $"ID: {user.Id} tried to access server {server.Id} without permission");
             }
@@ -35,6 +37,7 @@ namespace RedPoint.Areas.Chat.Services.Security
             if (!IsUserInServer(server, user))
             {
                 return new ChatError(ChatErrorType.UserNotInServer,
+                    user,
                     LogLevel.Warning,
                     $"ID: {user.Id} tried to access server {server.Id} without joining first");
             }
@@ -43,6 +46,7 @@ namespace RedPoint.Areas.Chat.Services.Security
             if(!IsUserPermitted(userPermissions, permissionType))
             {
                 return new ChatError(ChatErrorType.NoPermission,
+                    user,
                     LogLevel.Warning,
                     $"ID: {user.Id} tried to access channel {channel.Id} without permission");
             }

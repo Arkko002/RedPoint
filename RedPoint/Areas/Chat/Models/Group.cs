@@ -7,7 +7,7 @@ namespace RedPoint.Areas.Chat.Models
     public class Group : IEntity
     {
         public int Id { get; set; }
-        public UniqueIdentifier UniqueId { get; set; }
+        public HubGroupIdentifier HubGroupId { get; set; }
 
         public string Name { get; set; }
         public Server Server { get; set; }
@@ -19,7 +19,7 @@ namespace RedPoint.Areas.Chat.Models
         
         public Group()
         {
-            UniqueId = new UniqueIdentifier();
+            HubGroupId = new HubGroupIdentifier();
 
             if (Name == "Default") CanBeDeleted = false;
 

@@ -18,34 +18,26 @@ namespace RedPoint.Areas.Chat.Services
 {
     public class ChatControllerService : IChatControllerService
     {
-        private readonly EntityRepository<Channel, ApplicationDbContext> _channelRepo;
-        private readonly EntityRepository<Message, ApplicationDbContext> _messageRepo;
-        private readonly EntityRepository<Server, ApplicationDbContext> _serverRepo;
-        
-        private readonly IDtoManager _dtoManager;
-        private readonly IChatRequestValidator _requestValidator;
-
+        private readonly IChatEntityRepositoryProxy _repoProxy;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IDtoManager _dtoManager;
+        
+        private readonly IChatRequestValidator _requestValidator;
+        private readonly IChatErrorHandler _errorHandler;
+        
         private ApplicationUser _user;
-
-        private readonly ILogger<ChatControllerService> _logger;
         
         public ChatControllerService(UserManager<ApplicationUser> userManager,
-            EntityRepository<Server, ApplicationDbContext> serverRepo,
-            EntityRepository<Channel, ApplicationDbContext> channelRepo,
-            EntityRepository<Message, ApplicationDbContext> messageRepo,
+            IChatEntityRepositoryProxy repoProxy,
             IDtoManager dtoManager,
             IChatRequestValidator requestValidator,
-            ILogger<ChatControllerService> logger)
+            IChatErrorHandler errorHandler)
         {
-            //TODO Reduce the size of constructor
             _userManager = userManager;
-            _serverRepo = serverRepo;
-            _channelRepo = channelRepo;
-            _messageRepo = messageRepo;
+            _repoProxy = repoProxy;
             _dtoManager = dtoManager;
             _requestValidator = requestValidator;
-            _logger = logger;
+            _errorHandler = errorHandler;
         }
 
         public void AssignApplicationUser(ClaimsPrincipal user)
@@ -60,7 +52,7 @@ namespace RedPoint.Areas.Chat.Services
         
         public List<ChannelDto> GetServerChannels(int serverId, IChatDtoFactory<Channel> dtoFactory)
         {
-            var server = TryFindingServer(serverId);
+            var server = _repoProxy.TryFindingServer(serverId, _user);
             
             List<Channel> userPermittedChannels = new List<Channel>();
             foreach (var channel in server.Channels)
@@ -77,12 +69,12 @@ namespace RedPoint.Areas.Chat.Services
         
         public List<UserChatDto> GetServerUserList(int serverId, IChatDtoFactory<ApplicationUser> dtoFactory)
         {
-            var server = TryFindingServer(serverId);
+            var server = _repoProxy.TryFindingServer(serverId, _user);
             var result = _requestValidator.IsServerRequestValid(server, _user, PermissionType.CanView);
 
             if (result.ErrorType != ChatErrorType.NoError)
             {
-                HandleChatError(result);
+                _errorHandler.HandleChatError(result);
             }
 
             return _dtoManager.CreateDtoList<ApplicationUser, UserChatDto>(server.Users, dtoFactory);
@@ -91,79 +83,18 @@ namespace RedPoint.Areas.Chat.Services
         
         public List<MessageDto> GetChannelMessages(int channelId, int serverId, IChatDtoFactory<Message> dtoFactory)
         {
-            var channel = TryFindingChannel(channelId);
-            var server = TryFindingServer(serverId);
+            var channel = _repoProxy.TryFindingChannel(channelId, _user);
+            var server = _repoProxy.TryFindingServer(serverId, _user);
             
             var result = _requestValidator.IsChannelRequestValid(channel, server, _user, PermissionType.CanView);
 
             if (result.ErrorType != ChatErrorType.NoError)
             {
-                HandleChatError(result);
+                _errorHandler.HandleChatError(result);
             }
             
             //TODO Lazy loading, return only 20-40 currently visible messages
             return _dtoManager.CreateDtoList<Message, MessageDto>(channel.Messages, dtoFactory);
-        }
-        
-        private Server TryFindingServer(int serverId)
-        {
-            Server server = _serverRepo.Find(serverId);
-
-            if (server == null)
-            {
-                ChatError chatError = new ChatError(ChatErrorType.ServerNotFound,
-                    LogLevel.Warning,
-                    $"Non-existing server (ID: {serverId}) requested by {_user.Id}");
-                
-                HandleChatError(chatError);
-            }
-
-            return server;
-        }
-
-        private Channel TryFindingChannel(int channelId)
-        {
-            Channel channel = _channelRepo.Find(channelId);
-            
-            if (channel == null)
-            {
-                ChatError chatError = new ChatError(ChatErrorType.ChannelNotFound,
-                    LogLevel.Warning,
-                    $"Non-existing channel (ID: {channelId}) requested by {_user.Id}");
-                
-                HandleChatError(chatError);
-            }
-
-            return channel;
-        }
-        
-        private void HandleChatError(ChatError chatError)
-        {
-            if (chatError.LogMessage != null)
-            {
-                _logger.Log(chatError.LogLevel, chatError.LogMessage);
-            }
-            
-            switch (chatError.ErrorType)
-            {
-                case ChatErrorType.UserNotInServer:
-                    throw new InvalidServerRequestException($"{_user.UserName} is not part of the server.");
-                
-                case ChatErrorType.ServerNotFound:
-                    throw new EntityNotFoundException("No server found.");
-                
-                case ChatErrorType.ChannelNotFound:
-                    throw new EntityNotFoundException("No channel found.");
-
-                case ChatErrorType.NoPermission:
-                    throw new LackOfPermissionException($"{_user.UserName} has no required permission.");
-
-                case ChatErrorType.NoError:
-                    return;
-                
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
     }
 }

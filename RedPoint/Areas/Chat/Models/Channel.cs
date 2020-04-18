@@ -10,7 +10,7 @@ namespace RedPoint.Areas.Chat.Models
     public class Channel : IEntity, IChatGroups
     {
         public int Id { get; set; }
-        public UniqueIdentifier UniqueId { get; set; }
+        public HubGroupIdentifier HubGroupId { get; set; }
 
         public string Name { get; set; }
         public string Description { get; set; }
@@ -19,7 +19,7 @@ namespace RedPoint.Areas.Chat.Models
 
         public Channel()
         {
-            UniqueId = new UniqueIdentifier();
+            HubGroupId = new HubGroupIdentifier();
             InitializeLists();
         }
 
@@ -29,7 +29,7 @@ namespace RedPoint.Areas.Chat.Models
 
             Name = channelDto.Name;
             Description = channelDto.Description;
-            UniqueId = channelDto.UniqueId;
+            HubGroupId = channelDto.HubGroupId;
         }
         
         private void InitializeLists()
