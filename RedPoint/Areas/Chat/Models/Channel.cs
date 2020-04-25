@@ -23,13 +23,13 @@ namespace RedPoint.Areas.Chat.Models
             InitializeLists();
         }
 
-        public Channel(ChannelDto channelDto)
+        public Channel(ChannelIconDto channelIconDto)
         {
             InitializeLists();
 
-            Name = channelDto.Name;
-            Description = channelDto.Description;
-            HubGroupId = channelDto.HubGroupId;
+            Name = channelIconDto.Name;
+            Description = channelIconDto.Description;
+            HubGroupId = channelIconDto.HubGroupId;
         }
         
         private void InitializeLists()

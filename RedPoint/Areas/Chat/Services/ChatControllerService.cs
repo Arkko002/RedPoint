@@ -6,13 +6,8 @@ using Microsoft.Extensions.Logging;
 using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.Dto;
+using RedPoint.Areas.Chat.Services.DtoFactories;
 using RedPoint.Areas.Chat.Services.Security;
-using RedPoint.Data;
-using RedPoint.Data.Repository;
-using RedPoint.Exceptions;
-using RedPoint.Exceptions.Security;
-using RedPoint.Services.DtoManager;
-using RedPoint.Utilities.DtoFactories;
 
 namespace RedPoint.Areas.Chat.Services
 {
@@ -20,8 +15,7 @@ namespace RedPoint.Areas.Chat.Services
     {
         private readonly IChatEntityRepositoryProxy _repoProxy;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IDtoManager _dtoManager;
-        
+
         private readonly IChatRequestValidator _requestValidator;
         private readonly IChatErrorHandler _errorHandler;
         
@@ -29,13 +23,11 @@ namespace RedPoint.Areas.Chat.Services
         
         public ChatControllerService(UserManager<ApplicationUser> userManager,
             IChatEntityRepositoryProxy repoProxy,
-            IDtoManager dtoManager,
             IChatRequestValidator requestValidator,
             IChatErrorHandler errorHandler)
         {
             _userManager = userManager;
             _repoProxy = repoProxy;
-            _dtoManager = dtoManager;
             _requestValidator = requestValidator;
             _errorHandler = errorHandler;
         }
@@ -45,43 +37,20 @@ namespace RedPoint.Areas.Chat.Services
             _user = _userManager.GetUserAsync(user).Result;
         }
         
-        public List<ServerDto> GetUserServers(IChatDtoFactory<Server> dtoFactory)
+        public List<ServerIconDto> GetUserServers(IChatDtoFactory<Server, ServerIconDto> dtoFactory)
         {
-            return _dtoManager.CreateDtoList<Server, ServerDto>(_user.Servers, dtoFactory);
+            return dtoFactory.CreateDtoList(_user.Servers);
         }
-        
-        public List<ChannelDto> GetServerChannels(int serverId, IChatDtoFactory<Channel> dtoFactory)
-        {
-            var server = _repoProxy.TryFindingServer(serverId, _user);
-            
-            List<Channel> userPermittedChannels = new List<Channel>();
-            foreach (var channel in server.Channels)
-            {
-                //TODO flow control
-                if (_requestValidator.IsChannelRequestValid(channel, server, _user, PermissionType.CanView).ErrorType == ChatErrorType.NoError)
-                {
-                    userPermittedChannels.Add(channel);
-                }
-            }
-            
-            return _dtoManager.CreateDtoList<Channel, ChannelDto>(userPermittedChannels, dtoFactory);
-        }
-        
-        public List<UserChatDto> GetServerUserList(int serverId, IChatDtoFactory<ApplicationUser> dtoFactory)
+
+        public ServerDataDto GetServerData(int serverId, IChatDtoFactory<Server, ServerDataDto> dtoFactory)
         {
             var server = _repoProxy.TryFindingServer(serverId, _user);
-            var result = _requestValidator.IsServerRequestValid(server, _user, PermissionType.CanView);
 
-            if (result.ErrorType != ChatErrorType.NoError)
-            {
-                _errorHandler.HandleChatError(result);
-            }
-
-            return _dtoManager.CreateDtoList<ApplicationUser, UserChatDto>(server.Users, dtoFactory);
+            return dtoFactory.CreateDto(server);
         }
-
         
-        public List<MessageDto> GetChannelMessages(int channelId, int serverId, IChatDtoFactory<Message> dtoFactory)
+        //TODO
+        public List<MessageDto> GetChannelMessages(int channelId, int serverId, IChatDtoFactory<Message, MessageDto> dtoFactory)
         {
             var channel = _repoProxy.TryFindingChannel(channelId, _user);
             var server = _repoProxy.TryFindingServer(serverId, _user);
@@ -94,7 +63,6 @@ namespace RedPoint.Areas.Chat.Services
             }
             
             //TODO Lazy loading, return only 20-40 currently visible messages
-            return _dtoManager.CreateDtoList<Message, MessageDto>(channel.Messages, dtoFactory);
         }
     }
 }

@@ -32,7 +32,6 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Areas\Chat\Data\" />
-    <Folder Include="Services" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Data;
@@ -11,22 +12,6 @@ namespace RedPoint.Areas.Chat.Models
     /// </summary>
     public class Server : IEntity, IChatGroups
     {
-        public Server()
-        {
-            HubGroupId = new HubGroupIdentifier();
-            InitializeLists();
-        }
-
-        public Server(ServerDto serverDto)
-        {
-            Name = serverDto.Name;
-            Description = serverDto.Description;
-            ImagePath = serverDto.ImagePath;
-            IsVisible = serverDto.IsVisible;
-
-            InitializeLists();
-        }
-
         public int Id { get; set; }
         public HubGroupIdentifier HubGroupId { get; set; }
 
@@ -35,7 +20,7 @@ namespace RedPoint.Areas.Chat.Models
 
         [Required] public string Description { get; set; }
 
-        public string ImagePath { get; set; }
+        public Bitmap Image { get; set; }
 
         public List<ApplicationUser> Users { get; set; }
         public IEnumerable<Group> Groups { get; set; }
@@ -44,8 +29,24 @@ namespace RedPoint.Areas.Chat.Models
         //Determines if server is visible in the server browser
         public bool IsVisible { get; set; }
 
-        private void InitializeLists()
+        public Server()
         {
+            InitializeVariables();
+        }
+
+        public Server(ServerIconDto serverIconDto)
+        {
+            Name = serverIconDto.Name;
+            Description = serverIconDto.Description;
+            Image = serverIconDto.Image;
+            IsVisible = serverIconDto.IsVisible;
+
+            InitializeVariables();
+        }
+        
+        private void InitializeVariables()
+        {
+            HubGroupId = new HubGroupIdentifier();
             Users = new List<ApplicationUser>();
             Groups = new List<Group>();
             Channels = new List<Channel>();

@@ -37,12 +37,12 @@ namespace RedPoint.Areas.Chat.Services
             _user = _userManager.GetUserAsync(user).Result;
         }
 
-        public void AddChannel(int serverId, ChannelDto channel)
+        public void AddChannel(int serverId, ChannelIconDto channelIcon)
         {
             var result = CheckServerRequest(serverId, PermissionType.CanManageChannels);
             CheckChatError(result);
             
-            var newChannel = new Channel(channel);
+            var newChannel = new Channel(channelIcon);
 
             _repoProxy.ChannelRepository.Add(newChannel);
             _unitOfWork.Submit();
@@ -59,9 +59,9 @@ namespace RedPoint.Areas.Chat.Services
             _unitOfWork.Submit();
         }
 
-        public void AddServer(ServerDto server)
+        public void AddServer(ServerIconDto serverIcon)
         {
-            var newServer = new Server(server);
+            var newServer = new Server(serverIcon);
 
             _repoProxy.ServerRepository.Add(newServer);
             _unitOfWork.Submit();

@@ -17,14 +17,14 @@ using RedPoint.Areas.Account.Services.Security;
 using RedPoint.Areas.Chat.Hubs;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Services;
+using RedPoint.Areas.Chat.Services.DtoFactories;
 using RedPoint.Areas.Chat.Services.Security;
+using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Data;
 using RedPoint.Data.Repository;
 using RedPoint.Data.UnitOfWork;
 using RedPoint.Middleware;
-using RedPoint.Services;
-using RedPoint.Services.DtoManager;
-using RedPoint.Utilities.DtoFactories;
+
 
 namespace RedPoint
 {
@@ -101,14 +101,20 @@ namespace RedPoint
             services.AddScoped(x => new EntityUnitOfWork(x.GetRequiredService<DbContext>()));
             services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<,>));
             
-            services.AddScoped(typeof(IChatDtoFactory<Channel>), typeof(ChannelDtoFactory));
-            services.AddScoped(typeof(IChatDtoFactory<ApplicationUser>), typeof(UserDtoFactory));
-            services.AddScoped(typeof(IChatDtoFactory<Message>), typeof(MessageDtoFactory));
-            services.AddScoped(typeof(IChatDtoFactory<Server>), typeof(ServerDtoFactory));
+            
+            services.AddScoped(typeof(IChatDtoFactory<Channel, ChannelIconDto>), typeof(ChannelIconDtoFactory));
+            services.AddScoped(typeof(IChatDtoFactory<Channel, ChannelDataDto>), typeof(ChannelDataDtoFactory));
+            
+            services.AddScoped(typeof(IChatDtoFactory<Server, ServerIconDto>), typeof(ServerIconDtoFactory));
+            services.AddScoped(typeof(IChatDtoFactory<Server, ServerDataDto>), typeof(ServerDataDtoFactory));
+            
+            services.AddScoped(typeof(IChatDtoFactory<ApplicationUser, UserChatDto>), typeof(UserDtoFactory));
+            services.AddScoped(typeof(IChatDtoFactory<Message, MessageDto>), typeof(MessageDtoFactory));
+
             
             services.AddScoped(typeof(IAccountRequestValidator), typeof(AccountRequestValidator));
             services.AddScoped(typeof(IChatRequestValidator), typeof(ChatRequestValidator));
-            services.AddScoped(typeof(IDtoManager), typeof(DtoManager));
+
 
             services.AddScoped(typeof(IChatControllerService), typeof(ChatControllerService));
             services.AddScoped(typeof(IChatHubService), typeof(ChatHubService));

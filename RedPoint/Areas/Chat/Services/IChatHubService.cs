@@ -6,9 +6,9 @@ namespace RedPoint.Areas.Chat.Services
     public interface IChatHubService
     {
         void AssignApplicationUser(ClaimsPrincipal user);
-        void AddServer(ServerDto server);
+        void AddServer(ServerIconDto serverIcon);
         void AddMessage(int channelId, int serverId, MessageDto message);
-        void AddChannel(int serverId, ChannelDto channel);
+        void AddChannel(int serverId, ChannelIconDto channelIcon);
 
         void DeleteChannel(int channelId, int serverId);
         void DeleteServer(int serverId);

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RedPoint.Areas.Chat.Services;
-using RedPoint.Services;
-using RedPoint.Utilities.DtoFactories;
+using RedPoint.Areas.Chat.Services.DtoFactories;
 
 namespace RedPoint.Areas.Chat.Controllers
 {
@@ -19,39 +18,24 @@ namespace RedPoint.Areas.Chat.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserServers([FromServices] ServerDtoFactory dtoFactory)
+        [Route("chat/servers")]
+        public IActionResult GetUserServers([FromServices] ServerIconDtoFactory iconDtoFactory)
         {
-            var dtoList = _chatService.GetUserServers(dtoFactory);
+            var dtoList = _chatService.GetUserServers(iconDtoFactory);
 
             return Ok(dtoList);
         }
 
         [HttpGet]
-        public IActionResult GetServerChannels([FromBody] int serverId,
-            [FromServices] ChannelDtoFactory dtoFactory)
+        [Route("chat/server/{serverId}")]
+        public IActionResult GetServer(int serverId,
+            [FromServices] ServerDataDtoFactory dataDtoFactory)
         {
-            var dtoList = _chatService.GetServerChannels(serverId, dtoFactory);
+            //TODO!!! Include all of the stubs in ServerStub, send everything in one request
 
-            return Ok(dtoList);
-        }
+            var dto = _chatService.GetServerData(serverId, dataDtoFactory);
 
-        [HttpGet]
-        public IActionResult GetServerUserList([FromBody] int serverId,
-            [FromServices] UserDtoFactory dtoFactory)
-        {
-            var dtoList = _chatService.GetServerUserList(serverId, dtoFactory);
-
-            return Ok(dtoList);
-        }
-
-        [HttpGet]
-        public IActionResult GetChannelMessages([FromBody] int channelId,
-            [FromBody] int serverId,
-            [FromServices] MessageDtoFactory dtoFactory)
-        {
-            var dtoList = _chatService.GetChannelMessages(channelId, serverId, dtoFactory);
-
-            return Ok(dtoList);
+            return Ok(dto);
         }
     }
 }

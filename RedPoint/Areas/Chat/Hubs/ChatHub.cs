@@ -7,9 +7,9 @@ namespace RedPoint.Areas.Chat.Hubs
 {
     public interface IChatHub
     {
-        Task ServerAdded(ServerDto server);
+        Task ServerAdded(ServerIconDto serverIcon);
         Task MessageAdded(MessageDto message);
-        Task ChannelAdded(ChannelDto channel);
+        Task ChannelAdded(ChannelIconDto channelIcon);
 
         Task ServerDeleted(int serverId);
         Task MessageDeleted(int messageId);
@@ -18,7 +18,7 @@ namespace RedPoint.Areas.Chat.Hubs
         Task ChannelChanged(string channelUniqueId);
         Task ServerChanged(string serverUniqueId);
 
-        Task JoinedServer(ServerDto server);
+        Task JoinedServer(ServerIconDto serverIcon);
     }
 
     public class ChatHub : Hub<IChatHub>
@@ -31,12 +31,12 @@ namespace RedPoint.Areas.Chat.Hubs
             _chatService.AssignApplicationUser(Context.User);
         }
 
-        public Task AddServer(ServerDto server)
+        public Task AddServer(ServerIconDto serverIcon)
         {
-            _chatService.AddServer(server);
+            _chatService.AddServer(serverIcon);
 
-            Groups.AddToGroupAsync(Context.ConnectionId, server.HubGroupId.IdString);
-            return Clients.Group(server.HubGroupId.IdString).ServerAdded(server);
+            Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId.IdString);
+            return Clients.Group(serverIcon.HubGroupId.IdString).ServerAdded(serverIcon);
         }
 
         public Task AddMessage(MessageDto message, string channelUniqueId, int channelId, int serverId)
@@ -46,11 +46,11 @@ namespace RedPoint.Areas.Chat.Hubs
             return Clients.Group(channelUniqueId).MessageAdded(message);
         }
 
-        public Task AddChannel(ChannelDto channel, string serverUniqueId, int serverId)
+        public Task AddChannel(ChannelIconDto channelIcon, string serverUniqueId, int serverId)
         {
-            _chatService.AddChannel(serverId, channel);
+            _chatService.AddChannel(serverId, channelIcon);
 
-            return Clients.Group(serverUniqueId).ChannelAdded(channel);
+            return Clients.Group(serverUniqueId).ChannelAdded(channelIcon);
         }
 
         public Task DeleteServer(int serverId, string serverGroupId)
@@ -90,11 +90,11 @@ namespace RedPoint.Areas.Chat.Hubs
             return Clients.Caller.ServerChanged(newServerUniqueId);
         }
 
-        public Task JoinServer(ServerDto server)
+        public Task JoinServer(ServerIconDto serverIcon)
         {
-            Groups.AddToGroupAsync(Context.ConnectionId, server.HubGroupId.IdString);
+            Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId.IdString);
 
-            return Clients.Caller.JoinedServer(server);
+            return Clients.Caller.JoinedServer(serverIcon);
         }
     }
 }

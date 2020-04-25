@@ -1,4 +1,6 @@
-﻿namespace RedPoint.Areas.Chat.Models.Dto
+﻿using System.Drawing;
+
+namespace RedPoint.Areas.Chat.Models.Dto
 {
     /// <summary>
     ///     DTO class for ApplicationUser
@@ -11,6 +13,6 @@
 
         public string CurrentChannelId { get; set; }
         public int CurrentServerId { get; set; }
-        public string ImagePath { get; set; }
+        public Bitmap Image { get; set; }
     }
 }
