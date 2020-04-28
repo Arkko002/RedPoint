@@ -49,7 +49,6 @@ namespace RedPoint.Areas.Chat.Services
             return dtoFactory.CreateDto(server);
         }
         
-        //TODO
         public List<MessageDto> GetChannelMessages(int channelId, int serverId, IChatDtoFactory<Message, MessageDto> dtoFactory)
         {
             var channel = _repoProxy.TryFindingChannel(channelId, _user);
@@ -61,8 +60,9 @@ namespace RedPoint.Areas.Chat.Services
             {
                 _errorHandler.HandleChatError(result);
             }
-            
-            //TODO Lazy loading, return only 20-40 currently visible messages
+
+            //TODO Pagination, return 20-40 messages in one batch
+            return dtoFactory.CreateDtoList(channel.Messages);
         }
     }
 }

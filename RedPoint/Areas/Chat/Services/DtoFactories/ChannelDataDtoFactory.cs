@@ -6,14 +6,32 @@ namespace RedPoint.Areas.Chat.Services.DtoFactories
 {
     public class ChannelDataDtoFactory : IChatDtoFactory<Channel, ChannelDataDto>
     {
+        private IChatDtoFactory<Message, MessageDto> _messageFactory;
+
+        public ChannelDataDtoFactory(IChatDtoFactory<Message, MessageDto> messageFactory)
+        {
+            _messageFactory = messageFactory;
+        }
+        
         public ChannelDataDto CreateDto(Channel sourceObject)
         {
-            throw new System.NotImplementedException();
+            ChannelDataDto dto = new ChannelDataDto();
+            dto.Id = sourceObject.Id;
+            dto.Messages = _messageFactory.CreateDtoList(sourceObject.Messages);
+
+            return dto;
         }
 
         public List<ChannelDataDto> CreateDtoList(List<Channel> sourceList)
         {
-            throw new System.NotImplementedException();
+            List<ChannelDataDto> dtoList = new List<ChannelDataDto>();
+
+            foreach (var channel in sourceList)
+            {
+                dtoList.Add(CreateDto(channel));
+            }
+
+            return dtoList;
         }
     }
 }

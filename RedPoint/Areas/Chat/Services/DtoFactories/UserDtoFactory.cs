@@ -6,11 +6,6 @@ namespace RedPoint.Areas.Chat.Services.DtoFactories
 {
     public class UserDtoFactory : IChatDtoFactory<ApplicationUser, UserChatDto>
     {
-        public List<IDto> GetDtoList(List<ApplicationUser> sourceList)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public UserChatDto CreateDto(ApplicationUser sourceObject)
         {
             var userDto = new UserChatDto

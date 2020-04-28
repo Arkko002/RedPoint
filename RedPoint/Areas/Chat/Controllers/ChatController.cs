@@ -31,9 +31,15 @@ namespace RedPoint.Areas.Chat.Controllers
         public IActionResult GetServer(int serverId,
             [FromServices] ServerDataDtoFactory dataDtoFactory)
         {
-            //TODO!!! Include all of the stubs in ServerStub, send everything in one request
-
             var dto = _chatService.GetServerData(serverId, dataDtoFactory);
+
+            return Ok(dto);
+        }
+
+        public IActionResult GetChannelMessages(int channelId, int serverId,
+            [FromServices] MessageDtoFactory messageDtoFactory)
+        {
+            var dto = _chatService.GetChannelMessages(channelId, serverId, messageDtoFactory);
 
             return Ok(dto);
         }
