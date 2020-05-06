@@ -70,6 +70,7 @@ namespace RedPoint.Areas.Account.Services
                 AccountError error = new AccountError(AccountErrorType.UserLockedOut,
                     LogLevel.Warning,
                     $"{_user.Id} was locked out of account.");
+                HandleAccountError(error);
                 
             }
             

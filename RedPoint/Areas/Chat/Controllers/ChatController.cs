@@ -36,6 +36,8 @@ namespace RedPoint.Areas.Chat.Controllers
             return Ok(dto);
         }
 
+        [HttpGet]
+        [Route("chat/server/{serverId}/{channelId}")]
         public IActionResult GetChannelMessages(int channelId, int serverId,
             [FromServices] MessageDtoFactory messageDtoFactory)
         {

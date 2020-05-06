@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RedPoint.Models;
+using Newtonsoft.Json;
 
 namespace RedPoint.Middleware
 {
@@ -31,11 +32,11 @@ namespace RedPoint.Middleware
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-            return context.Response.WriteAsync(new GlobalErrorDetails
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(new GlobalErrorDetails
             {
                 StatusCode = context.Response.StatusCode,
                 Message = exception.Message
-            }.ToString());
+            }));
         }
     }
 }

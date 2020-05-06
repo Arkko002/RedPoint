@@ -1,13 +1,20 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import { authentication } from "./authentication.module";
+import { authentication } from "./modules/authentication.module";
+import { alert } from "./modules/alert.module";
 
 Vue.use(Vuex);
 
-export const store = new Vuex.store({
+export default new Vuex.store({
   modules: {
     authentication,
     alert
+  },
+  
+  getters: {
+    loggedIn(state) {
+      return !!state.user
+    }
   }
 });

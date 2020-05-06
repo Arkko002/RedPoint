@@ -1,6 +1,7 @@
-import userService from "../common/user.service";
-import router from "../router/index";
+import userService from "../../common/api/user.service"
+import router from "../../router/index"
 
+//TODO Add mapGetters for loggedIn etc.
 //Set user status as logged in if JWT token found in local storage
 const user = JSON.parse(localStorage.getItem("user"));
 const initialState = user
