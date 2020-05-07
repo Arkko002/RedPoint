@@ -8,6 +8,13 @@ namespace RedPoint.Areas.Account.Services.Security
 {
     public class AccountRequestValidator : IAccountRequestValidator
     {
+        private IAccountSecurityConfigurationProvider _provider;
+
+        public AccountRequestValidator(IAccountSecurityConfigurationProvider provider)
+        {
+            _provider = provider;
+        }
+        
         public AccountError IsLoginRequestValid(UserLoginDto requestDto)
         {
             throw new NotImplementedException();
@@ -15,9 +22,8 @@ namespace RedPoint.Areas.Account.Services.Security
 
         public AccountError IsRegisterRequestValid(UserRegisterDto requestDto)
         {
-            var passwordFile = File.ReadAllLines("test.txt"); // TODO Add configurable path to file
-            var passwordList = new List<string>(passwordFile);
-
+            var passwordList = _provider.GetBlacklistedPasswords();
+            
             if (passwordList.Contains(requestDto.Password))
             {
                 return new AccountError(AccountErrorType.PasswordTooWeak);
