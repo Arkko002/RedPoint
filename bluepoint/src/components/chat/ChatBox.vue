@@ -1,7 +1,7 @@
 <template>
   <div class="chatbox-container">
     <!-- TODO Iterate over last 20 messages, not all of the messages in server -->
-    <li v-for="message in messageArray" :key="message.id">
+    <li v-for="message in messages" :key="message.id">
       <label>
         <img
           v-bind:src="message.user.imagepath"
@@ -20,25 +20,35 @@
     </li>
 
     <div class="message-box">
-      <input type="text" class="message-box-input" id="messageInput" />
+      <input type="text" class="message-box-input" id="messageInput"  v-model="message"/>
       <button
         class="message-box-button"
-        v-on:click="sendMessage(messageInput.value)"
+        v-on:click="sendMessage(message)"
       />
     </div>
   </div>
 </template>
 
 <script>
-export default {
+  import ChatService from "bluepoint/src/common/chat.service"
+
+
+  export default {
   name: "ChatBox",
-  props: ["messageArray"],
+  props: ["messages"],
+
 
   methods: {
-    sendMessage(message) {
-      if (message.length == 0) return;
+    sendMessage(messageText) {
+      if (messageText.length === 0) return;
 
-      this.$emit("message-sent", message);
+      const message = {
+        text: messageText,
+        datetime: Date.now(),
+        user: this.currentUser
+      };
+
+      ChatService.sendMessage(message)
     }
   }
 };

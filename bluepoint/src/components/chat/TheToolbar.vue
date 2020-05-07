@@ -6,10 +6,14 @@
 </template>
 
 <script>
-import ToolbarSearchFIeld from "./ToolbarSearchField.vue";
+import ToolbarSearchField from "./ToolbarSearchField.vue";
 import ToolbarUserInfo from "./ToolbarUserInfo.vue";
 
 export default {
-  name: "TheToolbar"
+  name: "TheToolbar",
+  components: {
+    ToolbarSearchField,
+    ToolbarUserInfo
+  }
 };
 </script>

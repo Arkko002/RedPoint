@@ -3,18 +3,33 @@ import api from "./api"
 export default {
   fetchServers,
   fetchServerData,
-  fetchChannelData
+  fetchChannelData,
+  sendMessage,
+  sendClosingData
 };
 
 
 function fetchServers() {
-  return api.get("/chat/servers")
+  api.get("chat/servers")
+      .then(response => { return response})
 }
 
 function fetchServerData(serverId){
-  return api.get(`/chat/server/${serverId}`)
+  api.get(`chat/server/${serverId}`)
+      .then(response => { return response})
 }
 
 function fetchChannelData(channelId, serverId){
-  return api.get(`/chat/server/${serverId}/${channelId}`)
+  api.get(`chat/server/${serverId}/${channelId}`)
+      .then(response => { return response})
 }
+
+function sendMessage(message) {
+  
+}
+
+function sendClosingData(data) {
+  api.post("chat/close", data)
+      .then(response => { return response})
+}
+

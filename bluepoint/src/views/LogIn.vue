@@ -1,7 +1,7 @@
 <template>
   <div class="sign-in-container">
     <TheNavbar />
-    <LogInFrom />
+    <LogInForm />
   </div>
 </template>
 

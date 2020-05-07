@@ -33,9 +33,9 @@ export default {
 
   computed: {
     requiredFieldsFilled() {
-      if (!this.userName || !this.password) return false;
+      return !(!this.userName || !this.password);
 
-      return true;
+      
     },
 
     loggingIn() {

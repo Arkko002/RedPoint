@@ -6,10 +6,14 @@
 </template>
 
 <script>
-import TheNavbar from "@/components/TheNavbar.vue";
+import TheNavbar from "@/components/TheNavbar";
 import RegisterForm from "@/components/RegisterForm.vue";
 
 export default {
-  name: "Register"
+  name: "Register",
+  components: {
+    TheNavbar,
+    RegisterForm
+  }
 };
 </script>
