@@ -1,4 +1,6 @@
-[![Build Status](https://dev.azure.com/Arkko/RedPoint/_apis/build/status/Arkko002.RedPoint?branchName=master)](https://dev.azure.com/Arkko/RedPoint/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/Arkko/RedPoint/_apis/build/status/Arkko002.RedPoint?branchName=master)](https://dev.azure.com/Arkko/RedPoint/_build/latest?definitionId=1&branchName=master) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/Arkko002/RedPoint.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Arkko002/RedPoint/context:javascript)
+
+
 # RedPoint
 
 ## Description
