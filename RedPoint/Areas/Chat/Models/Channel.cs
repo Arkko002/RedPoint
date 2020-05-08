@@ -15,7 +15,7 @@ namespace RedPoint.Areas.Chat.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public List<Message> Messages { get; set; }
-        public IEnumerable<Group> Groups { get; set; }
+        public List<Group> Groups { get; set; }
 
         public Channel()
         {

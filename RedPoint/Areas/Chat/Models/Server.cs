@@ -23,7 +23,7 @@ namespace RedPoint.Areas.Chat.Models
         public Bitmap Image { get; set; }
 
         public List<ApplicationUser> Users { get; set; }
-        public IEnumerable<Group> Groups { get; set; }
+        public List<Group> Groups { get; set; }
         public List<Channel> Channels { get; set; }
 
         //Determines if server is visible in the server browser
