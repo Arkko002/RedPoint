@@ -6,7 +6,7 @@ namespace RedPoint.Areas.Account.Services.Security
 {
     public class AccountSecurityConfigurationProvider : IAccountSecurityConfigurationProvider
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public AccountSecurityConfigurationProvider(IConfiguration configuration)
         {

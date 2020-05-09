@@ -21,13 +21,19 @@ namespace RedPoint.Data.Repository
         public void Add(TEntity entity)
         {
             var entry = Context.Entry(entity);
-            if (entry.State == EntityState.Detached) Set.Add(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                Set.Add(entity);
+            }
         }
 
         public void Delete(TEntity entity)
         {
             var entry = Context.Entry(entity);
-            if (entry.State == EntityState.Detached) Set.Attach(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                Set.Attach(entity);
+            }
             Set.Remove(entity);
         }
 
@@ -39,7 +45,10 @@ namespace RedPoint.Data.Repository
         public void Update(TEntity entity)
         {
             var entry = Context.Entry(entity);
-            if (entry.State == EntityState.Detached) Set.Attach(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                Set.Attach(entity);
+            }
             entry.State = EntityState.Modified;
         }
     }

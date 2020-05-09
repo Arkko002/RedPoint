@@ -32,7 +32,10 @@ namespace RedPoint.Data.UnitOfWork
 
         public TDbContext GetContext<TDbContext>() where TDbContext : DbContext
         {
-            if (HasEnded) throw new ObjectDisposedException("Unit of Work has been disposed.");
+            if (HasEnded)
+            {
+                throw new ObjectDisposedException("Unit of Work has been disposed.");
+            }
 
             return (TDbContext) _context;
         }

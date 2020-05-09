@@ -8,6 +8,5 @@ const status = {
 //TODO should this be a vuex state?
 export const status = {
     state : {
-        userStatusState: 
     }
 } 

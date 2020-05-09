@@ -8,7 +8,7 @@ namespace RedPoint.Tests.Chat
 {
     public class ChatRequestValidatorTests
     {
-        private ChatRequestValidator _validator;
+        private readonly ChatRequestValidator _validator;
         
         public ChatRequestValidatorTests()
         {

@@ -9,7 +9,7 @@ namespace RedPoint.Tests.Account
     public class MockConfiguration : IConfiguration
     {
         private readonly Dictionary<string, string> dict;
-        private string _passwordFileVariant;
+        private readonly string _passwordFileVariant;
         
         public MockConfiguration(string passwordFileVariant)
         {

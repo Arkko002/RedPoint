@@ -12,10 +12,30 @@ namespace RedPoint.Areas.Chat.Services.Security
         
         public ChatErrorType ErrorType { get; }
 
+        
+        /// <summary>
+        /// Constructor only for NoError type objects
+        /// </summary>
+        /// <param name="errorType"></param>
+        public ChatError(ChatErrorType errorType)
+        {
+            ErrorType = errorType;
+        }
+
         public ChatError(ChatErrorType errorType,
-            ApplicationUser user = null,
-            LogLevel logLevel = LogLevel.None,
-            string logMessage = null)
+            LogLevel logLevel,
+            string logMessage)
+        {
+            ErrorType = errorType;
+            LogLevel = logLevel;
+            LogMessage = logMessage;
+        }
+        
+        public ChatError(ChatErrorType errorType,
+            ApplicationUser user,
+            LogLevel logLevel,
+            string logMessage
+            )
         {
             User = user;
             LogLevel = logLevel;

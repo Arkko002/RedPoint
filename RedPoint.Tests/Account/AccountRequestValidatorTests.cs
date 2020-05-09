@@ -7,7 +7,7 @@ namespace RedPoint.Tests.Account
 {
     public class AccountRequestValidatorTests
     {
-        private AccountRequestValidator _requestValidator;
+        private readonly AccountRequestValidator _requestValidator;
         
         public AccountRequestValidatorTests()
         {
@@ -22,7 +22,7 @@ namespace RedPoint.Tests.Account
         [Fact]
         public void ValidRequestForm_ShouldReturnNoErrorType()
         {
-            UserRegisterDto dto = new UserRegisterDto()
+            UserRegisterDto dto = new UserRegisterDto
             {
                 Username = "ValidUsername",
                 Password = "SecurePassword"

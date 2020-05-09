@@ -24,7 +24,7 @@ namespace RedPoint.Middleware
             }
             catch (Exception ex)
             {
-                await HandleGlobalExceptionAsync(httpContext, ex);
+                await HandleGlobalExceptionAsync(httpContext, ex).ConfigureAwait(false);
             }
         }
 

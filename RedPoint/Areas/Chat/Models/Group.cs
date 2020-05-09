@@ -21,7 +21,10 @@ namespace RedPoint.Areas.Chat.Models
         {
             HubGroupId = new HubGroupIdentifier();
 
-            if (Name == "Default") CanBeDeleted = false;
+            if (Name == "Default")
+            {
+                CanBeDeleted = false;
+            }
 
             Users = new List<ApplicationUser>();
             GroupPermissions = new List<PermissionType>();

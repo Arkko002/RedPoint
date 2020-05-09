@@ -3,7 +3,7 @@
     <li v-for="server in serverArray" :key="server.id">
       <label>
         <input type="radio" v-bind:value="server.name" />
-        <img v-bind:src="server.imagepath" />
+        <img v-bind:src="server.image" />
       </label>
     </li>
   </div>

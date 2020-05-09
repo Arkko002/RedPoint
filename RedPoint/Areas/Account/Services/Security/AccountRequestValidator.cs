@@ -8,7 +8,7 @@ namespace RedPoint.Areas.Account.Services.Security
 {
     public class AccountRequestValidator : IAccountRequestValidator
     {
-        private IAccountSecurityConfigurationProvider _provider;
+        private readonly IAccountSecurityConfigurationProvider _provider;
 
         public AccountRequestValidator(IAccountSecurityConfigurationProvider provider)
         {

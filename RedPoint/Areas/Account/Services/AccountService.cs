@@ -62,7 +62,7 @@ namespace RedPoint.Areas.Account.Services
             if (result.Succeeded)
             {
                 var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
-                return await GenerateJwtToken(model.Username, appUser);
+                return await GenerateJwtToken(model.Username, appUser).ConfigureAwait(false);
             }
 
             if (result.IsLockedOut)
@@ -71,10 +71,15 @@ namespace RedPoint.Areas.Account.Services
                     LogLevel.Warning,
                     $"{_user.Id} was locked out of account.");
                 HandleAccountError(error);
-                
             }
             
-            throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+            AccountError unknownError = new AccountError(AccountErrorType.UnknownError,
+                LogLevel.Critical,
+                $"{_user.Id} has caused an unknown error in Login method");
+            HandleAccountError(unknownError);
+
+            //Will never return null, as HandleAccountError always throws an exception on unknown error
+            return null;
         }
         
 
@@ -96,10 +101,16 @@ namespace RedPoint.Areas.Account.Services
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return await GenerateJwtToken(model.Username, user);
+                return await GenerateJwtToken(model.Username, user).ConfigureAwait(false);
             }
             
-            throw new ApplicationException("UNKNOWN_ERROR");
+            AccountError unknownError = new AccountError(AccountErrorType.UnknownError,
+                LogLevel.Critical,
+                $"{_user.Id} has caused an unknown error in Register method");
+            HandleAccountError(unknownError);
+
+            //Will never return null, as HandleAccountError always throws an exception on unknown error
+            return null;
         }
         
         private void HandleAccountError(AccountError accountError)
@@ -119,6 +130,9 @@ namespace RedPoint.Areas.Account.Services
                 
                 case AccountErrorType.UserLockedOut:
                     throw new InvalidRequestException("User was locked out of the account.");
+                
+                default:
+                    throw new InvalidRequestException("Unknown Error");
             }
         }
         

@@ -14,7 +14,7 @@ export default new Vuex.store({
   
   getters: {
     loggedIn(state) {
-      return !!state.user
+      return !!state.userl
     }
   }
 });

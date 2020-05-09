@@ -1,10 +1,12 @@
 <script>
+import router from "@/router/index"
+
 export default {
   name: "LogOut",
   created() {
-    var user = localStorage.getItem("user");
+      const user = localStorage.getItem("user");
 
-    if (user == null) {
+      if (user == null) {
       router.push("/");
       return;
     }

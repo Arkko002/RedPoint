@@ -34,6 +34,7 @@ namespace RedPoint.Areas.Chat.Services.Security
 
         public ChatError IsChannelRequestValid(Channel channel, Server server, ApplicationUser user, PermissionType permissionType)
         {
+            //TODO Check if channel is part of the server
             if (!IsUserInServer(server, user))
             {
                 return new ChatError(ChatErrorType.UserNotInServer,

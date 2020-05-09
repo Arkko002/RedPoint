@@ -4,6 +4,7 @@ namespace RedPoint.Areas.Account.Services.Security
     {
         NoError,
         PasswordTooWeak,
-        UserLockedOut
+        UserLockedOut,
+        UnknownError
     }
 }

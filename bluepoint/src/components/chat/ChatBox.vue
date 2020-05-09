@@ -4,7 +4,7 @@
     <li v-for="message in messages" :key="message.id">
       <label>
         <img
-          v-bind:src="message.user.imagepath"
+          v-bind:src="message.user.image"
           class="message message-user-image"
         />
         <label
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import ChatService from "bluepoint/src/common/chat.service"
+  import ChatService from "@/common/chat.service"
 
 
   export default {

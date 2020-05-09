@@ -25,9 +25,9 @@ export default {
   
   created() {
     //TODO Caching
-    this.serverArray = ChatService.fetchServers();
-    this.currentChannel = ChatService.fetchChannelData(this.currentUser.currentChannelId)
-    this.currentServer = ChatService.fetchServerData(this.currentUser.currentServerId)
+    this.serverArray = JSON.parse(ChatService.fetchServers())
+    this.currentChannel = JSON.parse(ChatService.fetchChannelData(this.currentUser.currentChannelId))
+    this.currentServer = JSON.parse(ChatService.fetchServerData(this.currentUser.currentServerId))
   },
   
   beforeDestroy() {
@@ -38,14 +38,7 @@ export default {
     return {
       serverArray: null,
       
-      /**
-       * @param currentServer.users   List of user on the server
-       */
       currentServer: null,
-
-      /**
-       * @param currentChannel.messages   List of messages in the channel
-       */
       currentChannel: null,
     }
   },

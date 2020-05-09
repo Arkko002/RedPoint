@@ -11,11 +11,11 @@ export default Axios.create({
     }
 })
 
-Axios.interceptors.response.use(response => {
-    return response.data
-}, error => {
+Axios.interceptors.response.use((response) => {
+    return response.data;
+}, (error) => {
     if (error.response && error.response.data){
         //TODO Global error handling
     }
-    return Promise.reject(error)
-})
+    return Promise.reject(error);
+});

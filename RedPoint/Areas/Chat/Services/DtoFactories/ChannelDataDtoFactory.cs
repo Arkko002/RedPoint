@@ -6,7 +6,7 @@ namespace RedPoint.Areas.Chat.Services.DtoFactories
 {
     public class ChannelDataDtoFactory : IChatDtoFactory<Channel, ChannelDataDto>
     {
-        private IChatDtoFactory<Message, MessageDto> _messageFactory;
+        private readonly IChatDtoFactory<Message, MessageDto> _messageFactory;
 
         public ChannelDataDtoFactory(IChatDtoFactory<Message, MessageDto> messageFactory)
         {

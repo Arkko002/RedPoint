@@ -9,7 +9,16 @@ namespace RedPoint.Areas.Account.Services.Security
 
         public AccountErrorType ErrorType {get;}
 
-        public AccountError(AccountErrorType errorType, LogLevel logLevel = LogLevel.None, string logMessage = null)
+        /// <summary>
+        /// Constructor only for NoError type objects
+        /// </summary>
+        /// <param name="errorType"></param>
+        public AccountError(AccountErrorType errorType)
+        {
+            ErrorType = errorType;
+        }
+        
+        public AccountError(AccountErrorType errorType, LogLevel logLevel, string logMessage)
         {
             ErrorType = errorType;
             LogLevel = logLevel;

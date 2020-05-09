@@ -7,8 +7,8 @@ namespace RedPoint.Areas.Chat.Services.DtoFactories
 {
     public class ServerDataDtoFactory : IChatDtoFactory<Server, ServerDataDto>
     {
-        private IChatDtoFactory<Channel, ChannelIconDto> _channelFactory;
-        private IChatDtoFactory<ApplicationUser, UserChatDto> _userFactory;
+        private readonly IChatDtoFactory<Channel, ChannelIconDto> _channelFactory;
+        private readonly IChatDtoFactory<ApplicationUser, UserChatDto> _userFactory;
 
         public ServerDataDtoFactory(IChatDtoFactory<Channel, ChannelIconDto> channelFactory,
             IChatDtoFactory<ApplicationUser, UserChatDto> userFactory)

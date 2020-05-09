@@ -3,7 +3,7 @@
     <li v-for="user in userArray" :key="user.id">
       <label>
         <input type="button" v-bind:value="user.name" />
-        <img v-bind:src="user.imagepath" />
+        <img v-bind:src="user.image" />
       </label>
     </li>
   </div>

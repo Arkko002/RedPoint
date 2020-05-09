@@ -18,7 +18,7 @@ namespace RedPoint
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Debug(e.Message);
                 throw;
             }
             finally

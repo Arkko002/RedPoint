@@ -1,5 +1,5 @@
-import userService from "../../common/api/user.service"
-import router from "../../router/index"
+import userService from "../../common/api/user.service";
+import router from "../../router/index";
 
 //TODO Add mapGetters for loggedIn etc.
 //Set user status as logged in if JWT token found in local storage
@@ -17,11 +17,11 @@ export const authentication = {
       commit("loginRequest", { username });
 
       userService.login(username, password).then(
-        user => {
+        (user) => {
           commit("loginSuccess", user);
           router.push("/chat");
         },
-        error => {
+        (error) => {
           commit("loginFailure", error);
           dispatch("alert/error", error, { root: true });
         }
@@ -37,11 +37,11 @@ export const authentication = {
       commit("registerREquest");
 
       userService.register(username, password).then(
-        success => {
+        (success) => {
           commit("registerSuccess");
           router.push("/login");
         },
-        error => {
+        (error) => {
           commit("registerFailure");
           dispatch("alert/error", error, { root: true });
         }
