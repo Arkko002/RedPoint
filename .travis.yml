@@ -1,0 +1,11 @@
+language: sharp
+solution: RedPoint.sln
+mono: none
+dotnet: 3.1
+
+install:
+  - dotnet restore
+
+script:
+  - dotnet build
+  - dotnet test RedPoint.Tests/RedPoint.Tests.csproj
