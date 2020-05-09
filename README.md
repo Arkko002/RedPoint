@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Arkko002/RedPoint.svg?branch=master)](https://travis-ci.org/Arkko002/RedPoint)[![Build Status](https://travis-ci.org/Arkko002/RedPoint.svg?branch=master)](https://travis-ci.org/Arkko002/RedPoint) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/Arkko002/RedPoint.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Arkko002/RedPoint/context:javascript) [![Coverage Status](https://coveralls.io/repos/github/Arkko002/RedPoint/badge.svg?branch=master)](https://coveralls.io/github/Arkko002/RedPoint?branch=master)
+[![Build Status](https://travis-ci.org/Arkko002/RedPoint.svg?branch=master)](https://travis-ci.org/Arkko002/RedPoint) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/Arkko002/RedPoint.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Arkko002/RedPoint/context:javascript) [![Coverage Status](https://coveralls.io/repos/github/Arkko002/RedPoint/badge.svg?branch=master)](https://coveralls.io/github/Arkko002/RedPoint?branch=master)
 
 
 # RedPoint
