@@ -131,8 +131,11 @@ namespace RedPoint.Areas.Account.Services
                 case AccountErrorType.UserLockedOut:
                     throw new InvalidRequestException("User was locked out of the account.");
                 
-                default:
+                case AccountErrorType.UnknownError:
                     throw new InvalidRequestException("Unknown Error");
+                
+                default:
+                    throw new InvalidRequestException("Default claus Error in HandleAccountError switch statement");
             }
         }
         
