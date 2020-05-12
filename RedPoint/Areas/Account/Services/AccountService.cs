@@ -21,10 +21,13 @@ namespace RedPoint.Areas.Account.Services
     public class AccountService : IAccountService
     {
         private readonly IConfiguration _configuration;
+        
         private readonly IAccountRequestValidator _requestValidator;
+        private readonly ITokenGenerator _tokenGenerator;
+        
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-
+        
         private readonly ILogger<AccountService> _logger;
 
         private IdentityUser _user;
@@ -34,7 +37,8 @@ namespace RedPoint.Areas.Account.Services
             SignInManager<IdentityUser> signInManager,
             IConfiguration configuration,
             IAccountRequestValidator requestValidator,
-            ILogger<AccountService> logger
+            ILogger<AccountService> logger,
+            ITokenGenerator tokenGenerator
         )
         {
             _userManager = userManager;
@@ -42,6 +46,7 @@ namespace RedPoint.Areas.Account.Services
             _configuration = configuration;
             _requestValidator = requestValidator;
             _logger = logger;
+            _tokenGenerator = tokenGenerator;
         }
         
         public void AssignApplicationUser(ClaimsPrincipal user)
@@ -49,7 +54,7 @@ namespace RedPoint.Areas.Account.Services
             _user = _userManager.GetUserAsync(user).Result;
         }
         
-        public async Task<object> Login(UserLoginDto model)
+        public async Task<string> Login(UserLoginDto model)
         {
             var validationResult = _requestValidator.IsLoginRequestValid(model);
             if (validationResult.ErrorType != AccountErrorType.NoError)
@@ -62,9 +67,9 @@ namespace RedPoint.Areas.Account.Services
             if (result.Succeeded)
             {
                 var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
-                return await GenerateJwtToken(model.Username, appUser).ConfigureAwait(false);
+                return _tokenGenerator.GenerateToken(model.Username, appUser);
             }
-
+            
             if (result.IsLockedOut)
             {
                 AccountError error = new AccountError(AccountErrorType.UserLockedOut,
@@ -73,18 +78,16 @@ namespace RedPoint.Areas.Account.Services
                 HandleAccountError(error);
             }
             
-            AccountError unknownError = new AccountError(AccountErrorType.UnknownError,
-                LogLevel.Critical,
-                $"{_user.Id} has caused an unknown error in Login method");
-            HandleAccountError(unknownError);
+            AccountError loginFailure = new AccountError(AccountErrorType.LoginFailure);
+            HandleAccountError(loginFailure);
 
-            //Will never return null, as HandleAccountError always throws an exception on unknown error
+            //Will never return null, as HandleAccountError always throws an exception on login failure
             return null;
         }
         
 
         
-        public async Task<object> Register(UserRegisterDto model)
+        public async Task<string> Register(UserRegisterDto model)
         {
             var validationResult = _requestValidator.IsRegisterRequestValid(model);
             if (validationResult.ErrorType != AccountErrorType.NoError)
@@ -101,15 +104,13 @@ namespace RedPoint.Areas.Account.Services
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return await GenerateJwtToken(model.Username, user).ConfigureAwait(false);
+                return _tokenGenerator.GenerateToken(model.Username, user);
             }
-            
-            AccountError unknownError = new AccountError(AccountErrorType.UnknownError,
-                LogLevel.Critical,
-                $"{_user.Id} has caused an unknown error in Register method");
+
+            AccountError unknownError = new AccountError(AccountErrorType.RegisterFailure);
             HandleAccountError(unknownError);
 
-            //Will never return null, as HandleAccountError always throws an exception on unknown error
+            //Will never return null, as HandleAccountError always throws an exception on register failure
             return null;
         }
         
@@ -131,36 +132,15 @@ namespace RedPoint.Areas.Account.Services
                 case AccountErrorType.UserLockedOut:
                     throw new InvalidRequestException("User was locked out of the account.");
                 
-                case AccountErrorType.UnknownError:
-                    throw new InvalidRequestException("Unknown Error");
+                case AccountErrorType.LoginFailure:
+                    throw new InvalidRequestException("The provided credentials were incorrect");
+                
+                case AccountErrorType.RegisterFailure:
+                    throw new InvalidRequestException("An error occured during registration process.");
                 
                 default:
                     throw new InvalidRequestException("Default claus Error in HandleAccountError switch statement");
             }
-        }
-        
-        private async Task<object> GenerateJwtToken(string username, IdentityUser user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
-
-            var token = new JwtSecurityToken(
-                _configuration["JwtIssuer"],
-                _configuration["JwtIssuer"],
-                claims,
-                expires: expires,
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

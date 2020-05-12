@@ -5,6 +5,7 @@ namespace RedPoint.Areas.Account.Services.Security
         NoError,
         PasswordTooWeak,
         UserLockedOut,
-        UnknownError
+        LoginFailure,
+        RegisterFailure
     }
 }

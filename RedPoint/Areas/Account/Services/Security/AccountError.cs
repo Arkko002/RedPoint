@@ -8,11 +8,7 @@ namespace RedPoint.Areas.Account.Services.Security
         public  string LogMessage { get; }
 
         public AccountErrorType ErrorType {get;}
-
-        /// <summary>
-        /// Constructor only for NoError type objects
-        /// </summary>
-        /// <param name="errorType"></param>
+        
         public AccountError(AccountErrorType errorType)
         {
             ErrorType = errorType;
