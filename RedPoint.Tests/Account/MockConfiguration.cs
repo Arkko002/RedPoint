@@ -20,11 +20,18 @@ namespace RedPoint.Tests.Account
             dict["JwtIssuer"] = "TestIssuer";
             dict["JwtExpireDays"] = "1";
 
-            File.CreateText("empty.txt");
-            using (StreamWriter sw = File.CreateText("full.txt"))
+            if (passwordFileVariant == "empty.txt")
             {
-                sw.WriteLine("test");
-                sw.WriteLine("test1");
+                File.CreateText("empty.txt");
+            }
+
+            if (passwordFileVariant == "full.txt")
+            {
+                using (StreamWriter sw = File.CreateText("full.txt"))
+                {
+                    sw.WriteLine("test");
+                    sw.WriteLine("test1");
+                }
             }
         }
         
@@ -53,7 +60,7 @@ namespace RedPoint.Tests.Account
                 }
                 return dict[key];
             } 
-            set => throw new System.NotImplementedException();
+            set => dict[key] = value;
         }
     }
 }

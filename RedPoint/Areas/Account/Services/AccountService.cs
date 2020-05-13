@@ -1,23 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using NLog;
 using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Account.Services.Security;
 using RedPoint.Exceptions;
-using ILogger = NLog.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace RedPoint.Areas.Account.Services
 {
+    
+    //TODO Add Update, Delete actions
     public class AccountService : IAccountService
     {
         private readonly IConfiguration _configuration;
@@ -29,9 +23,7 @@ namespace RedPoint.Areas.Account.Services
         private readonly UserManager<IdentityUser> _userManager;
         
         private readonly ILogger<AccountService> _logger;
-
-        private IdentityUser _user;
-            
+        
         public AccountService(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
@@ -47,11 +39,6 @@ namespace RedPoint.Areas.Account.Services
             _requestValidator = requestValidator;
             _logger = logger;
             _tokenGenerator = tokenGenerator;
-        }
-        
-        public void AssignApplicationUser(ClaimsPrincipal user)
-        {
-            _user = _userManager.GetUserAsync(user).Result;
         }
         
         public async Task<string> Login(UserLoginDto model)
@@ -72,9 +59,11 @@ namespace RedPoint.Areas.Account.Services
             
             if (result.IsLockedOut)
             {
+                var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
+                
                 AccountError error = new AccountError(AccountErrorType.UserLockedOut,
                     LogLevel.Warning,
-                    $"{_user.Id} was locked out of account.");
+                    $"{appUser.Id} was locked out of account.");
                 HandleAccountError(error);
             }
             
@@ -84,8 +73,6 @@ namespace RedPoint.Areas.Account.Services
             //Will never return null, as HandleAccountError always throws an exception on login failure
             return null;
         }
-        
-
         
         public async Task<string> Register(UserRegisterDto model)
         {
@@ -99,6 +86,7 @@ namespace RedPoint.Areas.Account.Services
             {
                 UserName = model.Username
             };
+            
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -106,9 +94,10 @@ namespace RedPoint.Areas.Account.Services
                 await _signInManager.SignInAsync(user, false);
                 return _tokenGenerator.GenerateToken(model.Username, user);
             }
-
-            AccountError unknownError = new AccountError(AccountErrorType.RegisterFailure);
-            HandleAccountError(unknownError);
+            
+            //TODO Handle IdentityErrors in result
+            AccountError registerError = new AccountError(AccountErrorType.RegisterFailure);
+            HandleAccountError(registerError);
 
             //Will never return null, as HandleAccountError always throws an exception on register failure
             return null;
