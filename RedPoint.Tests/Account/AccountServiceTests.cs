@@ -21,15 +21,13 @@ namespace RedPoint.Tests.Account
         private Mock<MockUserManager> _userManager;
         private Mock<MockSignInManager> _signInManager;
         private Mock<IAccountRequestValidator> _requestValidator;
-        private MockConfiguration _configuration;
-        private Mock<JwtTokenGenerator> _tokenGenerator;
-        
+
         public AccountServiceTests()
         {
-            _configuration = new MockConfiguration("none");
-            _configuration["JwtKey"] = "testKey-LongEnoughForHS256";
-            _configuration["JwtExpireDays"] = "1";
-            _configuration["JwtIssuer"] = "testIssuer";
+            var configuration = new MockConfiguration("none");
+            configuration["JwtKey"] = "testKey-LongEnoughForHS256";
+            configuration["JwtExpireDays"] = "1";
+            configuration["JwtIssuer"] = "testIssuer";
 
             var users = new List<IdentityUser>
             {
@@ -49,7 +47,7 @@ namespace RedPoint.Tests.Account
             _signInManager = new Mock<MockSignInManager>();
             
             _requestValidator = new Mock<IAccountRequestValidator>();
-            _tokenGenerator = new Mock<JwtTokenGenerator>(_configuration);
+            var tokenGenerator = new Mock<JwtTokenGenerator>(configuration);
             
             _signInManager.Setup(
                     x => x.PasswordSignInAsync(It.IsAny<string>(),
@@ -65,10 +63,9 @@ namespace RedPoint.Tests.Account
 
             _service = new AccountService(_userManager.Object,
                 _signInManager.Object,
-                _configuration,
                 _requestValidator.Object,
                 new NullLogger<AccountService>(),
-                _tokenGenerator.Object);
+                tokenGenerator.Object);
         }
 
         [Fact]

@@ -6,6 +6,7 @@ using RedPoint.Exceptions;
 
 namespace RedPoint.Areas.Account.Controllers
 {
+    //TODO Change the return values of controller, possibly to IActionResult
     [Route("[controller]/[action]")]
     public class AccountController : ControllerBase
     {
@@ -25,8 +26,13 @@ namespace RedPoint.Areas.Account.Controllers
         [HttpPost]
         public async Task<object> Register([FromBody] UserRegisterDto model)
         {
-
             return await _accountService.Register(model);
+        }
+
+        [HttpPost]
+        public async Task<object> Delete([FromBody] UserLoginDto model)
+        {
+            return await _accountService.Delete(model);
         }
     }
 }

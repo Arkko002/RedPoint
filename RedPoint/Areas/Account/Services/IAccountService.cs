@@ -7,5 +7,6 @@ namespace RedPoint.Areas.Account.Services
     {
         Task<string> Login(UserLoginDto model);
         Task<string> Register(UserRegisterDto model);
+        Task<bool> Delete(UserLoginDto model);
     }
 }

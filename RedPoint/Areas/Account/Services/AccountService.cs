@@ -14,8 +14,6 @@ namespace RedPoint.Areas.Account.Services
     //TODO Add Update, Delete actions
     public class AccountService : IAccountService
     {
-        private readonly IConfiguration _configuration;
-        
         private readonly IAccountRequestValidator _requestValidator;
         private readonly ITokenGenerator _tokenGenerator;
         
@@ -27,7 +25,6 @@ namespace RedPoint.Areas.Account.Services
         public AccountService(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration configuration,
             IAccountRequestValidator requestValidator,
             ILogger<AccountService> logger,
             ITokenGenerator tokenGenerator
@@ -35,7 +32,6 @@ namespace RedPoint.Areas.Account.Services
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _configuration = configuration;
             _requestValidator = requestValidator;
             _logger = logger;
             _tokenGenerator = tokenGenerator;
@@ -102,7 +98,13 @@ namespace RedPoint.Areas.Account.Services
             //Will never return null, as HandleAccountError always throws an exception on register failure
             return null;
         }
-        
+
+        //TODO
+        public Task<bool> Delete(UserLoginDto model)
+        {
+            throw new System.NotImplementedException();
+        }
+
         private void HandleAccountError(AccountError accountError)
         {
             if (accountError.LogMessage != null)
