@@ -18,8 +18,8 @@ namespace RedPoint.Tests.Account
     public class AccountServiceTests
     {
         private AccountService _service;
-        private Mock<MockUserManager> _userManager;
-        private Mock<MockSignInManager> _signInManager;
+        private Mock<MockUserManager<IdentityUser>> _userManager;
+        private Mock<MockSignInManager<IdentityUser>> _signInManager;
         private Mock<IAccountRequestValidator> _requestValidator;
 
         public AccountServiceTests()
@@ -38,13 +38,13 @@ namespace RedPoint.Tests.Account
                 }
             }.AsQueryable();
 
-            _userManager = new Mock<MockUserManager>();
+            _userManager = new Mock<MockUserManager<IdentityUser>>();
             _userManager.Setup(x => x.Users).Returns(users);
             _userManager.Setup(x => x.CreateAsync(It.IsAny<IdentityUser>(),
                     It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
 
-            _signInManager = new Mock<MockSignInManager>();
+            _signInManager = new Mock<MockSignInManager<IdentityUser>>();
             
             _requestValidator = new Mock<IAccountRequestValidator>();
             var tokenGenerator = new Mock<JwtTokenGenerator>(configuration);
