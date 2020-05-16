@@ -7,18 +7,18 @@ using RedPoint.Areas.Account.Models;
 
 namespace RedPoint.Tests.Account
 {
-    public class MockUserManager : UserManager<IdentityUser>
+    public class MockUserManager<T> : UserManager<T> where T : class
     {
         public MockUserManager()
-            : base(new Mock<IUserStore<IdentityUser>>().Object,
+            : base(new Mock<IUserStore<T>>().Object,
                 new Mock<IOptions<IdentityOptions>>().Object,
-                new Mock<IPasswordHasher<IdentityUser>>().Object,
-                new IUserValidator<IdentityUser>[0],
-                new IPasswordValidator<IdentityUser>[0],
+                new Mock<IPasswordHasher<T>>().Object,
+                new IUserValidator<T>[0],
+                new IPasswordValidator<T>[0],
                 new Mock<ILookupNormalizer>().Object,
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<IServiceProvider>().Object,
-                new Mock<ILogger<UserManager<IdentityUser>>>().Object)
+                new Mock<ILogger<UserManager<T>>>().Object)
         { }
 
     }

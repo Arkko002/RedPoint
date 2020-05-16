@@ -9,16 +9,16 @@ using RedPoint.Areas.Account.Models;
 
 namespace RedPoint.Tests.Account
 {
-    public class MockSignInManager : SignInManager<IdentityUser>
+    public class MockSignInManager<T> : SignInManager<T> where T : class
     {
         public MockSignInManager()
-            : base(new Mock<MockUserManager>().Object,
+            : base(new Mock<MockUserManager<T>>().Object,
                 new HttpContextAccessor(),
-                new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object,
+                new Mock<IUserClaimsPrincipalFactory<T>>().Object,
                 new Mock<IOptions<IdentityOptions>>().Object,
-                new Mock<ILogger<SignInManager<IdentityUser>>>().Object,
+                new Mock<ILogger<SignInManager<T>>>().Object,
                 new AuthenticationSchemeProvider(new OptionsManager<AuthenticationOptions>(new OptionsFactory<AuthenticationOptions>(new List<IConfigureOptions<AuthenticationOptions>>(), new List<IPostConfigureOptions<AuthenticationOptions>>()))), 
-                new Mock<IUserConfirmation<IdentityUser>>().Object)
+                new Mock<IUserConfirmation<T>>().Object)
         { }
     }
 }
