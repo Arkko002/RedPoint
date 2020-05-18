@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using RedPoint.Areas.Account.Models;
 
-namespace RedPoint.Tests.Account
+namespace RedPoint.Tests.Mocks
 {
     public class MockUserManager<T> : UserManager<T> where T : class
     {
@@ -19,7 +18,7 @@ namespace RedPoint.Tests.Account
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<T>>>().Object)
-        { }
-
+        {
+        }
     }
 }

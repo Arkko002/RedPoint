@@ -8,125 +8,125 @@ namespace RedPoint.Tests.Chat
 {
     public class ChatRequestValidatorTests
     {
-        private readonly ChatRequestValidator _validator;
-        
         public ChatRequestValidatorTests()
         {
             _validator = new ChatRequestValidator();
         }
-        
+
+        private readonly ChatRequestValidator _validator;
+
         [Fact]
-        public void ValidServerRequest_ShouldReturnNoErrorType()
+        public void NoChannelPermission_ShouldReturnNoPermissionType()
         {
-            ApplicationUser user = new ApplicationUser();
-            
-            Group group = new Group();
-            group.GroupPermissions.Add(PermissionType.IsAdmin);
+            var user = new ApplicationUser();
+
+            var group = new Group();
             group.Users.Add(user);
-            
-            user.Groups = new List<Group>();
-            user.Groups.Add(group);
-            
-            Server server = new Server();
+
+            var server = new Server();
             server.Users.Add(user);
             server.Groups = new List<Group>();
             server.Groups.Add(group);
-            
-            var returnErorr = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
 
-            Assert.True(returnErorr.ErrorType == ChatErrorType.NoError);
-        }
+            var channel = new Channel();
+            server.Channels.Add(channel);
+            channel.Groups = new List<Group>();
+            channel.Groups.Add(group);
 
-        [Fact]
-        public void UserNotInServer_ShouldReturnUserNotInServerType()
-        {
-            Server server = new Server();
-            ApplicationUser user = new ApplicationUser();
+            user.Groups = new List<Group>();
+            user.Groups.Add(group);
 
-            var returnError = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
-            
-            Assert.True(returnError.ErrorType == ChatErrorType.UserNotInServer);
+            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
+
+            Assert.True(returnError.ErrorType == ChatErrorType.NoPermission);
         }
 
         [Fact]
         public void NoServerPermission_ShouldReturnNoPermissionType()
         {
-            ApplicationUser user = new ApplicationUser();
-            
-            Group group = new Group();
+            var user = new ApplicationUser();
+
+            var group = new Group();
             group.Users.Add(user);
-            
-            Server server = new Server();
+
+            var server = new Server();
             server.Users.Add(user);
 
             var returnError = _validator.IsServerRequestValid(server, user, PermissionType.CanView);
-            
-            Assert.True(returnError.ErrorType == ChatErrorType.NoPermission);
-        }
 
-        [Fact]
-        public void ValidChannelRequest_ShouldReturnNoErrorType()
-        {
-            ApplicationUser user = new ApplicationUser();
-            
-            Group group = new Group();
-            group.GroupPermissions.Add(PermissionType.IsAdmin);
-            group.Users.Add(user);
-            
-            Server server = new Server();
-            server.Users.Add(user);
-            server.Groups = new List<Group>();
-            server.Groups.Add(group);
-            
-            Channel channel = new Channel();
-            server.Channels.Add(channel);
-            channel.Groups = new List<Group>();
-            channel.Groups.Add(group);
-            
-            user.Groups = new List<Group>();
-            user.Groups.Add(group);
-            
-            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
-            
-            Assert.True(returnError.ErrorType == ChatErrorType.NoError);
+            Assert.True(returnError.ErrorType == ChatErrorType.NoPermission);
         }
 
         [Fact]
         public void UserNotInChannelsServer_ShouldReturnUserNotInServerType()
         {
-            ApplicationUser user = new ApplicationUser();
-            Server server = new Server();
-            Channel channel = new Channel();
+            var user = new ApplicationUser();
+            var server = new Server();
+            var channel = new Channel();
 
             var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
-            
+
             Assert.True(returnError.ErrorType == ChatErrorType.UserNotInServer);
         }
 
         [Fact]
-        public void NoChannelPermission_ShouldReturnNoPermissionType()
+        public void UserNotInServer_ShouldReturnUserNotInServerType()
         {
-            ApplicationUser user = new ApplicationUser();
-            
-            Group group = new Group();
+            var server = new Server();
+            var user = new ApplicationUser();
+
+            var returnError = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
+
+            Assert.True(returnError.ErrorType == ChatErrorType.UserNotInServer);
+        }
+
+        [Fact]
+        public void ValidChannelRequest_ShouldReturnNoErrorType()
+        {
+            var user = new ApplicationUser();
+
+            var group = new Group();
+            group.GroupPermissions.Add(PermissionType.IsAdmin);
             group.Users.Add(user);
-            
-            Server server = new Server();
+
+            var server = new Server();
             server.Users.Add(user);
             server.Groups = new List<Group>();
             server.Groups.Add(group);
-            
-            Channel channel = new Channel();
+
+            var channel = new Channel();
             server.Channels.Add(channel);
             channel.Groups = new List<Group>();
             channel.Groups.Add(group);
-            
+
             user.Groups = new List<Group>();
             user.Groups.Add(group);
-            
+
             var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
-            
-            Assert.True(returnError.ErrorType == ChatErrorType.NoPermission);
+
+            Assert.True(returnError.ErrorType == ChatErrorType.NoError);
+        }
+
+        [Fact]
+        public void ValidServerRequest_ShouldReturnNoErrorType()
+        {
+            var user = new ApplicationUser();
+
+            var group = new Group();
+            group.GroupPermissions.Add(PermissionType.IsAdmin);
+            group.Users.Add(user);
+
+            user.Groups = new List<Group>();
+            user.Groups.Add(group);
+
+            var server = new Server();
+            server.Users.Add(user);
+            server.Groups = new List<Group>();
+            server.Groups.Add(group);
+
+            var returnErorr = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
+
+            Assert.True(returnErorr.ErrorType == ChatErrorType.NoError);
         }
     }
 }

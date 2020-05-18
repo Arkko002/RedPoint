@@ -2,41 +2,38 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Account.Services;
+using RedPoint.Tests.Mocks;
 using Xunit;
 
 namespace RedPoint.Tests.Account
 {
     public class JwtTokenGeneratorTests
     {
-        private MockConfiguration _configuration;
-        private JwtTokenGenerator _tokenGenerator;
-        
         public JwtTokenGeneratorTests()
         {
-            _configuration = new MockConfiguration("none");
-            _configuration["JwtKey"] = "testKey-LongEnoughForHS256";
-            _configuration["JwtExpireDays"] = "1";
-            _configuration["JwtIssuer"] = "testIssuer";
-            
-            _tokenGenerator = new JwtTokenGenerator(_configuration);
+            var configuration = new MockConfiguration("none");
+            configuration["JwtKey"] = "testKey-LongEnoughForHS256";
+            configuration["JwtExpireDays"] = "1";
+            configuration["JwtIssuer"] = "testIssuer";
+
+            _tokenGenerator = new JwtTokenGenerator(configuration);
         }
-        
+
+        private readonly JwtTokenGenerator _tokenGenerator;
+
         //TODO finish checking key signing
         [Fact]
         public void GenerateToken_ShouldReturnTokenString()
         {
-            string username = "testUsername";
-            
-            IdentityUser identityUser = new IdentityUser();
+            var username = "testUsername";
+
+            var identityUser = new IdentityUser();
             identityUser.Id = "testId";
-            
+
             var expires = DateTime.Now.AddDays(1);
-            
+
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var tokenString = _tokenGenerator.GenerateToken(username, identityUser);
