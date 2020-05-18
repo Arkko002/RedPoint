@@ -7,6 +7,10 @@ namespace RedPoint.Areas.Chat.Models
 {
     public class Message : IEntity
     {
+        public Message()
+        {
+        }
+
         public Message(MessageDto messageDto, ApplicationUser user)
         {
             DateTimePosted = DateTime.Parse(messageDto.DateTimePosted);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -12,20 +11,20 @@ namespace RedPoint.Areas.Account.Services
 {
     public class JwtTokenGenerator : ITokenGenerator
     {
-        private IConfiguration _configuration;
-        
+        private readonly IConfiguration _configuration;
+
         public JwtTokenGenerator(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        
+
         public string GenerateToken(string username, IdentityUser user)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));

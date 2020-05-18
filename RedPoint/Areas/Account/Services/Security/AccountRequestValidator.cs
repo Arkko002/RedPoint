@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using RedPoint.Areas.Account.Models;
-using RedPoint.Exceptions.Security;
 
 namespace RedPoint.Areas.Account.Services.Security
 {
@@ -14,7 +11,7 @@ namespace RedPoint.Areas.Account.Services.Security
         {
             _provider = provider;
         }
-        
+
         public AccountError IsLoginRequestValid(UserLoginDto requestDto)
         {
             throw new NotImplementedException();
@@ -23,12 +20,12 @@ namespace RedPoint.Areas.Account.Services.Security
         public AccountError IsRegisterRequestValid(UserRegisterDto requestDto)
         {
             var passwordList = _provider.GetBlacklistedPasswords();
-            
+
             if (passwordList.Contains(requestDto.Password))
             {
                 return new AccountError(AccountErrorType.PasswordTooWeak);
             }
-            
+
             return new AccountError(AccountErrorType.NoError);
         }
     }

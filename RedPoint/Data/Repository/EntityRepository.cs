@@ -34,6 +34,7 @@ namespace RedPoint.Data.Repository
             {
                 Set.Attach(entity);
             }
+
             Set.Remove(entity);
         }
 
@@ -49,6 +50,7 @@ namespace RedPoint.Data.Repository
             {
                 Set.Attach(entity);
             }
+
             entry.State = EntityState.Modified;
         }
     }

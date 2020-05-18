@@ -10,13 +10,13 @@ namespace RedPoint.Areas.Chat.Services
 {
     public class ChatHubService : IChatHubService
     {
+        private readonly IChatErrorHandler _errorHandler;
         private readonly IChatEntityRepositoryProxy _repoProxy;
+
+        private readonly IChatRequestValidator _requestValidator;
         private readonly EntityUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private readonly IChatRequestValidator _requestValidator;
-        private readonly IChatErrorHandler _errorHandler;
-        
         private ApplicationUser _user;
 
         public ChatHubService(EntityUnitOfWork unitOfWork,
@@ -41,7 +41,7 @@ namespace RedPoint.Areas.Chat.Services
         {
             var result = CheckServerRequest(serverId, PermissionType.CanManageChannels);
             CheckChatError(result);
-            
+
             var newChannel = new Channel(channelIcon);
 
             _repoProxy.ChannelRepository.Add(newChannel);
@@ -52,7 +52,7 @@ namespace RedPoint.Areas.Chat.Services
         {
             var result = CheckChannelRequest(channelId, serverId, PermissionType.CanWrite);
             CheckChatError(result);
-            
+
             var newMessage = new Message(message, _user);
 
             _repoProxy.MessageRepository.Add(newMessage);
@@ -80,7 +80,7 @@ namespace RedPoint.Areas.Chat.Services
         {
             var result = CheckServerRequest(serverId, PermissionType.CanManageServer);
             CheckChatError(result);
-            
+
             _repoProxy.ServerRepository.Delete(_repoProxy.ServerRepository.Find(serverId));
             _unitOfWork.Submit();
         }
@@ -89,7 +89,7 @@ namespace RedPoint.Areas.Chat.Services
         {
             var result = CheckChannelRequest(channelId, serverId, PermissionType.CanManageChannels);
             CheckChatError(result);
-            
+
             _repoProxy.MessageRepository.Delete(_repoProxy.MessageRepository.Find(messageId));
             _unitOfWork.Submit();
         }

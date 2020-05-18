@@ -10,7 +10,7 @@ namespace RedPoint.Areas.Account.Models
     public class ApplicationUser : IdentityUser, IEntity
     {
         public string CurrentChannelId { get; set; }
-        public int CurrentServerId { get; set; }
+        public string CurrentServerId { get; set; }
 
         public List<Message> Messages { get; set; }
         public List<Group> Groups { get; set; }

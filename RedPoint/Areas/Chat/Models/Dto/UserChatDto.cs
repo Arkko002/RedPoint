@@ -12,7 +12,7 @@ namespace RedPoint.Areas.Chat.Models.Dto
         public string Username { get; set; }
 
         public string CurrentChannelId { get; set; }
-        public int CurrentServerId { get; set; }
+        public string CurrentServerId { get; set; }
         public Bitmap Image { get; set; }
     }
 }

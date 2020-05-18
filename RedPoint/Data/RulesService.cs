@@ -28,9 +28,9 @@ namespace RedPoint.Data
         public static void ApplyDeleteRules(IEnumerable<object> deleting)
         {
             foreach (var entity in deleting)
+            foreach (var rule in DeleteRules)
             {
-                foreach (var rule in DeleteRules)
-                    rule(entity);
+                rule(entity);
             }
         }
 
@@ -53,11 +53,9 @@ namespace RedPoint.Data
         public static void ApplyInsertRules(IEnumerable<object> inserting)
         {
             foreach (var entity in inserting)
+            foreach (var rule in InsertRules)
             {
-                foreach (var rule in InsertRules)
-                {
-                    rule(entity);
-                }
+                rule(entity);
             }
         }
 
@@ -80,12 +78,9 @@ namespace RedPoint.Data
         public static void ApplyUpdateRules(IEnumerable<object> updating)
         {
             foreach (var entity in updating)
+            foreach (var rule in UpdateRules)
             {
-                foreach (var rule in UpdateRules)
-                {
-                    rule(entity);
-                }
-                
+                rule(entity);
             }
         }
     }

@@ -2,8 +2,8 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using RedPoint.Models;
 using Newtonsoft.Json;
+using RedPoint.Models;
 
 namespace RedPoint.Middleware
 {

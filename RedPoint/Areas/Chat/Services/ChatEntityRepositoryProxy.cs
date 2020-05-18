@@ -9,12 +9,8 @@ namespace RedPoint.Areas.Chat.Services
 {
     public class ChatEntityRepositoryProxy : IChatEntityRepositoryProxy
     {
-        public EntityRepository<Channel, ApplicationDbContext> ChannelRepository { get; }
-        public EntityRepository<Message, ApplicationDbContext> MessageRepository { get; }
-        public EntityRepository<Server, ApplicationDbContext> ServerRepository { get; }
-
         private readonly IChatErrorHandler _errorHandler;
-        
+
         public ChatEntityRepositoryProxy(EntityRepository<Server, ApplicationDbContext> serverRepo,
             EntityRepository<Channel, ApplicationDbContext> channelRepo,
             EntityRepository<Message, ApplicationDbContext> messageRepo,
@@ -25,18 +21,22 @@ namespace RedPoint.Areas.Chat.Services
             ServerRepository = serverRepo;
             _errorHandler = errorHandler;
         }
-        
+
+        public EntityRepository<Channel, ApplicationDbContext> ChannelRepository { get; }
+        public EntityRepository<Message, ApplicationDbContext> MessageRepository { get; }
+        public EntityRepository<Server, ApplicationDbContext> ServerRepository { get; }
+
         public Server TryFindingServer(int serverId, ApplicationUser requestingUser)
         {
-            Server server = ServerRepository.Find(serverId);
+            var server = ServerRepository.Find(serverId);
 
             if (server == null)
             {
-                ChatError chatError = new ChatError(ChatErrorType.ServerNotFound,
+                var chatError = new ChatError(ChatErrorType.ServerNotFound,
                     requestingUser,
                     LogLevel.Warning,
                     $"Non-existing server (ID: {serverId}) requested by {requestingUser.Id}");
-                
+
                 _errorHandler.HandleChatError(chatError);
             }
 
@@ -45,15 +45,15 @@ namespace RedPoint.Areas.Chat.Services
 
         public Channel TryFindingChannel(int channelId, ApplicationUser requestingUser)
         {
-            Channel channel = ChannelRepository.Find(channelId);
-            
+            var channel = ChannelRepository.Find(channelId);
+
             if (channel == null)
             {
-                ChatError chatError = new ChatError(ChatErrorType.ChannelNotFound,
+                var chatError = new ChatError(ChatErrorType.ChannelNotFound,
                     requestingUser,
                     LogLevel.Warning,
                     $"Non-existing channel (ID: {channelId}) requested by {requestingUser.Id}");
-                
+
                 _errorHandler.HandleChatError(chatError);
             }
 
@@ -62,15 +62,15 @@ namespace RedPoint.Areas.Chat.Services
 
         public Message TryFindingMessage(int messageId, ApplicationUser requestingUser)
         {
-            Message message = MessageRepository.Find(messageId);
-            
+            var message = MessageRepository.Find(messageId);
+
             if (message == null)
             {
-                ChatError chatError = new ChatError(ChatErrorType.ChannelNotFound,
+                var chatError = new ChatError(ChatErrorType.ChannelNotFound,
                     requestingUser,
                     LogLevel.Warning,
                     $"Non-existing message (ID: {messageId}) requested by {requestingUser.Id}");
-                
+
                 _errorHandler.HandleChatError(chatError);
             }
 

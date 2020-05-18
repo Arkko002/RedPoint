@@ -14,6 +14,4 @@ namespace RedPoint.Areas.Chat.Models
         public bool CanManageServers { get; set; } = false;
         public bool CanManageChannels { get; set; } = false;
     }
-
-
 }

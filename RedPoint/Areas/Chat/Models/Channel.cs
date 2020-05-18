@@ -9,14 +9,6 @@ namespace RedPoint.Areas.Chat.Models
     /// </summary>
     public class Channel : IEntity, IChatGroups
     {
-        public int Id { get; set; }
-        public HubGroupIdentifier HubGroupId { get; set; }
-
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public List<Message> Messages { get; set; }
-        public List<Group> Groups { get; set; }
-
         public Channel()
         {
             HubGroupId = new HubGroupIdentifier();
@@ -31,7 +23,15 @@ namespace RedPoint.Areas.Chat.Models
             Description = channelIconDto.Description;
             HubGroupId = channelIconDto.HubGroupId;
         }
-        
+
+        public int Id { get; set; }
+        public HubGroupIdentifier HubGroupId { get; set; }
+
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public List<Message> Messages { get; set; }
+        public List<Group> Groups { get; set; }
+
         private void InitializeLists()
         {
             Messages = new List<Message>();

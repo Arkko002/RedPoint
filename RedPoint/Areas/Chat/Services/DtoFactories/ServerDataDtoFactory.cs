@@ -16,10 +16,10 @@ namespace RedPoint.Areas.Chat.Services.DtoFactories
             _channelFactory = channelFactory;
             _userFactory = userFactory;
         }
-        
+
         public ServerDataDto CreateDto(Server sourceObject)
         {
-            ServerDataDto dto = new ServerDataDto();
+            var dto = new ServerDataDto();
             dto.Id = sourceObject.Id;
             dto.ChannelList = _channelFactory.CreateDtoList(sourceObject.Channels);
             dto.UserList = _userFactory.CreateDtoList(sourceObject.Users);
@@ -29,7 +29,7 @@ namespace RedPoint.Areas.Chat.Services.DtoFactories
 
         public List<ServerDataDto> CreateDtoList(List<Server> sourceList)
         {
-            List<ServerDataDto> dtoList = new List<ServerDataDto>();
+            var dtoList = new List<ServerDataDto>();
 
             foreach (var server in sourceList)
             {

@@ -4,14 +4,14 @@ using System.Text;
 namespace RedPoint.Areas.Chat.Models
 {
     /// <summary>
-    /// Separate identifier used to prevent ID clashing in SignalR groups
+    ///     Separate identifier used to prevent ID clashing in SignalR groups
     /// </summary>
     public class HubGroupIdentifier
     {
         public HubGroupIdentifier()
         {
             //TODO Maybe use a proper hashing algo here?
-            
+
             var random = new Random();
             var length = 12;
 

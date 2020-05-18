@@ -18,7 +18,10 @@ namespace RedPoint.Data.UnitOfWork
 
         public void Submit()
         {
-            if (HasEnded) throw new ObjectDisposedException("Unit of Work has been disposed.");
+            if (HasEnded)
+            {
+                throw new ObjectDisposedException("Unit of Work has been disposed.");
+            }
 
             if (_context != null)
             {

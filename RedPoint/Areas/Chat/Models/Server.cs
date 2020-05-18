@@ -12,23 +12,6 @@ namespace RedPoint.Areas.Chat.Models
     /// </summary>
     public class Server : IEntity, IChatGroups
     {
-        public int Id { get; set; }
-        public HubGroupIdentifier HubGroupId { get; set; }
-
-
-        [Required] public string Name { get; set; }
-
-        [Required] public string Description { get; set; }
-
-        public Bitmap Image { get; set; }
-
-        public List<ApplicationUser> Users { get; set; }
-        public List<Group> Groups { get; set; }
-        public List<Channel> Channels { get; set; }
-
-        //Determines if server is visible in the server browser
-        public bool IsVisible { get; set; }
-
         public Server()
         {
             InitializeVariables();
@@ -43,7 +26,24 @@ namespace RedPoint.Areas.Chat.Models
 
             InitializeVariables();
         }
-        
+
+        public int Id { get; set; }
+        public HubGroupIdentifier HubGroupId { get; set; }
+
+
+        [Required] public string Name { get; set; }
+
+        [Required] public string Description { get; set; }
+
+        public Bitmap Image { get; set; }
+
+        public List<ApplicationUser> Users { get; set; }
+        public List<Channel> Channels { get; set; }
+
+        //Determines if server is visible in the server browser
+        public bool IsVisible { get; set; }
+        public List<Group> Groups { get; set; }
+
         private void InitializeVariables()
         {
             HubGroupId = new HubGroupIdentifier();

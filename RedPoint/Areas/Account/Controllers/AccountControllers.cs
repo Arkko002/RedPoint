@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Account.Services;
-using RedPoint.Exceptions;
 
 namespace RedPoint.Areas.Account.Controllers
 {

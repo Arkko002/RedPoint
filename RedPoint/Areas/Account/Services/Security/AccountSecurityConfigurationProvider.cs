@@ -12,7 +12,7 @@ namespace RedPoint.Areas.Account.Services.Security
         {
             _configuration = configuration;
         }
-        
+
         public List<string> GetBlacklistedPasswords()
         {
             var passwordFile = File.ReadAllLines(_configuration["BlacklistedPasswords"]);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.Dto;
 
@@ -11,7 +12,7 @@ namespace RedPoint.Areas.Chat.Services.DtoFactories
             var messageDto = new MessageDto
             {
                 Id = sourceObject.Id,
-                DateTimePosted = sourceObject.DateTimePosted.ToString(),
+                DateTimePosted = sourceObject.DateTimePosted.ToString(CultureInfo.InvariantCulture),
                 Text = sourceObject.Text,
                 UserId = sourceObject.User.Id
             };

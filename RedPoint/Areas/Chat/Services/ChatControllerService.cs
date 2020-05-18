@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.Dto;
@@ -13,14 +11,16 @@ namespace RedPoint.Areas.Chat.Services
 {
     public class ChatControllerService : IChatControllerService
     {
+        private readonly IChatErrorHandler _errorHandler;
         private readonly IChatEntityRepositoryProxy _repoProxy;
-        private readonly UserManager<ApplicationUser> _userManager;
 
         private readonly IChatRequestValidator _requestValidator;
-        private readonly IChatErrorHandler _errorHandler;
-        
+        private readonly UserManager<ApplicationUser> _userManager;
+
         private ApplicationUser _user;
-        
+
+        //TODO Remove usage of UserManager from Chat Area, move all account activity including verification of
+        //users to Account Area
         public ChatControllerService(UserManager<ApplicationUser> userManager,
             IChatEntityRepositoryProxy repoProxy,
             IChatRequestValidator requestValidator,
@@ -36,7 +36,7 @@ namespace RedPoint.Areas.Chat.Services
         {
             _user = _userManager.GetUserAsync(user).Result;
         }
-        
+
         public List<ServerIconDto> GetUserServers(IChatDtoFactory<Server, ServerIconDto> dtoFactory)
         {
             return dtoFactory.CreateDtoList(_user.Servers);
@@ -48,12 +48,13 @@ namespace RedPoint.Areas.Chat.Services
 
             return dtoFactory.CreateDto(server);
         }
-        
-        public List<MessageDto> GetChannelMessages(int channelId, int serverId, IChatDtoFactory<Message, MessageDto> dtoFactory)
+
+        public List<MessageDto> GetChannelMessages(int channelId, int serverId,
+            IChatDtoFactory<Message, MessageDto> dtoFactory)
         {
             var channel = _repoProxy.TryFindingChannel(channelId, _user);
             var server = _repoProxy.TryFindingServer(serverId, _user);
-            
+
             var result = _requestValidator.IsChannelRequestValid(channel, server, _user, PermissionType.CanView);
 
             if (result.ErrorType != ChatErrorType.NoError)

@@ -20,14 +20,19 @@ namespace RedPoint.Tests.Mocks
             _dict["JwtIssuer"] = "TestIssuer";
             _dict["JwtExpireDays"] = "1";
 
-            if (passwordFileVariant == "empty.txt") File.CreateText("empty.txt");
+            if (passwordFileVariant == "empty.txt")
+            {
+                File.CreateText("empty.txt");
+            }
 
             if (passwordFileVariant == "full.txt")
+            {
                 using (var sw = File.CreateText("full.txt"))
                 {
                     sw.WriteLine("test");
                     sw.WriteLine("test1");
                 }
+            }
         }
 
         public IConfigurationSection GetSection(string key)
@@ -49,7 +54,11 @@ namespace RedPoint.Tests.Mocks
         {
             get
             {
-                if (key == "BlacklistedPasswords") return _passwordFileVariant;
+                if (key == "BlacklistedPasswords")
+                {
+                    return _passwordFileVariant;
+                }
+
                 return _dict[key];
             }
             set => _dict[key] = value;

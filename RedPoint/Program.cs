@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog;
 using NLog.Web;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace RedPoint
 {
@@ -23,7 +25,7 @@ namespace RedPoint
             }
             finally
             {
-                NLog.LogManager.Shutdown();
+                LogManager.Shutdown();
             }
         }
 
@@ -35,7 +37,7 @@ namespace RedPoint
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                    logging.SetMinimumLevel(LogLevel.Trace);
                 })
                 .UseNLog();
         }
