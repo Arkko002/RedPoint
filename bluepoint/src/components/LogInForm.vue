@@ -22,31 +22,31 @@
 
 <script>
 export default {
-  name: "LogInForm",
+	name: "LogInForm",
 
-  data() {
-    return {
-      username: { type: String },
-      password: { type: String }
-    };
-  },
+	data() {
+		return {
+			username: { type: String },
+			password: { type: String }
+		};
+	},
 
-  computed: {
-    requiredFieldsFilled() {
-      return !(!this.userName || !this.password);
+	computed: {
+		requiredFieldsFilled() {
+			return !(!this.userName || !this.password);
 
       
-    },
+		},
 
-    loggingIn() {
-      return this.$store.state.authentication.status.loggingIn;
-    }
-  },
+		loggingIn() {
+			return this.$store.state.authentication.status.loggingIn;
+		}
+	},
 
-  methods: {
-    submitForm(e) {
-      this.$store.dispatch("authentication/login", { userName, password });
-    }
-  }
+	methods: {
+		submitForm(e) {
+			this.$store.dispatch("authentication/login", { userName, password });
+		}
+	}
 };
 </script>

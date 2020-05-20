@@ -35,37 +35,37 @@
 
 <script>
 export default {
-  name: "RegisterForm",
-  data() {
-    return {
-      username: { type: String },
-      password: { type: String },
-      passwordConfirmation: { type: String },
-      email: { type: String }
-    };
-  },
+	name: "RegisterForm",
+	data() {
+		return {
+			username: { type: String },
+			password: { type: String },
+			passwordConfirmation: { type: String },
+			email: { type: String }
+		};
+	},
 
-  computed: {
-    requiredFieldsFilled() {
-      if (!this.userName || !this.password) return false;
-      if (this.password != this.passwordConfirmation) return false;
+	computed: {
+		requiredFieldsFilled() {
+			if (!this.userName || !this.password) return false;
+			if (this.password != this.passwordConfirmation) return false;
 
-      return true;
-    },
+			return true;
+		},
 
-    registering() {
-      return this.$store.state.authentication.status.registering;
-    }
-  },
+		registering() {
+			return this.$store.state.authentication.status.registering;
+		}
+	},
 
-  methods: {
-    submitForm: function(e) {
-      this.$storestore.dispatch("authentication/register", {
-        username,
-        password,
-        email
-      });
-    }
-  }
+	methods: {
+		submitForm: function(e) {
+			this.$storestore.dispatch("authentication/register", {
+				username,
+				password,
+				email
+			});
+		}
+	}
 };
 </script>

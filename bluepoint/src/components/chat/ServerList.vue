@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "ServerList",
-  props: ["serverArray"]
+	name: "ServerList",
+	props: ["serverArray"]
 };
 </script>

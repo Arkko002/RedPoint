@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "ToolbarUserInfo",
-  props: ["user"]
+	name: "ToolbarUserInfo",
+	props: ["user"]
 };
 </script>

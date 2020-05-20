@@ -10,10 +10,10 @@ import TheNavbar from "@/components/TheNavbar.vue";
 import LogInForm from "@/components/LogInForm.vue";
 
 export default {
-  name: "LogIn",
-  components: {
-    TheNavbar,
-    LogInForm
-  }
+	name: "LogIn",
+	components: {
+		TheNavbar,
+		LogInForm
+	}
 };
 </script>

@@ -12,41 +12,41 @@ import ServerList from "@/components/chat/ServerList.vue";
 import UserList from "@/components/chat/UserList.vue";
 import TheToolbar from "@/components/chat/TheToolbar.vue";
 import ChatBox from "@/components/chat/ChatBox.vue";
-import ChatService from "bluepoint/src/common/chat.service"
+import ChatService from "bluepoint/src/common/chat.service";
 
 export default {
-  name: "Chat",
-  components: {
-    ServerList,
-    UserList,
-    TheToolbar,
-    ChatBox: ChatBox
-  },
+	name: "Chat",
+	components: {
+		ServerList,
+		UserList,
+		TheToolbar,
+		ChatBox: ChatBox
+	},
   
-  created() {
-    //TODO Caching
-    this.serverArray = JSON.parse(ChatService.fetchServers())
-    this.currentChannel = JSON.parse(ChatService.fetchChannelData(this.currentUser.currentChannelId))
-    this.currentServer = JSON.parse(ChatService.fetchServerData(this.currentUser.currentServerId))
-  },
+	created() {
+		//TODO Caching
+		this.serverArray = JSON.parse(ChatService.fetchServers());
+		this.currentChannel = JSON.parse(ChatService.fetchChannelData(this.currentUser.currentChannelId));
+		this.currentServer = JSON.parse(ChatService.fetchServerData(this.currentUser.currentServerId));
+	},
   
-  beforeDestroy() {
-    ChatService.sendClosingData([this.currentServerId, this.currentChannelId])
-  },
+	beforeDestroy() {
+		ChatService.sendClosingData([this.currentServerId, this.currentChannelId]);
+	},
   
-  data() {
-    return {
-      serverArray: null,
+	data() {
+		return {
+			serverArray: null,
       
-      currentServer: null,
-      currentChannel: null,
-    }
-  },
+			currentServer: null,
+			currentChannel: null,
+		};
+	},
   
-  computed: {
-    currentUser() {
-      localStorage.getItem("user");
-    },
-  },
+	computed: {
+		currentUser() {
+			return  localStorage.getItem("user");
+		},
+	},
 };
 </script>

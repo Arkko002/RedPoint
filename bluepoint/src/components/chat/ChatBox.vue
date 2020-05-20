@@ -30,26 +30,26 @@
 </template>
 
 <script>
-  import ChatService from "@/common/chat.service"
+import ChatService from "@/common/chat.service";
 
 
-  export default {
-  name: "ChatBox",
-  props: ["messages"],
+export default {
+	name: "ChatBox",
+	props: ["messages"],
 
 
-  methods: {
-    sendMessage(messageText) {
-      if (messageText.length === 0) return;
+	methods: {
+		sendMessage(messageText) {
+			if (messageText.length === 0) return;
 
-      const message = {
-        text: messageText,
-        datetime: Date.now(),
-        user: this.currentUser
-      };
+			const message = {
+				text: messageText,
+				datetime: Date.now(),
+				user: this.currentUser
+			};
 
-      ChatService.sendMessage(message)
-    }
-  }
+			ChatService.sendMessage(message);
+		}
+	}
 };
 </script>

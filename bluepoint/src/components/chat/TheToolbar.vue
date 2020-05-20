@@ -10,10 +10,10 @@ import ToolbarSearchField from "./ToolbarSearchField.vue";
 import ToolbarUserInfo from "./ToolbarUserInfo.vue";
 
 export default {
-  name: "TheToolbar",
-  components: {
-    ToolbarSearchField,
-    ToolbarUserInfo
-  }
+	name: "TheToolbar",
+	components: {
+		ToolbarSearchField,
+		ToolbarUserInfo
+	}
 };
 </script>

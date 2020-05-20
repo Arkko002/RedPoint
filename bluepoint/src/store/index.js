@@ -7,14 +7,14 @@ import { alert } from "./modules/alert.module";
 Vue.use(Vuex);
 
 export default new Vuex.store({
-  modules: {
-    authentication,
-    alert
-  },
+	modules: {
+		authentication,
+		alert
+	},
   
-  getters: {
-    loggedIn(state) {
-      return !!state.userl
-    }
-  }
+	getters: {
+		loggedIn(state) {
+			return !!state.userl;
+		}
+	}
 });

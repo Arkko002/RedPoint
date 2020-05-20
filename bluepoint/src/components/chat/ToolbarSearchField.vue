@@ -7,6 +7,6 @@
 
 <script>
 export default {
-  name: "ToolbarSearchField"
+	name: "ToolbarSearchField"
 };
 </script>

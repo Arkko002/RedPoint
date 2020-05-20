@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "UserList",
-  props: ["userArray"]
+	name: "UserList",
+	props: ["userArray"]
 };
 </script>
