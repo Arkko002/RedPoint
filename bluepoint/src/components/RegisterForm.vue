@@ -48,7 +48,7 @@ export default {
 	computed: {
 		requiredFieldsFilled() {
 			if (!this.userName || !this.password) return false;
-			if (this.password != this.passwordConfirmation) return false;
+			if (this.password !== this.passwordConfirmation) return false;
 
 			return true;
 		},
@@ -59,8 +59,12 @@ export default {
 	},
 
 	methods: {
-		submitForm: function(e) {
-			this.$storestore.dispatch("authentication/register", {
+		submitForm() {
+			const username = this.username;
+			const password = this.password;
+			const email = this.email;
+          
+			this.$store.dispatch("authentication/register", {
 				username,
 				password,
 				email

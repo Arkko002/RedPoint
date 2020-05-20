@@ -13,10 +13,12 @@ namespace RedPoint.Tests.Account
     {
         public JwtTokenGeneratorTests()
         {
-            var configuration = new MockConfiguration("none");
-            configuration["JwtKey"] = "testKey-LongEnoughForHS256";
-            configuration["JwtExpireDays"] = "1";
-            configuration["JwtIssuer"] = "testIssuer";
+            var configuration = new MockConfiguration("none")
+            {
+                ["JwtKey"] = "testKey-LongEnoughForHS256",
+                ["JwtExpireDays"] = "1",
+                ["JwtIssuer"] = "testIssuer"
+            };
 
             _tokenGenerator = new JwtTokenGenerator(configuration);
         }
@@ -27,10 +29,9 @@ namespace RedPoint.Tests.Account
         [Fact]
         public void GenerateToken_ShouldReturnTokenString()
         {
-            var username = "testUsername";
+            const string username = "testUsername";
 
-            var identityUser = new IdentityUser();
-            identityUser.Id = "testId";
+            var identityUser = new IdentityUser {Id = "testId"};
 
             var expires = DateTime.Now.AddDays(1);
 

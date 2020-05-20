@@ -54,25 +54,21 @@ namespace RedPoint.Areas.Chat.Services.Security
             return new ChatError(ChatErrorType.NoError);
         }
 
-        private bool IsUserInServer(Server server, ApplicationUser user)
+        private static bool IsUserInServer(Server server, ApplicationUser user)
         {
             return server.Users.Contains(user);
         }
 
-        private IEnumerable<PermissionType> GetUserPermissionsOnEntity(ApplicationUser user, IChatGroups entity)
+        private static IEnumerable<PermissionType> GetUserPermissionsOnEntity(ApplicationUser user, IChatGroups entity)
         {
             var userGroupsOnServer = entity.Groups.Where(x => x.Users.Contains(user));
 
             IEnumerable<PermissionType> userPermissions = new List<PermissionType>();
-            foreach (var group in userGroupsOnServer)
-            {
-                userPermissions = userPermissions.Concat(@group.GroupPermissions);
-            }
 
-            return userPermissions;
+            return userGroupsOnServer.Aggregate(userPermissions, (current, @group) => current.Concat(@group.GroupPermissions));
         }
 
-        private bool IsUserPermitted(IEnumerable<PermissionType> userPermissions,
+        private static bool IsUserPermitted(IEnumerable<PermissionType> userPermissions,
             PermissionType expectedPermissions)
         {
             return userPermissions.Any(x => x == expectedPermissions || x == PermissionType.IsAdmin);

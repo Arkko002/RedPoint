@@ -16,10 +16,12 @@ namespace RedPoint.Tests.Account
     {
         public AccountServiceTests()
         {
-            var configuration = new MockConfiguration("none");
-            configuration["JwtKey"] = "testKey-LongEnoughForHS256";
-            configuration["JwtExpireDays"] = "1";
-            configuration["JwtIssuer"] = "testIssuer";
+            var configuration = new MockConfiguration("none")
+            {
+                ["JwtKey"] = "testKey-LongEnoughForHS256",
+                ["JwtExpireDays"] = "1",
+                ["JwtIssuer"] = "testIssuer"
+            };
 
             var users = new List<IdentityUser>
             {

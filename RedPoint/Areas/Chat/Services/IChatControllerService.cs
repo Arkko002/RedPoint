@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Security.Claims;
 using RedPoint.Areas.Chat.Models;
 using RedPoint.Areas.Chat.Models.Dto;
 using RedPoint.Areas.Chat.Services.DtoFactories;

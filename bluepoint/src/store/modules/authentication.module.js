@@ -34,10 +34,10 @@ export const authentication = {
 		},
 
 		register({ dispatch, commit }, { username, password, email }) {
-			commit("registerREquest");
+			commit("registerRequest");
 
-			userService.register(username, password).then(
-				(success) => {
+			userService.register(username, password, email).then(
+				() => {
 					commit("registerSuccess");
 					router.push("/login");
 				},

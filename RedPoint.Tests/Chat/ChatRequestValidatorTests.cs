@@ -25,16 +25,13 @@ namespace RedPoint.Tests.Chat
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group>();
-            server.Groups.Add(group);
+            server.Groups = new List<Group> {group};
 
             var channel = new Channel();
             server.Channels.Add(channel);
-            channel.Groups = new List<Group>();
-            channel.Groups.Add(group);
+            channel.Groups = new List<Group> {group};
 
-            user.Groups = new List<Group>();
-            user.Groups.Add(group);
+            user.Groups = new List<Group> {group};
 
             var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
 
@@ -91,13 +88,11 @@ namespace RedPoint.Tests.Chat
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group>();
-            server.Groups.Add(group);
+            server.Groups = new List<Group> {group};
 
             var channel = new Channel();
             server.Channels.Add(channel);
-            channel.Groups = new List<Group>();
-            channel.Groups.Add(group);
+            channel.Groups = new List<Group> {group};
 
             user.Groups = new List<Group>();
             user.Groups.Add(group);
@@ -116,17 +111,15 @@ namespace RedPoint.Tests.Chat
             group.GroupPermissions.Add(PermissionType.IsAdmin);
             group.Users.Add(user);
 
-            user.Groups = new List<Group>();
-            user.Groups.Add(group);
+            user.Groups = new List<Group> {group};
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group>();
-            server.Groups.Add(group);
+            server.Groups = new List<Group> {group};
+            
+            var returnError = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
 
-            var returnErorr = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
-
-            Assert.True(returnErorr.ErrorType == ChatErrorType.NoError);
+            Assert.True(returnError.ErrorType == ChatErrorType.NoError);
         }
     }
 }

@@ -19,10 +19,12 @@ namespace RedPoint.Areas.Chat.Services.DtoFactories
 
         public ServerDataDto CreateDto(Server sourceObject)
         {
-            var dto = new ServerDataDto();
-            dto.Id = sourceObject.Id;
-            dto.ChannelList = _channelFactory.CreateDtoList(sourceObject.Channels);
-            dto.UserList = _userFactory.CreateDtoList(sourceObject.Users);
+            var dto = new ServerDataDto
+            {
+                Id = sourceObject.Id,
+                ChannelList = _channelFactory.CreateDtoList(sourceObject.Channels),
+                UserList = _userFactory.CreateDtoList(sourceObject.Users)
+            };
 
             return dto;
         }

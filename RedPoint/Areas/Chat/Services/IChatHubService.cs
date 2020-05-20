@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using RedPoint.Areas.Chat.Models.Dto;
 
 namespace RedPoint.Areas.Chat.Services

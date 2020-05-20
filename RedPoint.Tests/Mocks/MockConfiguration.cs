@@ -15,22 +15,27 @@ namespace RedPoint.Tests.Mocks
         {
             _passwordFileVariant = passwordFileVariant;
 
-            _dict = new Dictionary<string, string>();
-            _dict["JwtKey"] = "TestKey";
-            _dict["JwtIssuer"] = "TestIssuer";
-            _dict["JwtExpireDays"] = "1";
-
-            if (passwordFileVariant == "empty.txt")
+            _dict = new Dictionary<string, string>
             {
-                File.CreateText("empty.txt");
-            }
+                ["JwtKey"] = "TestKey",
+                ["JwtIssuer"] = "TestIssuer",
+                ["JwtExpireDays"] = "1"
+            };
 
-            if (passwordFileVariant == "full.txt")
+            switch (passwordFileVariant)
             {
-                using (var sw = File.CreateText("full.txt"))
+                case "empty.txt":
+                    File.CreateText("empty.txt");
+                    break;
+                case "full.txt":
                 {
-                    sw.WriteLine("test");
-                    sw.WriteLine("test1");
+                    using (var sw = File.CreateText("full.txt"))
+                    {
+                        sw.WriteLine("test");
+                        sw.WriteLine("test1");
+                    }
+
+                    break;
                 }
             }
         }

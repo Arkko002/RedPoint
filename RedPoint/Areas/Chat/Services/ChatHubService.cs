@@ -18,8 +18,6 @@ namespace RedPoint.Areas.Chat.Services
         private readonly EntityUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private IHttpContextAccessor _httpContextAccessor;
-            
         private ApplicationUser _user;
 
         public ChatHubService(EntityUnitOfWork unitOfWork,
@@ -34,9 +32,8 @@ namespace RedPoint.Areas.Chat.Services
             _repoProxy = repoProxy;
             _requestValidator = requestValidator;
             _errorHandler = errorHandler;
-            _httpContextAccessor = httpContextAccessor;
-            
-            AssignApplicationUser(_httpContextAccessor.HttpContext.User);
+
+            AssignApplicationUser(httpContextAccessor.HttpContext.User);
         }
 
         private async void AssignApplicationUser(ClaimsPrincipal user)

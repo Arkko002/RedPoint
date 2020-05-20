@@ -15,10 +15,6 @@ function fetchChannelData(channelId, serverId){
 		.then((response) => { return response;});
 }
 
-function sendMessage(message) {
-  
-}
-
 function sendClosingData(data) {
 	api.post("chat/close", data)
 		.then((response) => { return response;});
@@ -28,6 +24,5 @@ export default {
 	fetchServers,
 	fetchServerData,
 	fetchChannelData,
-	sendMessage,
 	sendClosingData
 };

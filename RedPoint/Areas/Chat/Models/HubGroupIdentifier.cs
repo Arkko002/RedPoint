@@ -13,9 +13,9 @@ namespace RedPoint.Areas.Chat.Models
             //TODO Maybe use a proper hashing algo here?
 
             var random = new Random();
-            var length = 12;
+            const int length = 12;
 
-            var characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            const string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             var result = new StringBuilder(length);
             for (var i = 0; i < length; i++)
             {

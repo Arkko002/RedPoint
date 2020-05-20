@@ -44,8 +44,11 @@ export default {
 	},
 
 	methods: {
-		submitForm(e) {
-			this.$store.dispatch("authentication/login", { userName, password });
+		submitForm() {
+			const username = this.username;
+			const password = this.password;
+          
+			this.$store.dispatch("athentication/login", { username, password });
 		}
 	}
 };

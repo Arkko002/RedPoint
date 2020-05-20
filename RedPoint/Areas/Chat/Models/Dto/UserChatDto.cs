@@ -7,7 +7,7 @@ namespace RedPoint.Areas.Chat.Models.Dto
     /// </summary>
     public class UserChatDto : IDto
     {
-        //Use those to retrive  ApplicationUser
+        //Use those to retrieve ApplicationUser
         public string AppUserId { get; set; }
         public string Username { get; set; }
 
