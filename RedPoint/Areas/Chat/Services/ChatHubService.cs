@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Areas.Account.Models;
 using RedPoint.Areas.Chat.Models;
@@ -12,29 +13,35 @@ namespace RedPoint.Areas.Chat.Services
     {
         private readonly IChatErrorHandler _errorHandler;
         private readonly IChatEntityRepositoryProxy _repoProxy;
-
         private readonly IChatRequestValidator _requestValidator;
+        
         private readonly EntityUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        private IHttpContextAccessor _httpContextAccessor;
+            
         private ApplicationUser _user;
 
         public ChatHubService(EntityUnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager,
             IChatEntityRepositoryProxy repoProxy,
             IChatRequestValidator requestValidator,
-            IChatErrorHandler errorHandler)
+            IChatErrorHandler errorHandler,
+            IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _repoProxy = repoProxy;
             _requestValidator = requestValidator;
             _errorHandler = errorHandler;
+            _httpContextAccessor = httpContextAccessor;
+            
+            AssignApplicationUser(_httpContextAccessor.HttpContext.User);
         }
 
-        public void AssignApplicationUser(ClaimsPrincipal user)
+        private async void AssignApplicationUser(ClaimsPrincipal user)
         {
-            _user = _userManager.GetUserAsync(user).Result;
+            _user = await _userManager.GetUserAsync(user);
         }
 
         public void AddChannel(int serverId, ChannelIconDto channelIcon)

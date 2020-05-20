@@ -28,7 +28,6 @@ namespace RedPoint.Areas.Chat.Hubs
         public ChatHub(IChatHubService chatService)
         {
             _chatService = chatService;
-            _chatService.AssignApplicationUser(Context.User);
         }
 
         public Task AddServer(ServerIconDto serverIcon)

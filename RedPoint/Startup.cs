@@ -64,6 +64,8 @@ namespace RedPoint
                 options.User.RequireUniqueEmail = true;
             });
 
+            services.AddHttpContextAccessor();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

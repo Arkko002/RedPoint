@@ -8,7 +8,6 @@ namespace RedPoint.Areas.Chat.Services
 {
     public interface IChatControllerService
     {
-        void AssignApplicationUser(ClaimsPrincipal user);
         List<ServerIconDto> GetUserServers(IChatDtoFactory<Server, ServerIconDto> dtoFactory);
         ServerDataDto GetServerData(int serverId, IChatDtoFactory<Server, ServerDataDto> dtoFactory);
 

@@ -14,7 +14,6 @@ namespace RedPoint.Areas.Chat.Controllers
         public ChatController(IChatControllerService chatService)
         {
             _chatService = chatService;
-            _chatService.AssignApplicationUser(User);
         }
 
         [HttpGet]
