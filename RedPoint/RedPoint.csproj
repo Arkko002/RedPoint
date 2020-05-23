@@ -5,6 +5,7 @@
     <UserSecretsId>aspnet-RedPoint-DD010B23-2A1E-4127-99C4-0E3C0A95ED43</UserSecretsId>
   </PropertyGroup>
 
+  
   <ItemGroup>
     <Content Remove="wwwroot\css\site.css" />
   </ItemGroup>

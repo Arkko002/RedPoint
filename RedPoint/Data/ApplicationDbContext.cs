@@ -18,10 +18,10 @@ namespace RedPoint.Data
         public DbSet<Server> Servers { get; set; }
         public DbSet<HubGroupIdentifier> UniqueIdentifiers { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ApplicationUser>().ToTable("Users");
+            base.OnModelCreating(builder);
+            builder.Entity<ApplicationUser>().ToTable("Users");
         }
     }
 }

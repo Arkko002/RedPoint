@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Areas.Account.Models;
@@ -33,10 +34,10 @@ namespace RedPoint.Areas.Chat.Services
             _requestValidator = requestValidator;
             _errorHandler = errorHandler;
 
-            AssignApplicationUser(httpContextAccessor.HttpContext.User);
+            AssignApplicationUser(httpContextAccessor.HttpContext.User).ConfigureAwait(false);
         }
 
-        private async void AssignApplicationUser(ClaimsPrincipal user)
+        private async Task AssignApplicationUser(ClaimsPrincipal user)
         {
             _user = await _userManager.GetUserAsync(user);
         }
