@@ -51,6 +51,7 @@ namespace RedPoint.Areas.Chat.Services
         {
             var server = _repoProxy.TryFindingServer(serverId, _user);
 
+            //TODO validator, error handling
             return dtoFactory.CreateDto(server);
         }
 
