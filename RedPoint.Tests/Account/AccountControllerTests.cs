@@ -25,7 +25,7 @@ namespace RedPoint.Tests.Account
 
             var returnValue = _controller.Delete(new UserLoginDto {Username = "test", Password = "test"}).Result;
 
-            Assert.True((bool) returnValue);
+            _service.Verify(x => x.Delete(It.IsAny<UserLoginDto>()), Times.Once);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace RedPoint.Tests.Account
 
             var returnValue = _controller.Login(new UserLoginDto {Username = "test", Password = "test"}).Result;
 
-            Assert.True((string) returnValue == "CALLED");
+            _service.Verify(x => x.Login(It.IsAny<UserLoginDto>()), Times.Once);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace RedPoint.Tests.Account
 
             var returnValue = _controller.Register(new UserRegisterDto {Username = "test", Password = "test"}).Result;
 
-            Assert.True((string) returnValue == "CALLED");
+           _service.Verify(x => x.Register(It.IsAny<UserRegisterDto>()), Times.Once);
         }
     }
 }

@@ -24,60 +24,37 @@ namespace RedPoint.Tests.Chat
         [Fact]
         public void GetChannelMessages_ShouldCallService()
         {
-            var mockList = new List<MessageDto>
-            {
-                new MessageDto
-                {
-                    Text = "CALLED"
-                }
-            };
-
+            var mockList = new List<MessageDto>();
             _service.Setup(x => x.GetChannelMessages(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<MessageDtoFactory>()))
                 .Returns(mockList);
 
-            var returnValue = _controller.GetChannelMessages(1, 1, new MessageDtoFactory()) as OkObjectResult;
-            var returnList = returnValue.Value as List<MessageDto>;
+            _controller.GetChannelMessages(1, 1, new MessageDtoFactory());
 
-            Assert.True(returnList[0].Text == "CALLED");
+            _service.Verify(x => x.GetChannelMessages(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<MessageDtoFactory>()), Times.Once);
         }
 
         [Fact]
         public void GetServers_ShouldCallService()
         {
-            var mockData = new ServerDataDto
-            {
-                Id = 12345
-            };
-
+            var mockData = new ServerDataDto();
             _service.Setup(x => x.GetServerData(It.IsAny<int>(), It.IsAny<IChatDtoFactory<Server, ServerDataDto>>()))
                 .Returns(mockData);
 
-            var returnValue =
-                _controller.GetServer(1, new ServerDataDtoFactory(new ChannelIconDtoFactory(), new UserDtoFactory())) as
-                    OkObjectResult;
-            var returnDto = returnValue.Value as ServerDataDto;
-
-            Assert.True(returnDto.Id == 12345);
+            _controller.GetServer(1, new ServerDataDtoFactory(new ChannelIconDtoFactory(), new UserDtoFactory()));
+            
+            _service.Verify(x => x.GetServerData(It.IsAny<int>(), It.IsAny<IChatDtoFactory<Server, ServerDataDto>>()), Times.Once);
         }
 
         [Fact]
         public void GetUserServers_ShouldCallService()
         {
-            var mockList = new List<ServerIconDto>
-            {
-                new ServerIconDto
-                {
-                    Name = "CALLED"
-                }
-            };
-
+            var mockList = new List<ServerIconDto>();
             _service.Setup(x => x.GetUserServers(It.IsAny<IChatDtoFactory<Server, ServerIconDto>>()))
                 .Returns(mockList);
 
-            var returnValue = _controller.GetUserServers(new ServerIconDtoFactory()) as OkObjectResult;
-            var returnList = returnValue.Value as List<ServerIconDto>;
+            var returnValue = _controller.GetUserServers(new ServerIconDtoFactory());
 
-            Assert.True(returnList[0].Name == "CALLED");
+           _service.Verify(x => x.GetUserServers(It.IsAny<IChatDtoFactory<Server, ServerIconDto>>()), Times.Once);
         }
     }
 }
