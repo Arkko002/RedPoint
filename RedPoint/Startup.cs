@@ -11,20 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Account.Services;
-using RedPoint.Areas.Account.Services.Security;
-using RedPoint.Areas.Chat.Hubs;
-using RedPoint.Areas.Chat.Models;
-using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Chat.Services;
-using RedPoint.Areas.Chat.Services.DtoFactories;
-using RedPoint.Areas.Chat.Services.Security;
 using RedPoint.Data;
 using RedPoint.Data.Repository;
 using RedPoint.Data.UnitOfWork;
 using RedPoint.Middleware;
 
+#TODO Auth between RedPoint.Account and RedPoint.Chat, separation of concerns
 namespace RedPoint
 {
     public class Startup
@@ -46,23 +38,6 @@ namespace RedPoint
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
-
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-
-
-                options.User.AllowedUserNameCharacters =
-                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = true;
-            });
 
             services.AddHttpContextAccessor();
 
@@ -70,56 +45,14 @@ namespace RedPoint
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidIssuer = Configuration["JwtIssuer"],
-                    ValidAudience = Configuration["JwtIssuer"],
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Configuration["JwtKey"])), // TODO!!! set proper key
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
 
-            services.AddSignalR();
-
-            services.AddControllers();
+;
 
             services.AddScoped(x => new EntityUnitOfWork(x.GetRequiredService<DbContext>()));
             services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<,>));
 
 
-            services.AddScoped(typeof(IChatDtoFactory<Channel, ChannelIconDto>), typeof(ChannelIconDtoFactory));
-            services.AddScoped(typeof(IChatDtoFactory<Channel, ChannelDataDto>), typeof(ChannelDataDtoFactory));
-
-            services.AddScoped(typeof(IChatDtoFactory<Server, ServerIconDto>), typeof(ServerIconDtoFactory));
-            services.AddScoped(typeof(IChatDtoFactory<Server, ServerDataDto>), typeof(ServerDataDtoFactory));
-
-            services.AddScoped(typeof(IChatDtoFactory<ApplicationUser, UserChatDto>), typeof(UserDtoFactory));
-            services.AddScoped(typeof(IChatDtoFactory<Message, MessageDto>), typeof(MessageDtoFactory));
-
-
-            services.AddScoped(typeof(IAccountRequestValidator), typeof(AccountRequestValidator));
-            services.AddScoped(typeof(IChatRequestValidator), typeof(ChatRequestValidator));
-
-
-            services.AddScoped(typeof(IChatControllerService), typeof(ChatControllerService));
-            services.AddScoped(typeof(IChatHubService), typeof(ChatHubService));
-            services.AddScoped(typeof(IAccountService), typeof(AccountService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -143,12 +76,6 @@ namespace RedPoint
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                //TODO
-                endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chathub");
-            });
         }
     }
 }
