@@ -1,4 +1,3 @@
-using RedPoint.Areas.Account.Models;
 using RedPoint.Chat.Models;
 using RedPoint.Data;
 using RedPoint.Data.Repository;
@@ -7,10 +6,9 @@ namespace RedPoint.Chat.Services
 {
     public interface IChatEntityRepositoryProxy
     {
-        EntityRepository<Server, ApplicationDbContext> ServerRepository { get; }
-        EntityRepository<Channel, ApplicationDbContext> ChannelRepository { get; }
-
-        EntityRepository<Message, ApplicationDbContext> MessageRepository { get; }
+        EntityRepository<Server, ChatDbContext> ServerRepository { get; }
+        EntityRepository<Channel, ChatDbContext> ChannelRepository { get; }
+        EntityRepository<Message, ChatDbContext> MessageRepository { get; }
 
 
         Channel TryFindingChannel(int channelId, ChatUser requestingUser);

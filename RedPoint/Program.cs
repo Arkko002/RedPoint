@@ -8,6 +8,7 @@ using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace RedPoint
 {
+    //TODO Add logging to separated components
     public class Program
     {
         public static void Main(string[] args)

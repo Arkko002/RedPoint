@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using RedPoint.Areas.Account.Models;
 using RedPoint.Chat.Models.Dto;
 using RedPoint.Data;
 

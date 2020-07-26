@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using RedPoint.Areas.Account.Models;
+using RedPoint.Account.Models;
 
-namespace RedPoint.Areas.Account.Services
+namespace RedPoint.Account.Services
 {
     public interface IAccountService
     {

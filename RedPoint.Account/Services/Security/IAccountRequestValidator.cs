@@ -1,6 +1,6 @@
-using RedPoint.Areas.Account.Models;
+using RedPoint.Account.Models;
 
-namespace RedPoint.Areas.Account.Services.Security
+namespace RedPoint.Account.Services.Security
 {
     public interface IAccountRequestValidator
     {

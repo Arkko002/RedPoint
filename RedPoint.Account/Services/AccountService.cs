@@ -3,11 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Account.Services.Security;
-using RedPoint.Exceptions;
+using RedPoint.Account.Models;
+using RedPoint.Account.Services.Security;
+using RedPoint.Account.Exceptions;
 
-namespace RedPoint.Areas.Account.Services
+namespace RedPoint.Account.Services
 {
     //TODO Add Update, Delete actions
     public class AccountService : IAccountService
@@ -115,19 +115,21 @@ namespace RedPoint.Areas.Account.Services
                     return;
 
                 case AccountErrorType.PasswordTooWeak:
-                    throw new InvalidRequestException("Provided password is too weak.");
+                    throw new AccountRequestException("Provided password is too weak.");
 
                 case AccountErrorType.UserLockedOut:
-                    throw new InvalidRequestException("User was locked out of the account.");
+                    throw new AccountRequestException("User was locked out of the account.");
 
                 case AccountErrorType.LoginFailure:
-                    throw new InvalidRequestException("The provided credentials were incorrect");
+                    throw new AccountRequestException("The provided credentials were incorrect");
 
                 case AccountErrorType.RegisterFailure:
-                    throw new InvalidRequestException("An error occured during registration process.");
+                    throw new AccountRequestException("An error occured during registration process.");
 
                 default:
-                    throw new InvalidRequestException("Default claus Error in HandleAccountError switch statement");
+                    // TODO
+                    _logger.LogCritical("");
+                    throw new AccountRequestException("Default claus Error in HandleAccountError switch statement");
             }
         }
     }

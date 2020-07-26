@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace RedPoint.Areas.Account.Services
+namespace RedPoint.Account.Services
 {
     public interface ITokenGenerator
     {

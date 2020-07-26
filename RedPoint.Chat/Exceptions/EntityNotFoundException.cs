@@ -1,6 +1,6 @@
 using System;
 
-namespace RedPoint.Exceptions
+namespace RedPoint.Chat.Exceptions
 {
     public class EntityNotFoundException : Exception
     {

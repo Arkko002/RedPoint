@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RedPoint.Chat.Models;
 
-namespace RedPoint.Chat.Data
+namespace RedPoint.Data
 {
     public class ChatDbContext : DbContext
     {
@@ -15,5 +15,11 @@ namespace RedPoint.Chat.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Server> Servers { get; set; }
         public DbSet<HubGroupIdentifier> UniqueIdentifiers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<ChatUser>().ToTable("Users");
+        }
     }
 }

@@ -3,9 +3,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6"/>
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RedPoint.Data\RedPoint.Data.csproj" />
+    <ProjectReference Include="..\RedPoint.Middleware\RedPoint.Middleware.csproj" />
   </ItemGroup>
 </Project>

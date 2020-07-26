@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace RedPoint.Data
 {
-    public static class RulesService
+    public abstract class RulesService
     {
-        private static readonly List<Action<object>> DeleteRules = new List<Action<object>>();
-        private static readonly List<Action<object>> InsertRules = new List<Action<object>>();
-        private static readonly List<Action<object>> UpdateRules = new List<Action<object>>();
+        private readonly List<Action<object>> DeleteRules = new List<Action<object>>();
+        private readonly List<Action<object>> InsertRules = new List<Action<object>>();
+        private readonly List<Action<object>> UpdateRules = new List<Action<object>>();
 
-        public static void AddDeleteRule(Action<object> deleteRule)
+        public void AddDeleteRule(Action<object> deleteRule)
         {
             DeleteRules.Add(deleteRule);
         }
 
-        public static void AddDeleteRule<TEntity>(Action<TEntity> deleteRule)
+        public void AddDeleteRule<TEntity>(Action<TEntity> deleteRule)
         {
             DeleteRules.Add(x =>
             {
@@ -25,7 +25,7 @@ namespace RedPoint.Data
             });
         }
 
-        public static void ApplyDeleteRules(IEnumerable<object> deleting)
+        public void ApplyDeleteRules(IEnumerable<object> deleting)
         {
             foreach (var entity in deleting)
             {
@@ -36,12 +36,12 @@ namespace RedPoint.Data
             }
         }
 
-        public static void AddInsertRule(Action<object> insertRule)
+        public void AddInsertRule(Action<object> insertRule)
         {
             InsertRules.Add(insertRule);
         }
 
-        public static void AddInsertRule<TEntity>(Action<TEntity> insertRule)
+        public void AddInsertRule<TEntity>(Action<TEntity> insertRule)
         {
             InsertRules.Add(x =>
             {
@@ -52,7 +52,7 @@ namespace RedPoint.Data
             });
         }
 
-        public static void ApplyInsertRules(IEnumerable<object> inserting)
+        public void ApplyInsertRules(IEnumerable<object> inserting)
         {
             foreach (var entity in inserting)
             {
@@ -63,12 +63,12 @@ namespace RedPoint.Data
             }
         }
 
-        public static void AddUpdateRule(Action<object> updateRule)
+        public void AddUpdateRule(Action<object> updateRule)
         {
             UpdateRules.Add(updateRule);
         }
 
-        public static void AddUpdateRule<TEntity>(Action<TEntity> updateRule)
+        public void AddUpdateRule<TEntity>(Action<TEntity> updateRule)
         {
             UpdateRules.Add(x =>
             {
@@ -79,7 +79,7 @@ namespace RedPoint.Data
             });
         }
 
-        public static void ApplyUpdateRules(IEnumerable<object> updating)
+        public void ApplyUpdateRules(IEnumerable<object> updating)
         {
             foreach (var entity in updating)
             {

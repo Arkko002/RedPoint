@@ -10,7 +10,8 @@ using RedPoint.Chat.Models.Dto;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
-using RedPoint.Chat.Data;
+using RedPoint.Data;
+using RedPoint.Middleware;
 
 namespace RedPoint.Chat
 {
@@ -53,6 +54,8 @@ namespace RedPoint.Chat
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseGlobalExceptionMiddleware();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

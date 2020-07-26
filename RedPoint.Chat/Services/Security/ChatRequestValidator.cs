@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using RedPoint.Areas.Account.Models;
 using RedPoint.Chat.Models;
 
 namespace RedPoint.Chat.Services.Security

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using RedPoint.Areas.Account.Models;
 using RedPoint.Data;
 
 namespace RedPoint.Chat.Models

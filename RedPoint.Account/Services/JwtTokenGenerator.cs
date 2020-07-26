@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace RedPoint.Areas.Account.Services
+namespace RedPoint.Account.Services
 {
     public class JwtTokenGenerator : ITokenGenerator
     {

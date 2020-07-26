@@ -1,6 +1,6 @@
 using System;
 
-namespace RedPoint.Exceptions.Security
+namespace RedPoint.Chat.Exceptions.Security
 {
     public class InvalidChannelRequestException : Exception
     {

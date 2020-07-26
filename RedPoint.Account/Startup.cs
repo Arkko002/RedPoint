@@ -7,12 +7,13 @@ using RedPoint.Account.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RedPoint.Areas.Account.Services;
-using RedPoint.Areas.Account.Services.Security;
+using RedPoint.Account.Services;
+using RedPoint.Account.Services.Security;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using RedPoint.Middleware;
 
 namespace RedPoint.Account
 {
@@ -84,6 +85,8 @@ namespace RedPoint.Account
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseGlobalExceptionMiddleware();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

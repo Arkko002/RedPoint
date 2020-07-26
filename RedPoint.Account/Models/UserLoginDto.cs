@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace RedPoint.Areas.Account.Models
+namespace RedPoint.Account.Models
 {
     public class UserLoginDto
     {

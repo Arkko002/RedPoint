@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Account.Services;
+using RedPoint.Account.Models;
+using RedPoint.Account.Services;
 
-namespace RedPoint.Areas.Account.Controllers
+namespace RedPoint.Account.Controllers
 {
     //TODO Change the return values of controller, possibly to IActionResult
     [Route("[controller]/[action]")]

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using RedPoint.Areas.Account;
+using RedPoint.Account;
 
 [assembly: HostingStartup(typeof(IdentityHostingStartup))]
 
-namespace RedPoint.Areas.Account
+namespace RedPoint.Account
 {
     public class IdentityHostingStartup : IHostingStartup
     {

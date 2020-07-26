@@ -1,8 +1,8 @@
 using System;
 using Microsoft.Extensions.Logging;
 using RedPoint.Chat.Services.Security;
-using RedPoint.Exceptions;
-using RedPoint.Exceptions.Security;
+using RedPoint.Chat.Exceptions;
+using RedPoint.Chat.Exceptions.Security;
 
 namespace RedPoint.Chat.Services
 {

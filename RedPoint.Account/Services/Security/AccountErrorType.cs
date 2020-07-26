@@ -1,4 +1,4 @@
-namespace RedPoint.Areas.Account.Services.Security
+namespace RedPoint.Account.Services.Security
 {
     public enum AccountErrorType
     {

@@ -8,10 +8,12 @@ namespace RedPoint.Data.UnitOfWork
     public class EntityUnitOfWork : Disposable, IUnitOfWork
     {
         private readonly DbContext _context;
+        private readonly RulesService _rules;
 
-        public EntityUnitOfWork(DbContext context)
+        public EntityUnitOfWork(DbContext context, RulesService rules)
         {
             _context = context;
+            _rules = rules;
         }
 
         public bool HasEnded { get; private set; }
@@ -25,9 +27,9 @@ namespace RedPoint.Data.UnitOfWork
 
             if (_context != null)
             {
-                RulesService.ApplyInsertRules(_context.Changes(EntityState.Added));
-                RulesService.ApplyDeleteRules(_context.Changes(EntityState.Modified));
-                RulesService.ApplyUpdateRules(_context.Changes(EntityState.Deleted));
+                _rules.ApplyInsertRules(_context.Changes(EntityState.Added));
+                _rules.ApplyDeleteRules(_context.Changes(EntityState.Modified));
+                _rules.ApplyUpdateRules(_context.Changes(EntityState.Deleted));
 
                 _context.SaveChanges();
             }
@@ -40,7 +42,7 @@ namespace RedPoint.Data.UnitOfWork
                 throw new ObjectDisposedException("Unit of Work has been disposed.");
             }
 
-            return (TDbContext) _context;
+            return (TDbContext)_context;
         }
 
         protected override void Dispose(bool disposing)

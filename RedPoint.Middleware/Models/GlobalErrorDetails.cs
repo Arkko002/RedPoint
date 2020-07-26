@@ -1,4 +1,4 @@
-namespace RedPoint.Models
+namespace RedPoint.Middleware.Models
 {
     public class GlobalErrorDetails
     {

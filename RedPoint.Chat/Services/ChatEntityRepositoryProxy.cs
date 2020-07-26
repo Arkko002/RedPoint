@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using RedPoint.Areas.Account.Models;
 using RedPoint.Chat.Models;
 using RedPoint.Chat.Services.Security;
 using RedPoint.Data;
@@ -11,9 +10,12 @@ namespace RedPoint.Chat.Services
     {
         private readonly IChatErrorHandler _errorHandler;
 
-        public ChatEntityRepositoryProxy(EntityRepository<Server, ApplicationDbContext> serverRepo,
-            EntityRepository<Channel, ApplicationDbContext> channelRepo,
-            EntityRepository<Message, ApplicationDbContext> messageRepo,
+        public EntityRepository<Channel, ChatDbContext> ChannelRepository { get; }
+        public EntityRepository<Message, ChatDbContext> MessageRepository { get; }
+        public EntityRepository<Server, ChatDbContext> ServerRepository { get; }
+        public ChatEntityRepositoryProxy(EntityRepository<Server, ChatDbContext> serverRepo,
+            EntityRepository<Channel, ChatDbContext> channelRepo,
+            EntityRepository<Message, ChatDbContext> messageRepo,
             IChatErrorHandler errorHandler)
         {
             ChannelRepository = channelRepo;
@@ -22,9 +24,6 @@ namespace RedPoint.Chat.Services
             _errorHandler = errorHandler;
         }
 
-        public EntityRepository<Channel, ApplicationDbContext> ChannelRepository { get; }
-        public EntityRepository<Message, ApplicationDbContext> MessageRepository { get; }
-        public EntityRepository<Server, ApplicationDbContext> ServerRepository { get; }
 
         public Server TryFindingServer(int serverId, ChatUser requestingUser)
         {
