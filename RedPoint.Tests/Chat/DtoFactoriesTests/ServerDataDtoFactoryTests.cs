@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using Moq;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Chat.Models;
-using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Chat.Services.DtoFactories;
+using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Services.DtoFactories;
 using Xunit;
 
 namespace RedPoint.Tests.Chat.DtoFactoriesTests
@@ -13,14 +12,14 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         public ServerDataDtoFactoryTests()
         {
             var mockChannelDtoFactory = new Mock<IChatDtoFactory<Channel, ChannelIconDto>>();
-            var mockUserDtoFactory = new Mock<IChatDtoFactory<ApplicationUser, UserChatDto>>();
+            var mockUserDtoFactory = new Mock<IChatDtoFactory<ChatUser, ChatUserDto>>();
 
-            var channelDtoList = new List<ChannelIconDto> {new ChannelIconDto {Name = "CALLED"}};
+            var channelDtoList = new List<ChannelIconDto> { new ChannelIconDto { Name = "CALLED" } };
             mockChannelDtoFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Channel>>()))
                 .Returns(channelDtoList);
 
-            var userDtoList = new List<UserChatDto> {new UserChatDto {Username = "CALLED"}};
-            mockUserDtoFactory.Setup(x => x.CreateDtoList(It.IsAny<List<ApplicationUser>>()))
+            var userDtoList = new List<ChatUserDto> { new ChatUserDto { Username = "CALLED" } };
+            mockUserDtoFactory.Setup(x => x.CreateDtoList(It.IsAny<List<ChatUser>>()))
                 .Returns(userDtoList);
 
             _factory = new ServerDataDtoFactory(mockChannelDtoFactory.Object, mockUserDtoFactory.Object);

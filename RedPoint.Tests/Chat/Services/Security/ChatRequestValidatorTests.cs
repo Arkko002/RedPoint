@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Chat.Models;
-using RedPoint.Areas.Chat.Services.Security;
+using RedPoint.Account.Models;
+using RedPoint.Chat.Models;
+using RedPoint.Chat.Services.Security;
 using Xunit;
 
 namespace RedPoint.Tests.Chat
@@ -18,20 +18,20 @@ namespace RedPoint.Tests.Chat
         [Fact]
         public void NoChannelPermission_ShouldReturnNoPermissionType()
         {
-            var user = new ApplicationUser();
+            var user = new ChatUser();
 
             var group = new Group();
             group.Users.Add(user);
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group> {group};
+            server.Groups = new List<Group> { group };
 
             var channel = new Channel();
             server.Channels.Add(channel);
-            channel.Groups = new List<Group> {group};
+            channel.Groups = new List<Group> { group };
 
-            user.Groups = new List<Group> {group};
+            user.Groups = new List<Group> { group };
 
             var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
 
@@ -41,7 +41,7 @@ namespace RedPoint.Tests.Chat
         [Fact]
         public void NoServerPermission_ShouldReturnNoPermissionType()
         {
-            var user = new ApplicationUser();
+            var user = new ChatUser();
 
             var group = new Group();
             group.Users.Add(user);
@@ -57,7 +57,7 @@ namespace RedPoint.Tests.Chat
         [Fact]
         public void UserNotInChannelsServer_ShouldReturnUserNotInServerType()
         {
-            var user = new ApplicationUser();
+            var user = new ChatUser();
             var server = new Server();
             var channel = new Channel();
 
@@ -70,7 +70,7 @@ namespace RedPoint.Tests.Chat
         public void UserNotInServer_ShouldReturnUserNotInServerType()
         {
             var server = new Server();
-            var user = new ApplicationUser();
+            var user = new ChatUser();
 
             var returnError = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
 
@@ -80,7 +80,7 @@ namespace RedPoint.Tests.Chat
         [Fact]
         public void ValidChannelRequest_ShouldReturnNoErrorType()
         {
-            var user = new ApplicationUser();
+            var user = new ChatUser();
 
             var group = new Group();
             group.GroupPermissions.Add(PermissionType.IsAdmin);
@@ -88,11 +88,11 @@ namespace RedPoint.Tests.Chat
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group> {group};
+            server.Groups = new List<Group> { group };
 
             var channel = new Channel();
             server.Channels.Add(channel);
-            channel.Groups = new List<Group> {group};
+            channel.Groups = new List<Group> { group };
 
             user.Groups = new List<Group>();
             user.Groups.Add(group);
@@ -105,18 +105,18 @@ namespace RedPoint.Tests.Chat
         [Fact]
         public void ValidServerRequest_ShouldReturnNoErrorType()
         {
-            var user = new ApplicationUser();
+            var user = new ChatUser();
 
             var group = new Group();
             group.GroupPermissions.Add(PermissionType.IsAdmin);
             group.Users.Add(user);
 
-            user.Groups = new List<Group> {group};
+            user.Groups = new List<Group> { group };
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group> {group};
-            
+            server.Groups = new List<Group> { group };
+
             var returnError = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
 
             Assert.True(returnError.ErrorType == ChatErrorType.NoError);

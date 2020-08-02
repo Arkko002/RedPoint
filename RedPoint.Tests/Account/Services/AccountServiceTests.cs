@@ -3,10 +3,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Account.Services;
-using RedPoint.Areas.Account.Services.Security;
-using RedPoint.Exceptions;
+using RedPoint.Account.Models;
+using RedPoint.Account.Services;
+using RedPoint.Account.Services.Security;
+using RedPoint.Account.Exceptions;
 using RedPoint.Tests.Mocks;
 using Xunit;
 
@@ -77,8 +77,8 @@ namespace RedPoint.Tests.Account
                         It.IsAny<bool>()))
                 .ReturnsAsync(SignInResult.LockedOut);
 
-            Assert.ThrowsAsync<InvalidRequestException>(() =>
-                _service.Login(new UserLoginDto {Username = "Username", Password = "Password"}));
+            Assert.ThrowsAsync<AccountRequestException>(() =>
+                _service.Login(new UserLoginDto { Username = "Username", Password = "Password" }));
         }
 
         [Fact]
@@ -91,8 +91,8 @@ namespace RedPoint.Tests.Account
                         It.IsAny<bool>()))
                 .ReturnsAsync(SignInResult.Failed);
 
-            Assert.ThrowsAsync<InvalidRequestException>(() =>
-                _service.Login(new UserLoginDto {Username = "Username", Password = "Password"}));
+            Assert.ThrowsAsync<AccountRequestException>(() =>
+                _service.Login(new UserLoginDto { Username = "Username", Password = "Password" }));
         }
 
         [Fact]
@@ -101,13 +101,13 @@ namespace RedPoint.Tests.Account
             _requestValidator.Setup(x => x.IsLoginRequestValid(It.IsAny<UserLoginDto>()))
                 .Returns(new AccountError(AccountErrorType.LoginFailure));
 
-            Assert.ThrowsAsync<InvalidRequestException>(() => _service.Login(new UserLoginDto()));
+            Assert.ThrowsAsync<AccountRequestException>(() => _service.Login(new UserLoginDto()));
         }
 
         [Fact]
         public void Login_ValidAttempt_ShouldReturnJwtToken()
         {
-            var returnValue = _service.Login(new UserLoginDto {Password = "Password", Username = "Username"}).Result;
+            var returnValue = _service.Login(new UserLoginDto { Password = "Password", Username = "Username" }).Result;
 
             Assert.IsType<string>(returnValue);
         }
@@ -119,8 +119,8 @@ namespace RedPoint.Tests.Account
                     It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Failed());
 
-            Assert.ThrowsAsync<InvalidRequestException>(() =>
-                _service.Register(new UserRegisterDto {Username = "Username", Password = "Password"}));
+            Assert.ThrowsAsync<AccountRequestException>(() =>
+                _service.Register(new UserRegisterDto { Username = "Username", Password = "Password" }));
         }
 
         [Fact]
@@ -129,14 +129,14 @@ namespace RedPoint.Tests.Account
             _requestValidator.Setup(x => x.IsRegisterRequestValid(It.IsAny<UserRegisterDto>()))
                 .Returns(new AccountError(AccountErrorType.PasswordTooWeak));
 
-            Assert.ThrowsAsync<InvalidRequestException>(() =>
-                _service.Register(new UserRegisterDto {Username = "Username", Password = "Password"}));
+            Assert.ThrowsAsync<AccountRequestException>(() =>
+                _service.Register(new UserRegisterDto { Username = "Username", Password = "Password" }));
         }
 
         [Fact]
         public void Register_ValidForm_ShouldReturnJwtToken()
         {
-            var returnValue = _service.Register(new UserRegisterDto {Password = "Password", Username = "Username"})
+            var returnValue = _service.Register(new UserRegisterDto { Password = "Password", Username = "Username" })
                 .Result;
 
             Assert.IsType<string>(returnValue);

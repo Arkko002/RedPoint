@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using RedPoint.Areas.Account.Services;
+using RedPoint.Account.Services;
 using RedPoint.Tests.Mocks;
 using Xunit;
 
@@ -31,7 +31,7 @@ namespace RedPoint.Tests.Account
         {
             const string username = "testUsername";
 
-            var identityUser = new IdentityUser {Id = "testId"};
+            var identityUser = new IdentityUser { Id = "testId" };
 
             var expires = DateTime.Now.AddDays(1);
 

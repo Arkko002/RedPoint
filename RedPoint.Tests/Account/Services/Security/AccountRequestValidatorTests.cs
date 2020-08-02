@@ -1,6 +1,6 @@
 using System.Threading;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Account.Services.Security;
+using RedPoint.Account.Models;
+using RedPoint.Account.Services.Security;
 using RedPoint.Tests.Mocks;
 using Xunit;
 

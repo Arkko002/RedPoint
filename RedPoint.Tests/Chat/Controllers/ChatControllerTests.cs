@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using RedPoint.Areas.Chat.Controllers;
-using RedPoint.Areas.Chat.Models;
-using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Chat.Services;
-using RedPoint.Areas.Chat.Services.DtoFactories;
+using RedPoint.Chat.Controllers;
+using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Services;
+using RedPoint.Chat.Services.DtoFactories;
 using Xunit;
 
 namespace RedPoint.Tests.Chat
@@ -41,7 +41,7 @@ namespace RedPoint.Tests.Chat
                 .Returns(mockData);
 
             _controller.GetServer(1, new ServerDataDtoFactory(new ChannelIconDtoFactory(), new UserDtoFactory()));
-            
+
             _service.Verify(x => x.GetServerData(It.IsAny<int>(), It.IsAny<IChatDtoFactory<Server, ServerDataDto>>()), Times.Once);
         }
 
@@ -54,7 +54,7 @@ namespace RedPoint.Tests.Chat
 
             var returnValue = _controller.GetUserServers(new ServerIconDtoFactory());
 
-           _service.Verify(x => x.GetUserServers(It.IsAny<IChatDtoFactory<Server, ServerIconDto>>()), Times.Once);
+            _service.Verify(x => x.GetUserServers(It.IsAny<IChatDtoFactory<Server, ServerIconDto>>()), Times.Once);
         }
     }
 }

@@ -1,5 +1,5 @@
 using System.IO;
-using RedPoint.Areas.Account.Services.Security;
+using RedPoint.Account.Services.Security;
 using RedPoint.Tests.Mocks;
 using Xunit;
 

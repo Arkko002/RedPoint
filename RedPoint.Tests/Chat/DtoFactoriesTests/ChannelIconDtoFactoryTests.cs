@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using RedPoint.Areas.Chat.Models;
-using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Chat.Services.DtoFactories;
+using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Services.DtoFactories;
 using Xunit;
 
 namespace RedPoint.Tests.Chat.DtoFactoriesTests

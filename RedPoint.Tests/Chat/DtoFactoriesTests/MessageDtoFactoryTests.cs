@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Chat.Models;
-using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Chat.Services.DtoFactories;
+using RedPoint.Account.Models;
+using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Services.DtoFactories;
 using Xunit;
 
 namespace RedPoint.Tests.Chat.DtoFactoriesTests
@@ -28,7 +28,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         [Fact]
         public void CreateDto_ValidInput_ReturnObjectWithCorrectValues()
         {
-            var user = new ApplicationUser
+            var user = new ChatUser
             {
                 Id = "testId"
             };
@@ -56,9 +56,9 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var msgList = new List<Message>
             {
-                new Message {Id = 1, Text = "1", DateTimePosted = DateTime.Today, User = new ApplicationUser()},
-                new Message {Id = 2, Text = "2", DateTimePosted = DateTime.Today, User = new ApplicationUser()},
-                new Message {Id = 3, Text = "3", DateTimePosted = DateTime.Today, User = new ApplicationUser()}
+                new Message {Id = 1, Text = "1", DateTimePosted = DateTime.Today, User = new ChatUser()},
+                new Message {Id = 2, Text = "2", DateTimePosted = DateTime.Today, User = new ChatUser()},
+                new Message {Id = 3, Text = "3", DateTimePosted = DateTime.Today, User = new ChatUser()}
             };
 
             var returnList = _factory.CreateDtoList(msgList);

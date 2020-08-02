@@ -1,7 +1,7 @@
 using Moq;
-using RedPoint.Areas.Account.Controllers;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Account.Services;
+using RedPoint.Account.Controllers;
+using RedPoint.Account.Models;
+using RedPoint.Account.Services;
 using Xunit;
 
 namespace RedPoint.Tests.Account
@@ -23,7 +23,7 @@ namespace RedPoint.Tests.Account
             _service.Setup(x => x.Delete(It.IsAny<UserLoginDto>()))
                 .ReturnsAsync(true);
 
-            var returnValue = _controller.Delete(new UserLoginDto {Username = "test", Password = "test"}).Result;
+            var returnValue = _controller.Delete(new UserLoginDto { Username = "test", Password = "test" }).Result;
 
             _service.Verify(x => x.Delete(It.IsAny<UserLoginDto>()), Times.Once);
         }
@@ -34,7 +34,7 @@ namespace RedPoint.Tests.Account
             _service.Setup(x => x.Login(It.IsAny<UserLoginDto>()))
                 .ReturnsAsync("CALLED");
 
-            var returnValue = _controller.Login(new UserLoginDto {Username = "test", Password = "test"}).Result;
+            var returnValue = _controller.Login(new UserLoginDto { Username = "test", Password = "test" }).Result;
 
             _service.Verify(x => x.Login(It.IsAny<UserLoginDto>()), Times.Once);
         }
@@ -45,9 +45,9 @@ namespace RedPoint.Tests.Account
             _service.Setup(x => x.Register(It.IsAny<UserRegisterDto>()))
                 .ReturnsAsync("CALLED");
 
-            var returnValue = _controller.Register(new UserRegisterDto {Username = "test", Password = "test"}).Result;
+            var returnValue = _controller.Register(new UserRegisterDto { Username = "test", Password = "test" }).Result;
 
-           _service.Verify(x => x.Register(It.IsAny<UserRegisterDto>()), Times.Once);
+            _service.Verify(x => x.Register(It.IsAny<UserRegisterDto>()), Times.Once);
         }
     }
 }

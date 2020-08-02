@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using RedPoint.Areas.Account.Models;
-using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Chat.Services.DtoFactories;
+using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Services.DtoFactories;
 using Xunit;
 
 namespace RedPoint.Tests.Chat.DtoFactoriesTests
@@ -18,7 +18,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
         {
-            var user = new ApplicationUser
+            var user = new ChatUser
             {
                 Id = "testId",
                 UserName = "testName",
@@ -28,7 +28,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 
             var dto = _factory.CreateDto(user);
 
-            Assert.IsType<UserChatDto>(dto);
+            Assert.IsType<ChatUserDto>(dto);
             Assert.True(dto.AppUserId == "testId");
             Assert.True(dto.Username == "testName");
             Assert.True(dto.CurrentChannelId == "testChannelId");
@@ -38,16 +38,16 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         [Fact]
         public void CreateDtoList_ValidInput_ShouldReturnDtoList()
         {
-            var list = new List<ApplicationUser>
+            var list = new List<ChatUser>
             {
-                new ApplicationUser
+                new ChatUser
                 {
                     Id = "testId",
                     UserName = "testName",
                     CurrentChannelId = "testChannelId",
                     CurrentServerId = "testServerId"
                 },
-                new ApplicationUser
+                new ChatUser
                 {
                     Id = "testId2",
                     UserName = "testName2",
@@ -58,7 +58,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 
             var dtoList = _factory.CreateDtoList(list);
 
-            Assert.IsType<List<UserChatDto>>(dtoList);
+            Assert.IsType<List<ChatUserDto>>(dtoList);
             Assert.True(dtoList.Count == 2);
         }
     }
