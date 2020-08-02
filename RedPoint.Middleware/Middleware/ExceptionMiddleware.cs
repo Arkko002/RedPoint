@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using RedPoint.Models;
+using RedPoint.Middleware.Models;
 
 namespace RedPoint.Middleware
 {
@@ -31,7 +31,7 @@ namespace RedPoint.Middleware
         private static Task HandleGlobalExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return context.Response.WriteAsync(JsonConvert.SerializeObject(new GlobalErrorDetails
             {
                 StatusCode = context.Response.StatusCode,

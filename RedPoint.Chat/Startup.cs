@@ -13,6 +13,7 @@ using RedPoint.Chat.Services.Security;
 using RedPoint.Data;
 using RedPoint.Middleware;
 
+//TODO Nlog config file
 namespace RedPoint.Chat
 {
     public class Startup

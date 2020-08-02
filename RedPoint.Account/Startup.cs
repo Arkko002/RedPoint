@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using RedPoint.Middleware;
 
+//TODO NLog config file
 namespace RedPoint.Account
 {
     public class Startup
