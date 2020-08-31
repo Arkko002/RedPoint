@@ -1,4 +1,4 @@
-import userService from "../../common/api/user.service";
+import userService from "../../services/user.service";
 import router from "../../router/index";
 
 //TODO Add mapGetters for loggedIn etc.
@@ -46,7 +46,7 @@ export const authentication = {
 					dispatch("alert/error", error, { root: true });
 				}
 			);
-		}
+		},
 	},
 
 	mutations: {
@@ -74,6 +74,6 @@ export const authentication = {
 		},
 		registerFailure(state) {
 			state.status = {};
-		}
-	}
+		},
+	},
 };
