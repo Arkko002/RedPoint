@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Moq;
-using RedPoint.Areas.Chat.Models;
-using RedPoint.Areas.Chat.Models.Dto;
-using RedPoint.Areas.Chat.Services.DtoFactories;
+using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Services.DtoFactories;
 using Xunit;
 
 namespace RedPoint.Tests.Chat.DtoFactoriesTests
@@ -13,7 +13,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var mockMessageFactory = new Mock<IChatDtoFactory<Message, MessageDto>>();
 
-            var messageList = new List<MessageDto> {new MessageDto {Text = "CALLED"}};
+            var messageList = new List<MessageDto> { new MessageDto { Text = "CALLED" } };
             mockMessageFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Message>>()))
                 .Returns(messageList);
 

@@ -6,7 +6,7 @@ import { alert } from "./modules/alert.module";
 
 Vue.use(Vuex);
 
-export default new Vuex.store({
+export default new Vuex.Store({
 	modules: {
 		authentication,
 		alert

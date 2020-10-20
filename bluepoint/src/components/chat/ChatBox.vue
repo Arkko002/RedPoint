@@ -20,23 +20,23 @@
     </li>
 
     <div class="message-box">
-      <input type="text" class="message-box-input" id="messageInput"  v-model="message"/>
-      <button
-        class="message-box-button"
-        v-on:click="sendMessage(message)"
+      <input
+        type="text"
+        class="message-box-input"
+        id="messageInput"
+        v-model="message"
       />
+      <button class="message-box-button" v-on:click="sendMessage(message)" />
     </div>
   </div>
 </template>
 
 <script>
-import ChatService from "@/common/chat.service";
-
+import ChatService from "@/services/chat.service";
 
 export default {
 	name: "ChatBox",
 	props: ["messages"],
-
 
 	methods: {
 		sendMessage(messageText) {
@@ -45,11 +45,11 @@ export default {
 			const message = {
 				text: messageText,
 				datetime: Date.now(),
-				user: this.currentUser
+				user: this.currentUser,
 			};
 
 			ChatService.sendMessage(message);
-		}
-	}
+		},
+	},
 };
 </script>

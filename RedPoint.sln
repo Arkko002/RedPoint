@@ -3,9 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint", "RedPoint\RedPoint.csproj", "{F7B306D4-97F0-4709-A87B-D23B9BEA9501}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Tests", "RedPoint.Tests\RedPoint.Tests.csproj", "{659168E4-578A-4B0A-922F-F71A99C70633}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Chat", "RedPoint.Chat\RedPoint.Chat.csproj", "{894E6D45-7227-4C69-8534-55F383DA332F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Account", "RedPoint.Account\RedPoint.Account.csproj", "{8C586BCA-CFDC-4016-AE87-B0C12A01724B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Admin", "RedPoint.Admin\RedPoint.Admin.csproj", "{69CD06EA-FEE5-4F7C-B54D-4823A77C08B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Data", "RedPoint.Data\RedPoint.Data.csproj", "{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Middleware", "RedPoint.Middleware\RedPoint.Middleware.csproj", "{7B60232A-B0A5-41E2-B428-6378D12B2FBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F7B306D4-97F0-4709-A87B-D23B9BEA9501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7B306D4-97F0-4709-A87B-D23B9BEA9501}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7B306D4-97F0-4709-A87B-D23B9BEA9501}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7B306D4-97F0-4709-A87B-D23B9BEA9501}.Release|Any CPU.Build.0 = Release|Any CPU
 		{678CC8DC-2792-46BB-A318-C96E14A0990C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{678CC8DC-2792-46BB-A318-C96E14A0990C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{678CC8DC-2792-46BB-A318-C96E14A0990C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -25,6 +29,26 @@ Global
 		{659168E4-578A-4B0A-922F-F71A99C70633}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{659168E4-578A-4B0A-922F-F71A99C70633}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{659168E4-578A-4B0A-922F-F71A99C70633}.Release|Any CPU.Build.0 = Release|Any CPU
+		{894E6D45-7227-4C69-8534-55F383DA332F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{894E6D45-7227-4C69-8534-55F383DA332F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{894E6D45-7227-4C69-8534-55F383DA332F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{894E6D45-7227-4C69-8534-55F383DA332F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C586BCA-CFDC-4016-AE87-B0C12A01724B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C586BCA-CFDC-4016-AE87-B0C12A01724B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C586BCA-CFDC-4016-AE87-B0C12A01724B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C586BCA-CFDC-4016-AE87-B0C12A01724B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69CD06EA-FEE5-4F7C-B54D-4823A77C08B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CD06EA-FEE5-4F7C-B54D-4823A77C08B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CD06EA-FEE5-4F7C-B54D-4823A77C08B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CD06EA-FEE5-4F7C-B54D-4823A77C08B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B60232A-B0A5-41E2-B428-6378D12B2FBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B60232A-B0A5-41E2-B428-6378D12B2FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B60232A-B0A5-41E2-B428-6378D12B2FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B60232A-B0A5-41E2-B428-6378D12B2FBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
