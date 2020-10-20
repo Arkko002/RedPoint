@@ -53,7 +53,7 @@ export default {
 			const username = this.username;
 			const password = this.password;
 
-			this.$store.dispatch("athentication/login", { username, password });
+			this.$store.dispatch("authentication/login", { username, password });
 		},
 	},
 };

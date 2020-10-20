@@ -15,13 +15,14 @@ namespace RedPoint.Tests.Chat
     public class ChatErrorHandlerTests
     {
         private readonly ChatErrorHandler _errorHandler;
-        private readonly Mock<ILogger<ChatControllerService>> _logger;
+        private readonly Mock<Logger<ChatControllerService>> _logger;
         private readonly ChatUser _user;
 
         public ChatErrorHandlerTests()
         {
+            var mockFactory = new Mock<ILoggerFactory>();
             _user = new ChatUser() { UserName = "testUsername" };
-            _logger = new Mock<ILogger<ChatControllerService>>();
+            _logger = new Mock<Logger<ChatControllerService>>(mockFactory.Object);
             _errorHandler = new ChatErrorHandler(_logger.Object);
         }
 
