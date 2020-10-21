@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using NLog;
 using RedPoint.Chat.Models;
 
 namespace RedPoint.Chat.Services.Security

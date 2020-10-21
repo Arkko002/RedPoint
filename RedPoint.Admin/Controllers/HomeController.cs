@@ -4,16 +4,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using NLog;
 using RedPoint.Admin.Models;
 
 namespace RedPoint.Admin.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly Logger _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(Logger logger)
         {
             _logger = logger;
         }

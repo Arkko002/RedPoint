@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using NLog;
+using NLog.Config;
 using RedPoint.Account.Models;
 using RedPoint.Account.Services;
 using RedPoint.Account.Services.Security;
@@ -55,10 +59,15 @@ namespace RedPoint.Tests.Account
             _requestValidator.Setup(x => x.IsRegisterRequestValid(It.IsAny<UserRegisterDto>()))
                 .Returns(new AccountError(AccountErrorType.NoError));
 
+            
+            var configPath = Path.Join(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName, "nlog.config");
+            var logFactory = new LogFactory();
+            logFactory.Configuration = new XmlLoggingConfiguration(configPath, logFactory);
+            
             _service = new AccountService(_userManager.Object,
                 _signInManager.Object,
                 _requestValidator.Object,
-                new NullLogger<AccountService>(),
+                logFactory.GetCurrentClassLogger(),
                 tokenGenerator.Object);
         }
 

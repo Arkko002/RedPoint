@@ -1,5 +1,6 @@
 using System;
-using Microsoft.Extensions.Logging;
+using NLog;
+using NLog;
 using RedPoint.Chat.Services.Security;
 using RedPoint.Chat.Exceptions;
 using RedPoint.Chat.Exceptions.Security;
@@ -8,9 +9,9 @@ namespace RedPoint.Chat.Services
 {
     public class ChatErrorHandler : IChatErrorHandler
     {
-        private readonly ILogger<ChatControllerService> _logger;
+        private readonly Logger _logger;
 
-        public ChatErrorHandler(ILogger<ChatControllerService> logger)
+        public ChatErrorHandler(Logger logger)
         {
             _logger = logger;
         }

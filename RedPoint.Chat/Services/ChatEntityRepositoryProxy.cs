@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using NLog;
 using RedPoint.Chat.Models;
 using RedPoint.Chat.Services.Security;
 using RedPoint.Data;
@@ -33,7 +33,7 @@ namespace RedPoint.Chat.Services
             {
                 var chatError = new ChatError(ChatErrorType.ServerNotFound,
                     requestingUser,
-                    LogLevel.Warning,
+                    LogLevel.Warn, 
                     $"Non-existing server (ID: {serverId}) requested by {requestingUser.Id}");
 
                 _errorHandler.HandleChatError(chatError);
@@ -50,7 +50,7 @@ namespace RedPoint.Chat.Services
             {
                 var chatError = new ChatError(ChatErrorType.ChannelNotFound,
                     requestingUser,
-                    LogLevel.Warning,
+                    LogLevel.Warn,
                     $"Non-existing channel (ID: {channelId}) requested by {requestingUser.Id}");
 
                 _errorHandler.HandleChatError(chatError);
@@ -67,7 +67,7 @@ namespace RedPoint.Chat.Services
             {
                 var chatError = new ChatError(ChatErrorType.ChannelNotFound,
                     requestingUser,
-                    LogLevel.Warning,
+                    LogLevel.Warn,
                     $"Non-existing message (ID: {messageId}) requested by {requestingUser.Id}");
 
                 _errorHandler.HandleChatError(chatError);

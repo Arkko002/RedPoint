@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
+using NLog;
 using RedPoint.Chat.Models;
 
 namespace RedPoint.Chat.Services.Security
@@ -13,7 +13,7 @@ namespace RedPoint.Chat.Services.Security
             {
                 return new ChatError(ChatErrorType.UserNotInServer,
                     user,
-                    LogLevel.Warning,
+                    LogLevel.Warn,
                     $"ID: {user.Id} tried to access server {server.Id} without joining first");
             }
 
@@ -22,7 +22,7 @@ namespace RedPoint.Chat.Services.Security
             {
                 return new ChatError(ChatErrorType.NoPermission,
                     user,
-                    LogLevel.Warning,
+                    LogLevel.Warn,
                     $"ID: {user.Id} tried to access server {server.Id} without permission");
             }
 
@@ -37,7 +37,7 @@ namespace RedPoint.Chat.Services.Security
             {
                 return new ChatError(ChatErrorType.UserNotInServer,
                     user,
-                    LogLevel.Warning,
+                    LogLevel.Warn,
                     $"ID: {user.Id} tried to access server {server.Id} without joining first");
             }
 
@@ -46,7 +46,7 @@ namespace RedPoint.Chat.Services.Security
             {
                 return new ChatError(ChatErrorType.NoPermission,
                     user,
-                    LogLevel.Warning,
+                    LogLevel.Warn,
                     $"ID: {user.Id} tried to access channel {channel.Id} without permission");
             }
 

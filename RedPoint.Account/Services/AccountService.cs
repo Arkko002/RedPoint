@@ -2,7 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using NLog;
 using RedPoint.Account.Models;
 using RedPoint.Account.Services.Security;
 using RedPoint.Account.Exceptions;
@@ -12,7 +13,7 @@ namespace RedPoint.Account.Services
     //TODO Add Update, Delete actions
     public class AccountService : IAccountService
     {
-        private readonly ILogger<AccountService> _logger;
+        private readonly Logger _logger;
         private readonly IAccountRequestValidator _requestValidator;
 
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -23,7 +24,7 @@ namespace RedPoint.Account.Services
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IAccountRequestValidator requestValidator,
-            ILogger<AccountService> logger,
+            Logger logger,
             ITokenGenerator tokenGenerator
         )
         {
@@ -55,7 +56,7 @@ namespace RedPoint.Account.Services
                 var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
 
                 var error = new AccountError(AccountErrorType.UserLockedOut,
-                    LogLevel.Warning,
+                    LogLevel.Warn,
                     $"{appUser.Id} was locked out of account.");
                 HandleAccountError(error);
             }
@@ -128,7 +129,6 @@ namespace RedPoint.Account.Services
 
                 default:
                     // TODO
-                    _logger.LogCritical("");
                     throw new AccountRequestException("Default claus Error in HandleAccountError switch statement");
             }
         }
