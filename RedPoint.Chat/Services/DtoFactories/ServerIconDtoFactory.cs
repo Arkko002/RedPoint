@@ -4,8 +4,12 @@ using RedPoint.Chat.Models.Dto;
 
 namespace RedPoint.Chat.Services.DtoFactories
 {
+    /// <summary>
+    /// Factory that creates server DTOs that don't contain internal server data.
+    /// </summary>
     public class ServerIconDtoFactory : IChatDtoFactory<Server, ServerIconDto>
     {
+        /// <inheritdoc/>
         public ServerIconDto CreateDto(Server sourceObject)
         {
             var serverDto = new ServerIconDto
@@ -20,6 +24,7 @@ namespace RedPoint.Chat.Services.DtoFactories
             return serverDto;
         }
 
+        /// <inheritdoc/>
         public List<ServerIconDto> CreateDtoList(List<Server> sourceList)
         {
             var dtoList = new List<ServerIconDto>();

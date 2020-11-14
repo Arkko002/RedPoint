@@ -7,10 +7,31 @@ using RedPoint.Data;
 namespace RedPoint.Chat.Models
 {
     /// <summary>
-    ///     Server class that contains channels list and users list
+    /// Represents chat server, which is the internal highest level of content organisation.
+    /// Contains lists of users, channels, and groups that are part of it.
+    /// Can have an image assigned to it.
     /// </summary>
     public class Server : IEntity, IChatGroups
     {
+        public int Id { get; set; }
+        public HubGroupIdentifier HubGroupId { get; set; }
+
+
+        [Required] public string Name { get; set; }
+
+        [Required] public string Description { get; set; }
+
+        public Bitmap Image { get; set; }
+
+        public List<ChatUser> Users { get; set; }
+        public List<Channel> Channels { get; set; }
+        
+        /// <summary>
+        /// Determines if server is visible in the server browser
+        /// </summary>
+        public bool IsVisible { get; set; }
+        public List<Group> Groups { get; set; }
+        
         public Server()
         {
             InitializeVariables();
@@ -25,24 +46,7 @@ namespace RedPoint.Chat.Models
 
             InitializeVariables();
         }
-
-        public int Id { get; set; }
-        public HubGroupIdentifier HubGroupId { get; set; }
-
-
-        [Required] public string Name { get; set; }
-
-        [Required] public string Description { get; set; }
-
-        public Bitmap Image { get; set; }
-
-        public List<ChatUser> Users { get; set; }
-        public List<Channel> Channels { get; set; }
-
-        //Determines if server is visible in the server browser
-        public bool IsVisible { get; set; }
-        public List<Group> Groups { get; set; }
-
+        
         private void InitializeVariables()
         {
             HubGroupId = new HubGroupIdentifier();

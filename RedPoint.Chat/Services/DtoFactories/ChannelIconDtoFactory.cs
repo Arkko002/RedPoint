@@ -4,8 +4,12 @@ using RedPoint.Chat.Models.Dto;
 
 namespace RedPoint.Chat.Services.DtoFactories
 {
+    /// <summary>
+    /// Factory that creates channel DTOs that don't contain internal channel data.
+    /// </summary>
     public class ChannelIconDtoFactory : IChatDtoFactory<Channel, ChannelIconDto>
     {
+        /// <inheritdoc/>
         public ChannelIconDto CreateDto(Channel sourceObject)
         {
             var channelDto = new ChannelIconDto
@@ -18,6 +22,7 @@ namespace RedPoint.Chat.Services.DtoFactories
             return channelDto;
         }
 
+        /// <inheritdoc/>
         public List<ChannelIconDto> CreateDtoList(List<Channel> sourceList)
         {
             var dtoList = new List<ChannelIconDto>();

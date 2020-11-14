@@ -5,10 +5,25 @@ using RedPoint.Data;
 namespace RedPoint.Chat.Models
 {
     /// <summary>
-    ///     Channel class that represents text chat room
+    /// Contains list of messages that were wrote in this channel.
+    /// Can have separate permissions assigned per group basis.
     /// </summary>
     public class Channel : IEntity, IChatGroups
     {
+        public int Id { get; set; }
+        public HubGroupIdentifier HubGroupId { get; set; }
+
+        /// <summary>
+        /// Name of the channel
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Description of channel. Can be empty.
+        /// </summary>
+        public string Description { get; set; }
+        public List<Message> Messages { get; set; }
+        public List<Group> Groups { get; set; }
+        
         public Channel()
         {
             HubGroupId = new HubGroupIdentifier();
@@ -23,14 +38,6 @@ namespace RedPoint.Chat.Models
             Description = channelIconDto.Description;
             HubGroupId = channelIconDto.HubGroupId;
         }
-
-        public int Id { get; set; }
-        public HubGroupIdentifier HubGroupId { get; set; }
-
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public List<Message> Messages { get; set; }
-        public List<Group> Groups { get; set; }
 
         private void InitializeLists()
         {

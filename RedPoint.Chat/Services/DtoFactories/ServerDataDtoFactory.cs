@@ -4,11 +4,15 @@ using RedPoint.Chat.Models.Dto;
 
 namespace RedPoint.Chat.Services.DtoFactories
 {
+    /// <summary>
+    /// Factory that creates server DTOs with internal server data.
+    /// The amount of data included is based on user's server permissions.
+    /// </summary>
     public class ServerDataDtoFactory : IChatDtoFactory<Server, ServerDataDto>
     {
         private readonly IChatDtoFactory<Channel, ChannelIconDto> _channelFactory;
         private readonly IChatDtoFactory<ChatUser, ChatUserDto> _userFactory;
-
+        
         public ServerDataDtoFactory(IChatDtoFactory<Channel, ChannelIconDto> channelFactory,
             IChatDtoFactory<ChatUser, ChatUserDto> userFactory)
         {
@@ -16,6 +20,7 @@ namespace RedPoint.Chat.Services.DtoFactories
             _userFactory = userFactory;
         }
 
+        /// <inheritdoc/>
         public ServerDataDto CreateDto(Server sourceObject)
         {
             var dto = new ServerDataDto
@@ -28,6 +33,7 @@ namespace RedPoint.Chat.Services.DtoFactories
             return dto;
         }
 
+        /// <inheritdoc/>
         public List<ServerDataDto> CreateDtoList(List<Server> sourceList)
         {
             var dtoList = new List<ServerDataDto>();

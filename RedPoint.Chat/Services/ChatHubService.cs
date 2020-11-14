@@ -9,6 +9,9 @@ using RedPoint.Data.UnitOfWork;
 
 namespace RedPoint.Chat.Services
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ChatHubService : IChatHubService
     {
         private readonly IChatErrorHandler _errorHandler;

@@ -5,8 +5,12 @@ using RedPoint.Chat.Models.Dto;
 
 namespace RedPoint.Chat.Services.DtoFactories
 {
+    /// <summary>
+    /// Factory that creates message DTOs.
+    /// </summary>
     public class MessageDtoFactory : IChatDtoFactory<Message, MessageDto>
     {
+        /// <inheritdoc/>
         public MessageDto CreateDto(Message sourceObject)
         {
             var messageDto = new MessageDto
@@ -20,6 +24,7 @@ namespace RedPoint.Chat.Services.DtoFactories
             return messageDto;
         }
 
+        /// <inheritdoc/>
         public List<MessageDto> CreateDtoList(List<Message> sourceList)
         {
             var dtoList = new List<MessageDto>();

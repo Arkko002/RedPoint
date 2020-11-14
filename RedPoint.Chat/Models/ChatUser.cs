@@ -7,6 +7,10 @@ using RedPoint.Data;
 
 namespace RedPoint.Chat.Models
 {
+    
+    /// <summary>
+    /// Extends <c>IdentityUser</c> with data that is related to chat functionality (e.g. list of server's user joined).
+    /// </summary>
     public class ChatUser : IdentityUser, IEntity
     {
         public string CurrentChannelId { get; set; }

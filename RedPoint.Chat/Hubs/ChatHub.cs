@@ -5,6 +5,9 @@ using RedPoint.Chat.Services;
 
 namespace RedPoint.Chat.Hubs
 {
+    /// <summary>
+    /// Defines necessary methods for real-time chat functionality.
+    /// </summary>
     public interface IChatHub
     {
         Task ServerAdded(ServerIconDto serverIcon);
@@ -21,6 +24,9 @@ namespace RedPoint.Chat.Hubs
         Task JoinedServer(ServerIconDto serverIcon);
     }
 
+    /// <summary>
+    /// Implements real-time chat functionality.
+    /// </summary>
     public class ChatHub : Hub<IChatHub>
     {
         private readonly IChatHubService _chatService;

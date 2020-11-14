@@ -4,6 +4,10 @@ using RedPoint.Data;
 
 namespace RedPoint.Chat.Models
 {
+    /// <summary>
+    /// Represents a text message wrote in a channel.
+    /// Contains a reference to <c>ChatUser</c> that sent it, the actual text of the message, and the <c>DateTime</c>.
+    /// </summary>
     public class Message : IEntity
     {
         public Message()

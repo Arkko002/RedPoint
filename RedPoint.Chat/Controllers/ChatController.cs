@@ -5,6 +5,9 @@ using RedPoint.Chat.Services.DtoFactories;
 
 namespace RedPoint.Chat.Controllers
 {
+    /// <summary>
+    /// Controller for chat functionality that doesn't require real-time communication with the server.
+    /// </summary>
     [Authorize]
     [Area("chat")]
     public class ChatController : ControllerBase
@@ -16,6 +19,12 @@ namespace RedPoint.Chat.Controllers
             _chatService = chatService;
         }
 
+        /// <summary>
+        /// Gets a list of servers assigned to current user.
+        /// Current user is provided by the <c>UserManager</c> using <c>ClaimsPrincipal</c>>.
+        /// </summary>
+        /// <param name="iconDtoFactory">Factory handling creation of ServerIconDto.</param>
+        /// <returns>Returns a list of ServerIconDto</returns>
         [HttpGet]
         [Route("chat/servers")]
         public IActionResult GetUserServers([FromServices] ServerIconDtoFactory iconDtoFactory)
@@ -25,6 +34,12 @@ namespace RedPoint.Chat.Controllers
             return Ok(dtoList);
         }
 
+        /// <summary>
+        /// Gets data of a server with provided ID.
+        /// </summary>
+        /// <param name="serverId">ID of a server</param>
+        /// <param name="dataDtoFactory">Factory handling creation of ServerDataDto</param>
+        /// <returns>Returns ServerDataDto</returns>
         [HttpGet]
         [Route("chat/server/{serverId}")]
         public IActionResult GetServer(int serverId,
@@ -35,6 +50,13 @@ namespace RedPoint.Chat.Controllers
             return Ok(dto);
         }
 
+        /// <summary>
+        /// Gets messages from a given channel, on a given server.
+        /// </summary>
+        /// <param name="channelId">ID of the channel that is part of the server</param>
+        /// <param name="serverId">ID of the server</param>
+        /// <param name="messageDtoFactory">Factory handling creation of MessageDto</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("chat/server/{serverId}/{channelId}")]
         public IActionResult GetChannelMessages(int channelId, int serverId,

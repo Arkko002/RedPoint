@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace RedPoint.Chat.Models.Dto
 {
+    /// <summary>
+    /// Server DTO with channel and user list included.
+    /// </summary>
     public class ServerDataDto : IDto
     {
         public int Id { get; set; }

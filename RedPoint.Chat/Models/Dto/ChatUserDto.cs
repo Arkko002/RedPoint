@@ -3,7 +3,7 @@
 namespace RedPoint.Chat.Models.Dto
 {
     /// <summary>
-    ///     DTO class for ChatUser
+    ///  ChatUser DTO that doesn't include any sensitive account data.
     /// </summary>
     public class ChatUserDto : IDto
     {

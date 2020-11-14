@@ -7,6 +7,9 @@ using RedPoint.Chat.Exceptions.Security;
 
 namespace RedPoint.Chat.Services
 {
+    /// <summary>
+    /// Performs error handling for non-critical errors that occured in chat functionality.
+    /// </summary>
     public class ChatErrorHandler : IChatErrorHandler
     {
         private readonly Logger _logger;
@@ -16,8 +19,17 @@ namespace RedPoint.Chat.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="chatError"></param>
+        /// <exception cref="InvalidServerRequestException"></exception>
+        /// <exception cref="EntityNotFoundException"></exception>
+        /// <exception cref="LackOfPermissionException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void HandleChatError(ChatError chatError)
         {
+            //TODO should non-critical chat errors be handled as exceptions? Rethink error handling.
             if (chatError.LogMessage != null)
             {
                 _logger.Log(chatError.LogLevel, chatError.LogMessage);

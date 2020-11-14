@@ -6,6 +6,9 @@ using RedPoint.Data.Repository;
 
 namespace RedPoint.Chat.Services
 {
+    /// <summary>
+    /// Proxy for <c>EntityRepository</c> objects that provides error handling for repository operations.
+    /// </summary>
     public class ChatEntityRepositoryProxy : IChatEntityRepositoryProxy
     {
         private readonly IChatErrorHandler _errorHandler;
@@ -23,8 +26,13 @@ namespace RedPoint.Chat.Services
             ServerRepository = serverRepo;
             _errorHandler = errorHandler;
         }
-
-
+        
+        /// <summary>
+        /// Returns a server on valid request.
+        /// Passes a ServerNotFound error to error handler if server is not in the repository.
+        /// </summary>
+        /// <param name="serverId"></param>
+        /// <param name="requestingUser"></param>
         public Server TryFindingServer(int serverId, ChatUser requestingUser)
         {
             var server = ServerRepository.Find(serverId);
@@ -42,6 +50,12 @@ namespace RedPoint.Chat.Services
             return server;
         }
 
+        /// <summary>
+        /// Returns a channel on valid request.
+        /// Passes a ChannelNotFound error to error handler if channel is not in the repository.
+        /// </summary>
+        /// <param name="channelId"></param>
+        /// <param name="requestingUser"></param>
         public Channel TryFindingChannel(int channelId, ChatUser requestingUser)
         {
             var channel = ChannelRepository.Find(channelId);
@@ -59,10 +73,17 @@ namespace RedPoint.Chat.Services
             return channel;
         }
 
+        /// <summary>
+        /// Returns a message on valid request.
+        /// Passes a MessageNotFound error to error handler if message is not in the repository.
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <param name="requestingUser"></param>
         public Message TryFindingMessage(int messageId, ChatUser requestingUser)
         {
             var message = MessageRepository.Find(messageId);
 
+            //TODO bad error handling 
             if (message == null)
             {
                 var chatError = new ChatError(ChatErrorType.ChannelNotFound,

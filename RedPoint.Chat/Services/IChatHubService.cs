@@ -2,6 +2,9 @@ using RedPoint.Chat.Models.Dto;
 
 namespace RedPoint.Chat.Services
 {
+    /// <summary>
+    /// Provides methods necessary for 
+    /// </summary>
     public interface IChatHubService
     {
         void AddServer(ServerIconDto serverIcon);
