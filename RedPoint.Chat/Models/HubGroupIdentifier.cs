@@ -3,6 +3,7 @@ using System.Text;
 
 namespace RedPoint.Chat.Models
 {
+    //TODO Rework this completly, attach a unique identifier to every IEntity object, use proper hashing algorithm PLZ!!!
     /// <summary>
     ///     Separate identifier used to prevent ID clashing in SignalR groups
     /// </summary>

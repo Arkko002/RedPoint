@@ -21,10 +21,10 @@ namespace RedPoint.Chat.Controllers
 
         /// <summary>
         /// Gets a list of servers assigned to current user.
-        /// Current user is provided by the <c>UserManager</c> using <c>ClaimsPrincipal</c>>.
+        /// Current user is provided by the UserManager using ClaimsPrincipal.
         /// </summary>
         /// <param name="iconDtoFactory">Factory handling creation of ServerIconDto.</param>
-        /// <returns>Returns a list of ServerIconDto</returns>
+        /// <returns>Returns a list of <c>ServerIconDto</c></returns>
         [HttpGet]
         [Route("chat/servers")]
         public IActionResult GetUserServers([FromServices] ServerIconDtoFactory iconDtoFactory)

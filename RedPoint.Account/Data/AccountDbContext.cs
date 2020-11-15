@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RedPoint.Account.Data
 {
+    /// <inheritdoc/>
     public class AccountDbContext : IdentityDbContext
     {
         public AccountDbContext(DbContextOptions<AccountDbContext> options)

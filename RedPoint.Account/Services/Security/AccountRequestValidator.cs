@@ -3,6 +3,7 @@ using RedPoint.Account.Models;
 
 namespace RedPoint.Account.Services.Security
 {
+    /// <inheritdoc/> 
     public class AccountRequestValidator : IAccountRequestValidator
     {
         private readonly IAccountSecurityConfigurationProvider _provider;
@@ -12,11 +13,13 @@ namespace RedPoint.Account.Services.Security
             _provider = provider;
         }
 
+        /// <inheritdoc/>
         public AccountError IsLoginRequestValid(UserLoginDto requestDto)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public AccountError IsRegisterRequestValid(UserRegisterDto requestDto)
         {
             var passwordList = _provider.GetBlacklistedPasswords();

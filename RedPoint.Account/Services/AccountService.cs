@@ -11,6 +11,7 @@ using RedPoint.Account.Exceptions;
 namespace RedPoint.Account.Services
 {
     //TODO Add Update, Delete actions
+    /// <inheritdoc/>
     public class AccountService : IAccountService
     {
         private readonly Logger _logger;

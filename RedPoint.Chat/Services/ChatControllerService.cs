@@ -10,6 +10,7 @@ using RedPoint.Chat.Services.Security;
 
 namespace RedPoint.Chat.Services
 {
+    /// <inheritdoc cref="IChatControllerService"/>
     public class ChatControllerService : IChatControllerService
     {
         private readonly IChatErrorHandler _errorHandler;
@@ -18,6 +19,9 @@ namespace RedPoint.Chat.Services
 
         private readonly UserManager<ChatUser> _userManager;
 
+        /// <summary>
+        /// Current user is provided by <c>UserManager</c> on <c>ChatControllerService</c> creation.
+        /// </summary>
         private ChatUser _user;
 
         //TODO Remove usage of UserManager from Chat Area, move all account activity including verification of
@@ -32,6 +36,7 @@ namespace RedPoint.Chat.Services
             _repoProxy = repoProxy;
             _requestValidator = requestValidator;
             _errorHandler = errorHandler;
+            
 
             AssignChatUser(httpContextAccessor.HttpContext.User).ConfigureAwait(false);
         }
@@ -41,11 +46,13 @@ namespace RedPoint.Chat.Services
             _user = await _userManager.GetUserAsync(user);
         }
 
+        /// <inheritdoc/>
         public List<ServerIconDto> GetUserServers(IChatDtoFactory<Server, ServerIconDto> dtoFactory)
         {
             return dtoFactory.CreateDtoList(_user.Servers);
         }
 
+        /// <inheritdoc/>
         public ServerDataDto GetServerData(int serverId, IChatDtoFactory<Server, ServerDataDto> dtoFactory)
         {
             var server = _repoProxy.TryFindingServer(serverId, _user);
@@ -54,6 +61,7 @@ namespace RedPoint.Chat.Services
             return dtoFactory.CreateDto(server);
         }
 
+        /// <inheritdoc/>
         public List<MessageDto> GetChannelMessages(int channelId, int serverId,
             IChatDtoFactory<Message, MessageDto> dtoFactory)
         {

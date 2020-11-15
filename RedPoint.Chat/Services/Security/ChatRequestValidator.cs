@@ -5,18 +5,10 @@ using RedPoint.Chat.Models;
 
 namespace RedPoint.Chat.Services.Security
 {
-    /// <summary>
-    /// Detects potential errors and security issues in user request's within chat functionality.
-    /// </summary>
+    /// <inheritdoc />>
     public class ChatRequestValidator : IChatRequestValidator
     {
-        /// <summary>
-        /// Performs internal checks of user's request against a server (e.g. check's for appropriate permissions).
-        /// </summary>
-        /// <param name="server"></param>
-        /// <param name="user"></param>
-        /// <param name="permissionType"></param>
-        /// <returns>ChatError object with error details. ChatErrorType is set to NoError on valid requests.</returns>
+        /// <inheritdoc/>
         public ChatError IsServerRequestValid(Server server, ChatUser user, PermissionType permissionType)
         {
             if (!IsUserInServer(server, user))
@@ -39,14 +31,7 @@ namespace RedPoint.Chat.Services.Security
             return new ChatError(ChatErrorType.NoError);
         }
 
-        /// <summary>
-        /// Performs internal checks of user's request against a channel (e.g. check's for appropriate permissions).
-        /// </summary>
-        /// <param name="channel"></param>
-        /// <param name="server"></param>
-        /// <param name="user"></param>
-        /// <param name="permissionType"></param>
-        /// <returns>ChatError object with error details. ChatErrorType is set to NoError on valid requests.</returns>
+        /// <inheritdoc/>
         public ChatError IsChannelRequestValid(Channel channel, Server server, ChatUser user,
             PermissionType permissionType)
         {

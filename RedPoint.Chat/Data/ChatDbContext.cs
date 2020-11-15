@@ -3,6 +3,7 @@ using RedPoint.Chat.Models;
 
 namespace RedPoint.Data
 {
+    /// <inheritdoc/>
     public class ChatDbContext : DbContext
     {
         public ChatDbContext(DbContextOptions options)

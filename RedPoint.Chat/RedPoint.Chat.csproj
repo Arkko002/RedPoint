@@ -3,6 +3,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="docfx.console" Version="2.56.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
@@ -14,5 +18,31 @@
   <ItemGroup>
     <ProjectReference Include="..\RedPoint.Data\RedPoint.Data.csproj" />
     <ProjectReference Include="..\RedPoint.Middleware\RedPoint.Middleware.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="articles\**" />
+    <Compile Remove="api\**" />
+    <Compile Remove="_site\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="articles\**" />
+    <EmbeddedResource Remove="api\**" />
+    <EmbeddedResource Remove="_site\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="articles\**" />
+    <None Remove="api\**" />
+    <None Remove="_site\**" />
+    <None Remove="toc.yml" />
+    <None Remove="index.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="articles\**" />
+    <Content Remove="api\**" />
+    <Content Remove="_site\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="_site\manifest.json" />
+    <_ContentIncludedByDefault Remove="_site\search-stopwords.json" />
   </ItemGroup>
 </Project>

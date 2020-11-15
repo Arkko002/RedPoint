@@ -2,6 +2,7 @@
 
 namespace RedPoint.Chat.Models
 {
+    //TODO possibly redundant, delete
     public class GroupPermissions : IEntity
     {
         public int Id { get; set; }
