@@ -34,6 +34,9 @@
 </template>
 
 <script>
+/**
+ * Contains logic related to creation of user's account.
+ */
 export default {
 	name: "RegisterForm",
 	data() {
@@ -46,19 +49,28 @@ export default {
 	},
 
 	computed: {
+		/**
+     * Checks if all of the fields necessary for account creation were filled.
+     * @returns {boolean}
+     */
 		requiredFieldsFilled() {
-			if (!this.userName || !this.password) return false;
-			if (this.password !== this.passwordConfirmation) return false;
-
-			return true;
+			if (!this.username || !this.password) return false;
+			return this.password === this.passwordConfirmation;
 		},
 
+		/**
+     * Checks if any registration process is already started by the current session.
+     * @returns {any}
+     */
 		registering() {
 			return this.$store.state.authentication.status.registering;
 		}
 	},
 
 	methods: {
+		/**
+     * Submits the form data to Vuex authentication module.
+     */
 		submitForm() {
 			const username = this.username;
 			const password = this.password;

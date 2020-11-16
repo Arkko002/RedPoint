@@ -34,11 +34,18 @@
 <script>
 import ChatService from "@/services/chat.service";
 
+/**
+ * Displaying and sending messages.
+ */
 export default {
 	name: "ChatBox",
 	props: ["messages"],
 
 	methods: {
+		/**
+     * Constructs a message from user input and passes it to the [ChatService]{@link ChatService}
+     * @param messageText
+     */
 		sendMessage(messageText) {
 			if (messageText.length === 0) return;
 

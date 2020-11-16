@@ -10,6 +10,9 @@
 </template>
 
 <script>
+/**
+ * Display of user's server list, and server list actions.
+ */
 export default {
 	name: "ServerList",
 	props: ["serverArray"]

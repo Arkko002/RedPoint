@@ -14,6 +14,9 @@ import TheToolbar from "@/components/chat/TheToolbar.vue";
 import ChatBox from "@/components/chat/ChatBox.vue";
 import ChatService from "../services/chat.service";
 
+/**
+ * Component used as a router view for chat page.
+ */
 export default {
 	name: "Chat",
 	components: {
@@ -46,7 +49,7 @@ export default {
 			currentChannel: null,
 		};
 	},
-
+  
 	computed: {
 		currentUser() {
 			return localStorage.getItem("user");

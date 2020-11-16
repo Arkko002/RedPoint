@@ -10,6 +10,9 @@
 </template>
 
 <script>
+/**
+ * Display of server's users, and user list related actions.
+ */
 export default {
 	name: "UserList",
 	props: ["userArray"]

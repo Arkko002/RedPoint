@@ -21,6 +21,9 @@
 </template>
 
 <script>
+/**
+ * Contains user's account log in logic.
+ */
 export default {
 	name: "LogInForm",
 
@@ -32,12 +35,20 @@ export default {
 	},
 
 	computed: {
+		/**
+     * Checks if any log in process is already started by the current session.
+     * @returns {any}
+     */
 		loggingIn() {
 			return this.$store.state.authentication.status.loggingIn;
 		},
 	},
 
 	methods: {
+		/**
+     * Checks if all of the fields necessary for logging in were filled.
+     * @returns {boolean}
+     */
 		requiredFieldsFilled() {
 			if (!this.name) {
 				this.errors.push("Name required.");
@@ -46,9 +57,12 @@ export default {
 				this.errors.push("Age required.");
 			}
 
-			return this.userName && this.password;
+			return Boolean(this.username) && Boolean(this.password);
 		},
 
+		/**
+     * Submits the form data to Vuex authentication module.
+     */
 		submitForm() {
 			const username = this.username;
 			const password = this.password;

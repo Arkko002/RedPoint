@@ -8,6 +8,9 @@
 </template>
 
 <script>
+/**
+ * Current user's brief account info, and quick access to account actions.
+ */
 export default {
 	name: "ToolbarUserInfo",
 	props: ["user"]

@@ -6,6 +6,9 @@
 </template>
 
 <script>
+/**
+ * Input for search queries and search autocompletion hints.
+ */
 export default {
 	name: "ToolbarSearchField"
 };

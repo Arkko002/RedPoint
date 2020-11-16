@@ -1,6 +1,9 @@
 <script>
 import router from "@/router/index";
 
+/**
+ * Component used as a router view for account log out.
+ */
 export default {
 	name: "LogOut",
 	created() {
