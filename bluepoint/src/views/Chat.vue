@@ -26,6 +26,9 @@ export default {
 		ChatBox: ChatBox,
 	},
 
+	/**
+   * Initializes chat functionality with user's data pulled from back end.
+   */
 	created() {
 		//TODO Caching
 		this.serverArray = JSON.parse(ChatService.fetchServers());
