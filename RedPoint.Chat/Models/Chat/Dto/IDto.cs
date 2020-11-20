@@ -1,4 +1,4 @@
-namespace RedPoint.Chat.Models.Dto
+namespace RedPoint.Chat.Models.Chat.Dto
 {
     public interface IDto
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using RedPoint.Chat.Models.Dto;
-using RedPoint.Data;
+using RedPoint.Chat.Models.Chat.Dto;
+using RedPoint.Data.Repository;
 
-namespace RedPoint.Chat.Models
+namespace RedPoint.Chat.Models.Chat
 {
     /// <summary>
     /// Represents a text message wrote in a channel.

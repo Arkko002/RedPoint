@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using RedPoint.Chat.Models.Dto;
-using RedPoint.Data;
+using RedPoint.Chat.Models.Chat.Dto;
+using RedPoint.Data.Repository;
 
-namespace RedPoint.Chat.Models
+namespace RedPoint.Chat.Models.Chat
 {
     /// <summary>
     /// Represents chat server, which is the internal highest level of content organisation.

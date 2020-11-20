@@ -1,9 +1,9 @@
 using System;
 using NLog;
-using NLog;
 using RedPoint.Chat.Services.Security;
 using RedPoint.Chat.Exceptions;
 using RedPoint.Chat.Exceptions.Security;
+using RedPoint.Chat.Models.Errors;
 
 namespace RedPoint.Chat.Services
 {
@@ -18,18 +18,18 @@ namespace RedPoint.Chat.Services
             _logger = logger;
         }
         
-        public void HandleChatError(ChatError chatError)
+        public void HandleChatError(ChatError error)
         {
             //TODO should non-critical chat errors be handled as exceptions? Rethink error handling.
-            if (chatError.LogMessage != null)
+            if (!string.IsNullOrEmpty(error.LogMessage))
             {
-                _logger.Log(chatError.LogLevel, chatError.LogMessage);
+                _logger.Log(error.LogLevel, error.LogMessage);
             }
 
-            switch (chatError.ErrorType)
+            switch (error.ErrorType)
             {
                 case ChatErrorType.UserNotInServer:
-                    throw new InvalidServerRequestException($"{chatError.User.UserName} is not part of the server.");
+                    throw new InvalidServerRequestException($"{error.User.UserName} is not part of the server.");
 
                 case ChatErrorType.ServerNotFound:
                     throw new EntityNotFoundException("No server found.");
@@ -38,7 +38,7 @@ namespace RedPoint.Chat.Services
                     throw new EntityNotFoundException("No channel found.");
 
                 case ChatErrorType.NoPermission:
-                    throw new LackOfPermissionException($"{chatError.User.UserName} has no required permission.");
+                    throw new LackOfPermissionException($"{error.User.UserName} has no required permission.");
 
                 case ChatErrorType.NoError:
                     return;

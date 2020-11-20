@@ -1,6 +1,6 @@
-﻿using RedPoint.Data;
+﻿using RedPoint.Data.Repository;
 
-namespace RedPoint.Chat.Models.User_Settings
+namespace RedPoint.Chat.Models.Chat.User_Settings
 {
     /// <summary>
     ///     Container class for specialised settings classes

@@ -1,10 +1,10 @@
 using Moq;
 using RedPoint.Account.Controllers;
-using RedPoint.Account.Models;
+using RedPoint.Account.Models.Account;
 using RedPoint.Account.Services;
 using Xunit;
 
-namespace RedPoint.Tests.Account
+namespace RedPoint.Tests.Account.Controllers
 {
     public class AccountControllerTests
     {

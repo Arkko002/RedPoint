@@ -1,4 +1,4 @@
-namespace RedPoint.Chat.Services.Security
+namespace RedPoint.Chat.Models.Errors
 {
     public enum ChatErrorType
     {

@@ -1,3 +1,4 @@
+using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services.Security;
 
 namespace RedPoint.Chat.Services
@@ -7,6 +8,6 @@ namespace RedPoint.Chat.Services
     /// </summary>
     public interface IChatErrorHandler
     {
-        void HandleChatError(ChatError chatError);
+        void HandleChatError(ChatError error);
     }
 }

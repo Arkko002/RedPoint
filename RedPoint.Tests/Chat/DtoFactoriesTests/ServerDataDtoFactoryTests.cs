@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Moq;
 using RedPoint.Chat.Models;
-using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services.DtoFactories;
 using Xunit;
 

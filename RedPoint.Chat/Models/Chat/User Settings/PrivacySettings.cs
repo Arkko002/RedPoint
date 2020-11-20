@@ -1,4 +1,4 @@
-﻿namespace RedPoint.Chat.Models.User_Settings
+﻿namespace RedPoint.Chat.Models.Chat.User_Settings
 {
     public class PrivacySettings
     {

@@ -5,6 +5,8 @@ using NLog.Config;
 using RedPoint.Chat.Exceptions;
 using RedPoint.Chat.Exceptions.Security;
 using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.Security;
 using Xunit;

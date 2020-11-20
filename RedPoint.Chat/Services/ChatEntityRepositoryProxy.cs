@@ -1,5 +1,8 @@
 using NLog;
+using RedPoint.Chat.Data;
 using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services.Security;
 using RedPoint.Data;
 using RedPoint.Data.Repository;

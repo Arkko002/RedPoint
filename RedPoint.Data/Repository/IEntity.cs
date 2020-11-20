@@ -1,4 +1,4 @@
-namespace RedPoint.Data
+namespace RedPoint.Data.Repository
 {
     public interface IEntity
     {

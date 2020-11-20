@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RedPoint.Chat.Controllers;
-using RedPoint.Chat.Models;
-using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 using Xunit;
 
-namespace RedPoint.Tests.Chat
+namespace RedPoint.Tests.Chat.Controllers
 {
     public class ChatControllerTests
     {

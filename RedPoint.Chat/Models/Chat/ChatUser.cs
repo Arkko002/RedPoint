@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.AspNetCore.Identity;
-using RedPoint.Chat.Models;
-using RedPoint.Chat.Models.User_Settings;
-using RedPoint.Data;
+using RedPoint.Chat.Models.Chat.User_Settings;
+using RedPoint.Data.Repository;
 
-namespace RedPoint.Chat.Models
+namespace RedPoint.Chat.Models.Chat
 {
     
     /// <summary>

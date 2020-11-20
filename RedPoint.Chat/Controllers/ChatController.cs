@@ -9,7 +9,6 @@ namespace RedPoint.Chat.Controllers
     /// Controller for chat functionality that doesn't require real-time communication with the server.
     /// </summary>
     [Authorize]
-    [Area("chat")]
     public class ChatController : ControllerBase
     {
         private readonly IChatControllerService _chatService;

@@ -1,6 +1,6 @@
-﻿using RedPoint.Data;
+﻿using RedPoint.Data.Repository;
 
-namespace RedPoint.Chat.Models
+namespace RedPoint.Chat.Models.Chat
 {
     //TODO possibly redundant, delete
     public class GroupPermissions : IEntity

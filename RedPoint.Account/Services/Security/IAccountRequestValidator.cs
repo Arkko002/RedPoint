@@ -1,4 +1,6 @@
 using RedPoint.Account.Models;
+using RedPoint.Account.Models.Account;
+using RedPoint.Account.Models.Errors;
 
 namespace RedPoint.Account.Services.Security
 {

@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Chat.Models;
-using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Chat.Dto;
+using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
 

@@ -1,4 +1,4 @@
-namespace RedPoint.Tests.Chat
+namespace RedPoint.Tests.Chat.Services
 {
     public class ChatEntityRepositoryProxyTests
     {

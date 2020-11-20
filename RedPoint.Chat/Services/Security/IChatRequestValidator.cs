@@ -1,4 +1,6 @@
 using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Errors;
 
 namespace RedPoint.Chat.Services.Security
 {

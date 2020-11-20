@@ -1,4 +1,6 @@
+using RedPoint.Chat.Data;
 using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Chat;
 using RedPoint.Data;
 using RedPoint.Data.Repository;
 

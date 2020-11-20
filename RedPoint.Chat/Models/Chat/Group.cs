@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using RedPoint.Data;
+using RedPoint.Data.Repository;
 
-namespace RedPoint.Chat.Models
+namespace RedPoint.Chat.Models.Chat
 {
     /// <summary>
     /// Allows organising permissions by grouping users together.

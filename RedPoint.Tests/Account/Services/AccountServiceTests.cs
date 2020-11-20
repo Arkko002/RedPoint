@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NLog;
 using NLog.Config;
-using RedPoint.Account.Models;
+using RedPoint.Account.Exceptions;
+using RedPoint.Account.Models.Account;
+using RedPoint.Account.Models.Errors;
 using RedPoint.Account.Services;
 using RedPoint.Account.Services.Security;
-using RedPoint.Account.Exceptions;
 using RedPoint.Tests.Mocks;
 using Xunit;
 
-namespace RedPoint.Tests.Account
+namespace RedPoint.Tests.Account.Services
 {
     public class AccountServiceTests
     {

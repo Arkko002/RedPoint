@@ -1,4 +1,4 @@
-namespace RedPoint.Chat.Models
+namespace RedPoint.Chat.Models.Chat
 {
     public enum PermissionType
     {

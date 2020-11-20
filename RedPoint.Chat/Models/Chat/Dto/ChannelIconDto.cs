@@ -1,4 +1,4 @@
-namespace RedPoint.Chat.Models.Dto
+namespace RedPoint.Chat.Models.Chat.Dto
 {
     /// <summary>
     /// Channel DTO that doesn't include internal channel data.

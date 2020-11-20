@@ -7,7 +7,7 @@ using RedPoint.Account.Services;
 using RedPoint.Tests.Mocks;
 using Xunit;
 
-namespace RedPoint.Tests.Account
+namespace RedPoint.Tests.Account.Services
 {
     public class JwtTokenGeneratorTests
     {

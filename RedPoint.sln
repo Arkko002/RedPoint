@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Admin", "RedPoint.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Data", "RedPoint.Data\RedPoint.Data.csproj", "{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedPoint.Middleware", "RedPoint.Middleware\RedPoint.Middleware.csproj", "{7B60232A-B0A5-41E2-B428-6378D12B2FBA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,10 +43,6 @@ Global
 		{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0D0C816-207A-4F4C-AFA7-6DC1F186B9DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B60232A-B0A5-41E2-B428-6378D12B2FBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B60232A-B0A5-41E2-B428-6378D12B2FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B60232A-B0A5-41E2-B428-6378D12B2FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B60232A-B0A5-41E2-B428-6378D12B2FBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

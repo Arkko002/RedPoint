@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using RedPoint.Chat.Data;
 using RedPoint.Chat.Hubs;
 using RedPoint.Chat.Models;
-using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
@@ -14,6 +17,7 @@ using RedPoint.Data;
 using RedPoint.Middleware;
 
 //TODO Nlog config file
+[assembly: ApiController]
 namespace RedPoint.Chat
 {
     public class Startup
@@ -55,15 +59,13 @@ namespace RedPoint.Chat
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseGlobalExceptionMiddleware();
-
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error-development");
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

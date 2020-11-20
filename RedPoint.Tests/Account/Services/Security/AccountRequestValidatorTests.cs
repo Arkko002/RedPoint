@@ -1,10 +1,11 @@
 using System.Threading;
-using RedPoint.Account.Models;
+using RedPoint.Account.Models.Account;
+using RedPoint.Account.Models.Errors;
 using RedPoint.Account.Services.Security;
 using RedPoint.Tests.Mocks;
 using Xunit;
 
-namespace RedPoint.Tests.Account
+namespace RedPoint.Tests.Account.Services.Security
 {
     public class AccountRequestValidatorTests
     {

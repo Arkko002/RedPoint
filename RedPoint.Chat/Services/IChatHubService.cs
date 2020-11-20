@@ -1,4 +1,4 @@
-using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Models.Chat.Dto;
 
 namespace RedPoint.Chat.Services
 {

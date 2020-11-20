@@ -1,7 +1,7 @@
 using NLog;
-using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Chat;
 
-namespace RedPoint.Chat.Services.Security
+namespace RedPoint.Chat.Models.Errors
 {
     /// <summary>
     /// Error object used to represent internal, non-critical errors related to chat functionality.

@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace RedPoint.Chat.Models
+namespace RedPoint.Chat.Models.Chat
 {
     //TODO Rework this completly, attach a unique identifier to every IEntity object, use proper hashing algorithm PLZ!!!
     /// <summary>

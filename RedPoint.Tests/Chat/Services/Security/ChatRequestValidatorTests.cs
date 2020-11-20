@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using RedPoint.Account.Models;
-using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services.Security;
 using Xunit;
 
-namespace RedPoint.Tests.Chat
+namespace RedPoint.Tests.Chat.Services.Security
 {
     public class ChatRequestValidatorTests
     {

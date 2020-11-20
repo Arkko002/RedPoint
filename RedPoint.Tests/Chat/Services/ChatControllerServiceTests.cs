@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using RedPoint.Account.Models;
-using RedPoint.Chat.Models;
-using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Chat.Dto;
+using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
 using RedPoint.Tests.Mocks;
 using Xunit;
 
-namespace RedPoint.Tests.Chat
+namespace RedPoint.Tests.Chat.Services
 {
     public class ChatControllerServiceTests
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace RedPoint.Account.Models
+namespace RedPoint.Account.Models.Account
 {
     /// <summary>
     /// DTO used to transport registration data from front end.

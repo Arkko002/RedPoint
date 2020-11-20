@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using RedPoint.Chat.Models;
-using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Chat.Dto;
 
 namespace RedPoint.Chat.Services.DtoFactories
 {

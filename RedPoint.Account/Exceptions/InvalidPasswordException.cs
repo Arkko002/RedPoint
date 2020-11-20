@@ -1,6 +1,6 @@
 using System;
 
-namespace RedPoint.Chat.Exceptions.Security
+namespace RedPoint.Account.Exceptions
 {
     public class InvalidPasswordException : Exception
     {

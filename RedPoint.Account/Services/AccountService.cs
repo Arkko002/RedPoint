@@ -7,6 +7,8 @@ using NLog;
 using RedPoint.Account.Models;
 using RedPoint.Account.Services.Security;
 using RedPoint.Account.Exceptions;
+using RedPoint.Account.Models.Account;
+using RedPoint.Account.Models.Errors;
 
 namespace RedPoint.Account.Services
 {

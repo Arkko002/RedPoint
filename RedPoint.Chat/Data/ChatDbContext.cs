@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using RedPoint.Chat.Models;
+using RedPoint.Chat.Models.Chat;
 
-namespace RedPoint.Data
+namespace RedPoint.Chat.Data
 {
     /// <inheritdoc/>
     public class ChatDbContext : DbContext

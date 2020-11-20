@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using RedPoint.Account.Models;
+using RedPoint.Account.Models.Account;
 
 namespace RedPoint.Account.Services
 {

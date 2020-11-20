@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace RedPoint.Chat.Models.Dto
+namespace RedPoint.Chat.Models.Chat.Dto
 {
     /// <summary>
     /// Server DTO with channel and user list included.

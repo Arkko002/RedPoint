@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace RedPoint.Chat.Models.Dto
+namespace RedPoint.Chat.Models.Chat.Dto
 {
     /// <summary>
     ///  ChatUser DTO that doesn't include any sensitive account data.

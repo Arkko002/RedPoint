@@ -1,6 +1,7 @@
 using NLog;
+using RedPoint.Account.Services.Security;
 
-namespace RedPoint.Account.Services.Security
+namespace RedPoint.Account.Models.Errors
 {
     //TODO Move this and ChatError into models.security namespace
     /// <summary>

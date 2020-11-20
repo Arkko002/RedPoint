@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using RedPoint.Chat.Models.Dto;
+using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services;
 
 namespace RedPoint.Chat.Hubs

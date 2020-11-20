@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace RedPoint.Chat.Models.Dto
+namespace RedPoint.Chat.Models.Chat.Dto
 {
     /// <summary>
     /// Server DTO object that doesn't include internal server data.

@@ -1,4 +1,4 @@
-namespace RedPoint.Chat.Models.Dto
+namespace RedPoint.Chat.Models.Chat.Dto
 {
     /// <summary>
     /// Message DTO object that doesn't include user's account data in it.
