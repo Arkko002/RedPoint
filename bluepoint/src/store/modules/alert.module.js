@@ -1,4 +1,5 @@
 export const alert = {
+//TODO separate alerts for each component
 	namespaced: true,
 	state: {
 		type: null,

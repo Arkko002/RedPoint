@@ -26,6 +26,7 @@
             "error",
             "tab"
         ],
+        "no-mixed-spaces-and-tabs": "warn",
         "linebreak-style": [
             "error",
             "unix"

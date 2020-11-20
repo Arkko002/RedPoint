@@ -1,11 +1,13 @@
 <template>
   <div class="register-container">
-    <RegisterForm />
+  	<ErrorPopup />
+		<RegisterForm />
   </div>
 </template>
 
 <script>
 import RegisterForm from "@/components/RegisterForm.vue";
+import ErrorPopup from "@/components/ErrorPopup";
 
 /**
  * Component used as a router view for user's account registration.
@@ -14,7 +16,8 @@ import RegisterForm from "@/components/RegisterForm.vue";
 export default {
 	name: "Register",
 	components: {
-		RegisterForm
+		RegisterForm,
+		ErrorPopup
 	}
 };
 </script>

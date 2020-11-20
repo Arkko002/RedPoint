@@ -64,6 +64,10 @@ export default {
      */
 		registering() {
 			return this.$store.state.authentication.status.registering;
+		},
+		
+		alert(){
+			return this.$store.state.alert.type;
 		}
 	},
 

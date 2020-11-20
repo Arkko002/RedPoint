@@ -1,11 +1,13 @@
 <template>
-  <div class="sign-in-container">
-    <LogInForm />
-  </div>
+	<div class="sign-in-container">
+		<ErrorPopup/>
+		<LogInForm/>
+	</div>
 </template>
 
 <script>
 import LogInForm from "@/components/LogInForm.vue";
+import ErrorPopup from "@/components/ErrorPopup";
 
 /**
  * Component used as a router view for account log in.
@@ -14,7 +16,8 @@ import LogInForm from "@/components/LogInForm.vue";
 export default {
 	name: "LogIn",
 	components: {
-		LogInForm
+		LogInForm,
+		ErrorPopup
 	}
 };
 </script>
