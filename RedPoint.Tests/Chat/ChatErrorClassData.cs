@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using NLog;
 using RedPoint.Chat.Models.Errors;
-using RedPoint.Chat.Services.Security;
 
 namespace RedPoint.Tests.Chat
 {

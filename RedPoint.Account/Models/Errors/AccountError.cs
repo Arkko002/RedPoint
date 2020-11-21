@@ -1,9 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using NLog;
-using RedPoint.Account.Services.Security;
 
 namespace RedPoint.Account.Models.Errors
 {
-    //TODO Move this and ChatError into models.security namespace
+    //TODO Add user reference in the future
     /// <summary>
     /// Error object used to represent internal, non-critical errors in account-related functionality. 
     /// </summary>
@@ -25,9 +25,19 @@ namespace RedPoint.Account.Models.Errors
             LogMessage = logMessage;
         }
 
+        public AccountError(AccountErrorType errorType, LogLevel logLevel, string logMessage, IdentityUser user)
+        {
+            ErrorType = errorType;
+            LogLevel = logLevel;
+            LogMessage = logMessage;
+            User = user;
+        }
+
         public LogLevel LogLevel { get; }
         public string LogMessage { get; }
 
         public AccountErrorType ErrorType { get; }
+        
+        public IdentityUser User { get; }
     }
 }

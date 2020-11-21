@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Globalization;
-using RedPoint.Chat.Models;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 

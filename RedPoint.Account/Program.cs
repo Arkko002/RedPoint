@@ -1,11 +1,8 @@
 using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using NLog;
 using NLog;
 using NLog.Web;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace RedPoint.Account
 {

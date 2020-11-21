@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using RedPoint.Middleware;
 
 //TODO NLog config file
 [assembly: ApiController]

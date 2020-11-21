@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using RedPoint.Chat.Models;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Models.Errors;
