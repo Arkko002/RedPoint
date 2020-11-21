@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using NLog;
@@ -16,8 +17,15 @@ using Xunit;
 
 namespace RedPoint.Tests.Account.Services
 {
+    //TODO Add AccountErrorHandlerTests, update service and validator tests accordingly
     public class AccountServiceTests
     {
+        private readonly AccountService _service;
+        private readonly Mock<MockUserManager<IdentityUser>> _userManager;
+        private readonly Mock<MockSignInManager<IdentityUser>> _signInManager;
+        private readonly Mock<IAccountRequestValidator> _requestValidator;
+        private readonly Mock<AccountErrorHandler> _errorHandler;
+    
         public AccountServiceTests()
         {
             var configuration = new MockConfiguration("none")
@@ -55,26 +63,24 @@ namespace RedPoint.Tests.Account.Services
                 .ReturnsAsync(SignInResult.Success);
 
             _requestValidator.Setup(x => x.IsLoginRequestValid(It.IsAny<UserLoginDto>()))
-                .Returns(new AccountError(AccountErrorType.NoError));
+                .Returns(Task.FromResult(new AccountError(AccountErrorType.NoError)));
             _requestValidator.Setup(x => x.IsRegisterRequestValid(It.IsAny<UserRegisterDto>()))
-                .Returns(new AccountError(AccountErrorType.NoError));
+                .Returns(Task.FromResult(new AccountError(AccountErrorType.NoError)));
 
             
             var configPath = Path.Join(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName, "nlog.config");
             var logFactory = new LogFactory();
             logFactory.Configuration = new XmlLoggingConfiguration(configPath, logFactory);
+
+            _errorHandler = new Mock<AccountErrorHandler>(new NullLogger(new LogFactory()));
             
             _service = new AccountService(_userManager.Object,
                 _signInManager.Object,
                 _requestValidator.Object,
-                logFactory.GetCurrentClassLogger(),
+                _errorHandler.Object,
                 tokenGenerator.Object);
         }
 
-        private readonly AccountService _service;
-        private readonly Mock<MockUserManager<IdentityUser>> _userManager;
-        private readonly Mock<MockSignInManager<IdentityUser>> _signInManager;
-        private readonly Mock<IAccountRequestValidator> _requestValidator;
 
         [Fact]
         public void Login_AccountLockedOut_ShouldThrowException()
@@ -108,7 +114,7 @@ namespace RedPoint.Tests.Account.Services
         public void Login_ValidationError_ShouldThrowException()
         {
             _requestValidator.Setup(x => x.IsLoginRequestValid(It.IsAny<UserLoginDto>()))
-                .Returns(new AccountError(AccountErrorType.LoginFailure));
+                .Returns(Task.FromResult(new AccountError(AccountErrorType.LoginFailure)));
 
             Assert.ThrowsAsync<AccountRequestException>(() => _service.Login(new UserLoginDto()));
         }
@@ -136,7 +142,7 @@ namespace RedPoint.Tests.Account.Services
         public void Register_ValidationError_ShouldThrowException()
         {
             _requestValidator.Setup(x => x.IsRegisterRequestValid(It.IsAny<UserRegisterDto>()))
-                .Returns(new AccountError(AccountErrorType.PasswordTooWeak));
+                .Returns(Task.FromResult(new AccountError(AccountErrorType.PasswordTooWeak)));
 
             Assert.ThrowsAsync<AccountRequestException>(() =>
                 _service.Register(new UserRegisterDto { Username = "Username", Password = "Password" }));
