@@ -2,7 +2,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using RedPoint.Chat.Models;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Models.Errors;
@@ -48,7 +47,7 @@ namespace RedPoint.Chat.Services
         public void AddChannel(int serverId, ChannelIconDto channelIcon)
         {
             var result = CheckServerRequest(serverId, PermissionType.CanManageChannels);
-            CheckChatError(result);
+            _errorHandler.HandleChatError(result);
 
             var newChannel = new Channel(channelIcon);
 
@@ -60,7 +59,7 @@ namespace RedPoint.Chat.Services
         public void AddMessage(int channelId, int serverId, MessageDto message)
         {
             var result = CheckChannelRequest(channelId, serverId, PermissionType.CanWrite);
-            CheckChatError(result);
+            _errorHandler.HandleChatError(result);
 
             var newMessage = new Message(message, _user);
 
@@ -81,7 +80,7 @@ namespace RedPoint.Chat.Services
         public void DeleteChannel(int channelId, int serverId)
         {
             var result = CheckChannelRequest(channelId, serverId, PermissionType.CanManageChannels);
-            CheckChatError(result);
+            _errorHandler.HandleChatError(result);
 
             _repoProxy.ChannelRepository.Delete(_repoProxy.ChannelRepository.Find(channelId));
             _unitOfWork.Submit();
@@ -91,7 +90,7 @@ namespace RedPoint.Chat.Services
         public void DeleteServer(int serverId)
         {
             var result = CheckServerRequest(serverId, PermissionType.CanManageServer);
-            CheckChatError(result);
+            _errorHandler.HandleChatError(result);
 
             _repoProxy.ServerRepository.Delete(_repoProxy.ServerRepository.Find(serverId));
             _unitOfWork.Submit();
@@ -101,7 +100,7 @@ namespace RedPoint.Chat.Services
         public void DeleteMessage(int messageId, int channelId, int serverId)
         {
             var result = CheckChannelRequest(channelId, serverId, PermissionType.CanManageChannels);
-            CheckChatError(result);
+            _errorHandler.HandleChatError(result);
 
             _repoProxy.MessageRepository.Delete(_repoProxy.MessageRepository.Find(messageId));
             _unitOfWork.Submit();
@@ -131,15 +130,6 @@ namespace RedPoint.Chat.Services
             var channel = _repoProxy.TryFindingChannel(channelId, _user);
             var server = _repoProxy.TryFindingServer(serverId, _user);
             return _requestValidator.IsChannelRequestValid(channel, server, _user, permissionType);
-        }
-
-        private void CheckChatError(ChatError error)
-        {
-            //TODO maybe get rid of this? Move != NoError checks to error handler
-            if (error.ErrorType != ChatErrorType.NoError)
-            {
-                _errorHandler.HandleChatError(error);
-            }
         }
     }
 }

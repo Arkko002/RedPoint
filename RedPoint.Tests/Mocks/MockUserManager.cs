@@ -1,7 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using NLog;
 using Microsoft.Extensions.Options;
 using Moq;
 

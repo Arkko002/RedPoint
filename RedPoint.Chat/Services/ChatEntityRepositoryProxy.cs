@@ -1,14 +1,13 @@
 using NLog;
 using RedPoint.Chat.Data;
-using RedPoint.Chat.Models;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Errors;
-using RedPoint.Chat.Services.Security;
-using RedPoint.Data;
 using RedPoint.Data.Repository;
 
 namespace RedPoint.Chat.Services
 {
+
+    //TODO Improper implementation of proxy pattern
     /// <summary>
     /// Proxy for <c>EntityRepository</c> objects that provides error handling for repository operations.
     /// </summary>
@@ -86,10 +85,9 @@ namespace RedPoint.Chat.Services
         {
             var message = MessageRepository.Find(messageId);
 
-            //TODO bad error handling 
             if (message == null)
             {
-                var chatError = new ChatError(ChatErrorType.ChannelNotFound,
+                var chatError = new ChatError(ChatErrorType.MessageNotFound,
                     requestingUser,
                     LogLevel.Warn,
                     $"Non-existing message (ID: {messageId}) requested by {requestingUser.Id}");

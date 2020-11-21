@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using RedPoint.Chat.Models;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Errors;
 
@@ -13,7 +12,7 @@ namespace RedPoint.Chat.Services.Security
         /// <inheritdoc/>
         public ChatError IsServerRequestValid(Server server, ChatUser user, PermissionType permissionType)
         {
-            if (!IsUserInServer(server, user))
+            if (!server.Users.Contains(user))
             {
                 return new ChatError(ChatErrorType.UserNotInServer,
                     user,
@@ -37,13 +36,20 @@ namespace RedPoint.Chat.Services.Security
         public ChatError IsChannelRequestValid(Channel channel, Server server, ChatUser user,
             PermissionType permissionType)
         {
-            //TODO Check if channel is part of the server
-            if (!IsUserInServer(server, user))
+            if (!server.Users.Contains(user))
             {
                 return new ChatError(ChatErrorType.UserNotInServer,
                     user,
                     LogLevel.Warn,
                     $"ID: {user.Id} tried to access server {server.Id} without joining first");
+            }
+
+            if (!server.Channels.Contains(channel))
+            {
+                return new ChatError(ChatErrorType.ChannelNotFound,
+                    user,
+                    LogLevel.Warn,
+                    $"ID: {user.Id} tried to access channel {channel.Id} that isn't part of server {server.Id}");
             }
 
             var userPermissions = GetUserPermissionsOnEntity(user, channel);
@@ -58,11 +64,6 @@ namespace RedPoint.Chat.Services.Security
             return new ChatError(ChatErrorType.NoError);
         }
 
-        private static bool IsUserInServer(Server server, ChatUser user)
-        {
-            return server.Users.Contains(user);
-        }
-
         /// <summary>
         /// Gets a list of PermissionTypes attached to groups user is part of in a given server.
         /// </summary>
@@ -75,7 +76,8 @@ namespace RedPoint.Chat.Services.Security
 
             IEnumerable<PermissionType> userPermissions = new List<PermissionType>();
 
-            return userGroupsOnServer.Aggregate(userPermissions, (current, @group) => current.Concat(@group.GroupPermissions));
+            return userGroupsOnServer.Aggregate(userPermissions,
+                (current, @group) => current.Concat(@group.GroupPermissions));
         }
 
         /// <summary>

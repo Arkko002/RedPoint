@@ -1,5 +1,3 @@
-using System;
-
 namespace RedPoint.Admin.Models
 {
     public class ErrorViewModel

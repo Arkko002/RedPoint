@@ -7,14 +7,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using RedPoint.Chat.Data;
 using RedPoint.Chat.Hubs;
-using RedPoint.Chat.Models;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
-using RedPoint.Data;
-using RedPoint.Middleware;
 
 //TODO Nlog config file
 [assembly: ApiController]
@@ -55,7 +52,6 @@ namespace RedPoint.Chat
             services.AddControllers();
         }
 
-        //TODO Copy global exception handling to all the microservices, Repository and Unit of work in each microservice???
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

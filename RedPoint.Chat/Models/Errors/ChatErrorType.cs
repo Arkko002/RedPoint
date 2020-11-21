@@ -5,6 +5,7 @@ namespace RedPoint.Chat.Models.Errors
         NoError,
         ServerNotFound,
         ChannelNotFound,
+        MessageNotFound,
         UserNotInServer,
         NoPermission
     }

@@ -1,4 +1,4 @@
-using RedPoint.Account.Models;
+using System.Threading.Tasks;
 using RedPoint.Account.Models.Account;
 using RedPoint.Account.Models.Errors;
 
@@ -12,15 +12,15 @@ namespace RedPoint.Account.Services.Security
         /// <summary>
         /// Performs internal check of user's registration request.
         /// </summary>
-        /// <param name="requestDto"></param>
+        /// <param name="model"></param>
         /// <returns>AccountError object with error details. AccountErrorType is set to NoError on valid request.</returns>
-        AccountError IsRegisterRequestValid(UserRegisterDto requestDto);
+        Task<AccountError> IsRegisterRequestValid(UserRegisterDto model);
         
         /// <summary>
         /// Performs internal check of user's login request.
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns>AccountError object with error details. AccountErrorType is set to NoError on valid request.</returns>
-        AccountError IsLoginRequestValid(UserLoginDto requestDto);
+        Task<AccountError> IsLoginRequestValid(UserLoginDto requestDto);
     }
 }

@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RedPoint.Account.Models;
 using RedPoint.Account.Models.Account;
 using RedPoint.Account.Services;
 
