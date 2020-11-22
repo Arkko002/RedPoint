@@ -17,20 +17,17 @@ namespace RedPoint.Account.Services
         private readonly IAccountRequestValidator _requestValidator;
         private readonly IAccountErrorHandler _errorHandler;
 
-        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly UserManager<IdentityUser> _userManager;
 
         public AccountService(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
             IAccountRequestValidator requestValidator,
             IAccountErrorHandler errorHandler,
             ITokenGenerator tokenGenerator
         )
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _requestValidator = requestValidator;
             _tokenGenerator = tokenGenerator;
             _errorHandler = errorHandler;

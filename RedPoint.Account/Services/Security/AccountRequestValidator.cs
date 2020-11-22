@@ -62,7 +62,7 @@ namespace RedPoint.Account.Services.Security
                 UserName = model.Username
             };
 
-            var result = _userManager.CreateAsync(user, model.Password).Result;
+            var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {

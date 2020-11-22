@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using RedPoint.Account.Models.Account;
@@ -13,14 +14,19 @@ namespace RedPoint.Tests.Account.Services.Security
 {
     public class AccountRequestValidatorTests
     {
+        private const string InsecurePassword = "InsecurePassword";
+
         private readonly Mock<MockUserManager<IdentityUser>> _userManager;
         private readonly Mock<MockSignInManager<IdentityUser>> _signInManager;
-        
+        private readonly Mock<IAccountSecurityConfigurationProvider> _configurationProvider;
+
+        private readonly AccountRequestValidator _requestValidator;
+
         public AccountRequestValidatorTests()
         {
-            var configuration = new MockConfiguration("full.txt");
-            var provider = new AccountSecurityConfigurationProvider(configuration);
-
+            _configurationProvider = new Mock<IAccountSecurityConfigurationProvider>();
+            _configurationProvider.Setup(x => x.GetBlacklistedPasswords())
+                .Returns(new List<string> {InsecurePassword});
 
             var users = new List<IdentityUser>
             {
@@ -38,6 +44,15 @@ namespace RedPoint.Tests.Account.Services.Security
                 .ReturnsAsync(IdentityResult.Success);
 
             _signInManager = new Mock<MockSignInManager<IdentityUser>>();
+
+            _requestValidator = new AccountRequestValidator(_configurationProvider.Object, _signInManager.Object,
+                _userManager.Object);
+        }
+
+
+        [Fact]
+        public void LoginRequest_ValidLoginRequest_ShouldReturnNoErrorType()
+        {
             _signInManager.Setup(
                     x => x.PasswordSignInAsync(It.IsAny<string>(),
                         It.IsAny<string>(),
@@ -45,39 +60,146 @@ namespace RedPoint.Tests.Account.Services.Security
                         It.IsAny<bool>()))
                 .ReturnsAsync(SignInResult.Success);
 
-            //Quick hack to prevent race condition on password file creation
-            Thread.Sleep(100);
-            _requestValidator = new AccountRequestValidator(provider, _signInManager.Object, _userManager.Object);
-        }
-
-        private readonly AccountRequestValidator _requestValidator;
-
-        [Fact]
-        public void ValidRequestForm_ShouldReturnNoErrorType()
-        {
-            var dto = new UserRegisterDto
+            var loginDto = new UserLoginDto
             {
-                Username = "ValidUsername",
-                Password = "SecurePassword"
+                Username = "name",
+                Password = "password"
             };
 
-            var returnError = _requestValidator.IsRegisterRequestValid(dto).Result;
+            var result = _requestValidator.IsLoginRequestValid(new UserLoginDto()).Result;
 
-            Assert.True(returnError.ErrorType == AccountErrorType.NoError);
+            Assert.True(result.ErrorType == AccountErrorType.NoError);
         }
 
         [Fact]
-        public void WeakPassword_ShouldReturnWeakPasswordError()
+        public void LoginRequest_LockedOut_ShouldReturnLockedOutErrorType()
         {
-            var dto = new UserRegisterDto
+            _signInManager.Setup(
+                    x => x.PasswordSignInAsync(It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<bool>(),
+                        It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.LockedOut);
+            
+            var loginDto = new UserLoginDto
             {
-                Username = "ValidUsername",
-                Password = "test"
+                Username = "Username",
+                Password = "password"
             };
 
-            var returnError = _requestValidator.IsRegisterRequestValid(dto).Result;
+            var result = _requestValidator.IsLoginRequestValid(loginDto).Result;
 
-            Assert.True(returnError.ErrorType == AccountErrorType.PasswordTooWeak);
+            Assert.True(result.ErrorType == AccountErrorType.UserLockedOut);
+        }
+
+        [Fact]
+        public void LoginRequest_Failure_ShouldReturnLoginFailureType()
+        {
+            _signInManager.Setup(
+                    x => x.PasswordSignInAsync(It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<bool>(),
+                        It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Failed);
+
+            var loginDto = new UserLoginDto
+            {
+                Username = "name",
+                Password = "password"
+            };
+
+            var result = _requestValidator.IsLoginRequestValid(loginDto).Result;
+
+            Assert.True(result.ErrorType == AccountErrorType.LoginFailure);
+        }
+
+        [Fact]
+        public void LoginRequest_NotAllowed_ShouldReturnLoginFailureType()
+        {
+            _signInManager.Setup(
+                    x => x.PasswordSignInAsync(It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<bool>(),
+                        It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.NotAllowed);
+                
+            var loginDto = new UserLoginDto
+            {
+                Username = "name",
+                Password = "password"
+            };
+
+            var result = _requestValidator.IsLoginRequestValid(loginDto).Result;
+
+            Assert.True(result.ErrorType == AccountErrorType.LoginFailure);
+        }
+
+        [Fact]
+        public void LoginRequest_TwoFactorRequired_ShouldReturnLoginFailureType()
+        {
+            _signInManager.Setup(
+                    x => x.PasswordSignInAsync(It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<bool>(),
+                        It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.TwoFactorRequired);
+                
+            var loginDto = new UserLoginDto
+            {
+                Username = "name",
+                Password = "password"
+            };
+            var result = _requestValidator.IsLoginRequestValid(loginDto).Result;
+
+            Assert.True(result.ErrorType == AccountErrorType.LoginFailure);
+        }
+
+        [Fact]
+        public void RegisterRequest_ValidRequest_ShouldReturnNoErrorType()
+        {
+            _userManager.Setup(x => x.CreateAsync(It.IsAny<IdentityUser>(),
+                It.IsAny<string>())).Returns(Task.FromResult(IdentityResult.Success));
+
+            var user = new UserRegisterDto
+            {
+                Password = "SecurePassword",
+                Username = "Name"
+            };
+
+            var error = _requestValidator.IsRegisterRequestValid(user).Result;
+
+            Assert.True(error.ErrorType == AccountErrorType.NoError);
+        }
+
+        [Fact]
+        public void RegisterRequest_WeakPassword_ShouldReturnWeakPasswordErrorType()
+        {
+            var user = new UserRegisterDto
+            {
+                Username = "name",
+                Password = InsecurePassword
+            };
+
+            var error = _requestValidator.IsRegisterRequestValid(user).Result;
+
+            Assert.True(error.ErrorType == AccountErrorType.PasswordTooWeak);
+        }
+
+        [Fact]
+        public void RegisterRequest_IdentityErrors_ShouldReturnRegisterFailureErrorType()
+        {
+            _userManager.Setup(x => x.CreateAsync(It.IsAny<IdentityUser>(),
+                It.IsAny<string>())).Returns(Task.FromResult(IdentityResult.Failed()));
+
+            var user = new UserRegisterDto
+            {
+                Password = "SecurePassword",
+                Username = "Name"
+            };
+
+            var error = _requestValidator.IsRegisterRequestValid(user).Result;
+
+            Assert.True(error.ErrorType == AccountErrorType.RegisterFailure);
         }
     }
 }
