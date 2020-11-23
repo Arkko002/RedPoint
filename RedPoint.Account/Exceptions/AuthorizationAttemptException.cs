@@ -4,6 +4,7 @@ namespace RedPoint.Account.Exceptions
 {
     public class AuthorizationAttemptException : Exception
     {
+        #nullable enable
         public AuthorizationAttemptException()
         {
         }

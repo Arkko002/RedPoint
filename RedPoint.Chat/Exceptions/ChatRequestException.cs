@@ -4,6 +4,7 @@ namespace RedPoint.Chat.Exceptions
 {
     public class ChatRequestException : Exception
     {
+        #nullable enable
         public ChatRequestException()
         {
         }

@@ -4,6 +4,7 @@ namespace RedPoint.Account.Exceptions
 {
     public class LockOutException : Exception
     {
+        #nullable enable
         public LockOutException()
         {
         }
