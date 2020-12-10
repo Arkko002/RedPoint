@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using RedPoint.Chat.Data;
 using RedPoint.Chat.Hubs;
 using RedPoint.Chat.Models.Chat;
@@ -12,6 +14,7 @@ using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
+using RedPoint.Middleware;
 
 //TODO Nlog config file
 [assembly: ApiController]
@@ -30,8 +33,14 @@ namespace RedPoint.Chat
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ChatDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("ChatDb")));
+                options.UseMySql(
+                        Configuration.GetConnectionString("AccountDb"), 
+                        new MariaDbServerVersion(new Version(10, 5, 8)),
+                        mySqlOptions => mySqlOptions
+                            .CharSetBehavior(CharSetBehavior.NeverAppend))
+                    .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging()
+            );
 
             services.AddScoped(typeof(IChatDtoFactory<Channel, ChannelIconDto>), typeof(ChannelIconDtoFactory));
             services.AddScoped(typeof(IChatDtoFactory<Channel, ChannelDataDto>), typeof(ChannelDataDtoFactory));
@@ -70,6 +79,7 @@ namespace RedPoint.Chat
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseMiddleware<JwtVerificationMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
