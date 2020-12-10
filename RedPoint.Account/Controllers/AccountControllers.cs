@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RedPoint.Account.Models.Account;
 using RedPoint.Account.Services;
@@ -9,7 +10,7 @@ namespace RedPoint.Account.Controllers
     /// Controller for account-related functionality.
     /// </summary>
     //TODO Change the return values of controller, possibly to IActionResult
-    [Route("[controller]/[action]")]
+    [Route("{controller}/{action}")]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -20,18 +21,22 @@ namespace RedPoint.Account.Controllers
         }
 
         [HttpPost]
-        public async Task<object> Login([FromBody] UserLoginDto model)
+        public async Task<IActionResult> Login([FromBody] UserLoginDto model)
         {
-            return await _accountService.Login(model);
+            var token = await _accountService.Login(model);
+            return Ok(new {token});
         }
 
         [HttpPost]
-        public async Task<object> Register([FromBody] UserRegisterDto model)
+        public async Task<IActionResult> Register([FromBody] UserRegisterDto model)
         {
-            return await _accountService.Register(model);
+            var token = await _accountService.Register(model);
+            return Ok(new {token});
         }
 
         [HttpPost]
+        [Authorize]
+        //TODO
         public async Task<object> Delete([FromBody] UserLoginDto model)
         {
             return await _accountService.Delete(model);

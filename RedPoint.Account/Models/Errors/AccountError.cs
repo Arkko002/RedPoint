@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
-using NLog;
+using Microsoft.Extensions.Logging;
+
 
 namespace RedPoint.Account.Models.Errors
 {

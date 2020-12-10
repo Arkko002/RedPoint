@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
 using RedPoint.Account.Services.Security;
 using RedPoint.Account.Exceptions;

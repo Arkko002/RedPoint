@@ -1,5 +1,5 @@
 using System;
-using NLog;
+using Microsoft.Extensions.Logging;
 using RedPoint.Account.Exceptions;
 using RedPoint.Account.Models.Errors;
 
@@ -7,9 +7,9 @@ namespace RedPoint.Account.Services
 {
     public class AccountErrorHandler : IAccountErrorHandler
     {
-        private readonly Logger _logger;
+        private readonly ILogger<AccountErrorHandler> _logger;
 
-        public AccountErrorHandler(Logger logger)
+        public AccountErrorHandler(ILogger<AccountErrorHandler> logger)
         {
             _logger = logger;
         }

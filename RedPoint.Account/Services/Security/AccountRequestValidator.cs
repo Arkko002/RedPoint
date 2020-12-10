@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using NLog;
+using Microsoft.Extensions.Logging;
 using RedPoint.Account.Models.Account;
 using RedPoint.Account.Models.Errors;
 
@@ -38,7 +38,7 @@ namespace RedPoint.Account.Services.Security
                 var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
 
                 return new AccountError(AccountErrorType.UserLockedOut,
-                    LogLevel.Warn,
+                    LogLevel.Warning,
                     $"{appUser.Id} was locked out of account.",
                     appUser);
             }
