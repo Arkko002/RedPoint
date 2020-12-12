@@ -15,9 +15,9 @@ namespace RedPoint.Tests.Account.Services
         {
             var configuration = new MockConfiguration("none")
             {
-                ["JwtKey"] = "testKey-LongEnoughForHS256",
-                ["JwtExpireDays"] = "1",
-                ["JwtIssuer"] = "testIssuer"
+                ["Jwt:Key"] = "testKey-LongEnoughForHS256",
+                ["Jwt:ExpireDays"] = "1",
+                ["Jwt:Issuer"] = "testIssuer"
             };
 
             _tokenGenerator = new JwtTokenGenerator(configuration);
