@@ -82,7 +82,7 @@ namespace RedPoint.Tests.Chat.Services
             _repoProxy.Setup(x => x.TryFindingServer(It.IsAny<int>(), It.IsAny<ChatUser>()))
                 .Returns(new Server());
             _requestValidator.Setup(x => x.IsChannelRequestValid(It.IsAny<Channel>(), It.IsAny<Server>(),
-                    It.IsAny<ChatUser>(), It.IsAny<PermissionType>()))
+                    It.IsAny<ChatUser>(), It.IsAny<PermissionTypes>()))
                 .Returns(new ChatError(ChatErrorType.NoError));
 
             var mockFactory = new Mock<IChatDtoFactory<Message, MessageDto>>();
@@ -94,7 +94,7 @@ namespace RedPoint.Tests.Chat.Services
             _repoProxy.Verify(x => x.TryFindingChannel(It.IsAny<int>(), It.IsAny<ChatUser>()), Times.Once);
             _repoProxy.Verify(x => x.TryFindingServer(It.IsAny<int>(), It.IsAny<ChatUser>()), Times.Once);
             _requestValidator.Verify(x => x.IsChannelRequestValid(It.IsAny<Channel>(), It.IsAny<Server>(),
-                It.IsAny<ChatUser>(), It.IsAny<PermissionType>()), Times.Once);
+                It.IsAny<ChatUser>(), It.IsAny<PermissionTypes>()), Times.Once);
             mockFactory.Verify(x => x.CreateDtoList(It.IsAny<List<Message>>()), Times.Once);
         }
     }

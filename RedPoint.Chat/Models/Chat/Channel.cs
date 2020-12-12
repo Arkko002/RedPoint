@@ -8,7 +8,7 @@ namespace RedPoint.Chat.Models.Chat
     /// Contains list of messages that were wrote in this channel.
     /// Can have separate permissions assigned per group basis.
     /// </summary>
-    public class Channel : IEntity, IChatGroups
+    public class Channel : IEntity, IGroupEntity
     {
         public int Id { get; set; }
         public HubGroupIdentifier HubGroupId { get; set; }

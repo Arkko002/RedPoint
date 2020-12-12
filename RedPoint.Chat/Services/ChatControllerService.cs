@@ -69,7 +69,7 @@ namespace RedPoint.Chat.Services
             var channel = _repoProxy.TryFindingChannel(channelId, _user);
             var server = _repoProxy.TryFindingServer(serverId, _user);
 
-            var result = _requestValidator.IsChannelRequestValid(channel, server, _user, PermissionType.CanView);
+            var result = _requestValidator.IsChannelRequestValid(channel, server, _user, PermissionTypes.CanView);
 
             if (result.ErrorType != ChatErrorType.NoError)
             {

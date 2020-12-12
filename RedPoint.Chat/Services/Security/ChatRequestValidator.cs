@@ -10,7 +10,7 @@ namespace RedPoint.Chat.Services.Security
     public class ChatRequestValidator : IChatRequestValidator
     {
         /// <inheritdoc/>
-        public ChatError IsServerRequestValid(Server server, ChatUser user, PermissionType permissionType)
+        public ChatError IsServerRequestValid(Server server, ChatUser user, PermissionTypes permissionTypes)
         {
             if (!server.Users.Contains(user))
             {
@@ -21,7 +21,7 @@ namespace RedPoint.Chat.Services.Security
             }
 
             var userPermissions = GetUserPermissionsOnEntity(user, server);
-            if (!IsUserPermitted(userPermissions, permissionType))
+            if (!IsUserPermitted(userPermissions, permissionTypes))
             {
                 return new ChatError(ChatErrorType.NoPermission,
                     user,
@@ -34,7 +34,7 @@ namespace RedPoint.Chat.Services.Security
 
         /// <inheritdoc/>
         public ChatError IsChannelRequestValid(Channel channel, Server server, ChatUser user,
-            PermissionType permissionType)
+            PermissionTypes permissionTypes)
         {
             if (!server.Users.Contains(user))
             {
@@ -53,7 +53,7 @@ namespace RedPoint.Chat.Services.Security
             }
 
             var userPermissions = GetUserPermissionsOnEntity(user, channel);
-            if (!IsUserPermitted(userPermissions, permissionType))
+            if (!IsUserPermitted(userPermissions, permissionTypes))
             {
                 return new ChatError(ChatErrorType.NoPermission,
                     user,
@@ -65,31 +65,35 @@ namespace RedPoint.Chat.Services.Security
         }
 
         /// <summary>
-        /// Gets a list of PermissionTypes attached to groups user is part of in a given server.
+        /// Gathers all of user's permissions on a given <c>IGroupEntity</c> and returns them as a collection.
         /// </summary>
         /// <param name="user"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        private static IEnumerable<PermissionType> GetUserPermissionsOnEntity(ChatUser user, IChatGroups entity)
+        private static IEnumerable<PermissionTypes> GetUserPermissionsOnEntity(ChatUser user, IGroupEntity entity)
         {
             var userGroupsOnServer = entity.Groups.Where(x => x.Users.Contains(user));
+            var userPermissions = new List<PermissionTypes>();
 
-            IEnumerable<PermissionType> userPermissions = new List<PermissionType>();
+            foreach (var group in userGroupsOnServer)
+            {
+                userPermissions.Add(group.GroupPermissions);
+            }
 
-            return userGroupsOnServer.Aggregate(userPermissions,
-                (current, @group) => current.Concat(@group.GroupPermissions));
+            return userPermissions;
         }
 
         /// <summary>
         /// Checks for occurence of an expected permission in the provided list of permissions.
+        /// Returns true if user is an admin regardless of occurrence of expected permission. 
         /// </summary>
         /// <param name="userPermissions"></param>
         /// <param name="expectedPermission"></param>
         /// <returns></returns>
-        private static bool IsUserPermitted(IEnumerable<PermissionType> userPermissions,
-            PermissionType expectedPermission)
+        private static bool IsUserPermitted(IEnumerable<PermissionTypes> userPermissions,
+            PermissionTypes expectedPermission)
         {
-            return userPermissions.Any(x => x == expectedPermission || x == PermissionType.IsAdmin);
+            return userPermissions.Any(x => x.HasFlag(expectedPermission) || x.HasFlag(PermissionTypes.IsAdmin));
         }
     }
 }

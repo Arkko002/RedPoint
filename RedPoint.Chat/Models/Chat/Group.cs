@@ -19,9 +19,9 @@ namespace RedPoint.Chat.Models.Chat
         public List<ChatUser> Users { get; set; }
         
         /// <summary>
-        /// List of enum objects representing group's permissions
+        /// Stores Flags defining group's permissions/
         /// </summary>
-        public List<PermissionType> GroupPermissions { get; set; }
+        public PermissionTypes GroupPermissions { get; set; }
         
         /// <summary>
         /// Set to true if group is the default, mandatory group of a server.
@@ -39,7 +39,6 @@ namespace RedPoint.Chat.Models.Chat
             }
 
             Users = new List<ChatUser>();
-            GroupPermissions = new List<PermissionType>();
         }
     }
 }

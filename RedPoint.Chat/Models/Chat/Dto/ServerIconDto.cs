@@ -13,7 +13,7 @@ namespace RedPoint.Chat.Models.Chat.Dto
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public Bitmap Image { get; set; }
+        public byte[] Image { get; set; }
 
         //Determines if server is visible in the server browser
         public bool IsVisible { get; set; }

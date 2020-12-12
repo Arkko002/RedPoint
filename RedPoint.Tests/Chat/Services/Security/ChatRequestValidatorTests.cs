@@ -33,7 +33,7 @@ namespace RedPoint.Tests.Chat.Services.Security
 
             user.Groups = new List<Group> { group };
 
-            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
+            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
 
             Assert.True(returnError.ErrorType == ChatErrorType.NoPermission);
         }
@@ -49,7 +49,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             var server = new Server();
             server.Users.Add(user);
 
-            var returnError = _validator.IsServerRequestValid(server, user, PermissionType.CanView);
+            var returnError = _validator.IsServerRequestValid(server, user, PermissionTypes.CanView);
 
             Assert.True(returnError.ErrorType == ChatErrorType.NoPermission);
         }
@@ -61,7 +61,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             var server = new Server();
             var channel = new Channel();
 
-            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
+            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
 
             Assert.True(returnError.ErrorType == ChatErrorType.UserNotInServer);
         }
@@ -72,7 +72,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             var server = new Server();
             var user = new ChatUser();
 
-            var returnError = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
+            var returnError = _validator.IsServerRequestValid(server, user, PermissionTypes.IsAdmin);
 
             Assert.True(returnError.ErrorType == ChatErrorType.UserNotInServer);
         }
@@ -83,7 +83,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             var user = new ChatUser();
 
             var group = new Group();
-            group.GroupPermissions.Add(PermissionType.IsAdmin);
+            group.GroupPermissions |= PermissionTypes.IsAdmin;
             group.Users.Add(user);
 
             var server = new Server();
@@ -97,7 +97,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             user.Groups = new List<Group>();
             user.Groups.Add(group);
 
-            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionType.CanView);
+            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
 
             Assert.True(returnError.ErrorType == ChatErrorType.NoError);
         }
@@ -108,7 +108,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             var user = new ChatUser();
 
             var group = new Group();
-            group.GroupPermissions.Add(PermissionType.IsAdmin);
+            group.GroupPermissions |= PermissionTypes.IsAdmin;
             group.Users.Add(user);
 
             user.Groups = new List<Group> { group };
@@ -117,7 +117,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             server.Users.Add(user);
             server.Groups = new List<Group> { group };
 
-            var returnError = _validator.IsServerRequestValid(server, user, PermissionType.IsAdmin);
+            var returnError = _validator.IsServerRequestValid(server, user, PermissionTypes.IsAdmin);
 
             Assert.True(returnError.ErrorType == ChatErrorType.NoError);
         }

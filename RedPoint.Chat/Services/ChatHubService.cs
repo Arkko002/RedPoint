@@ -46,7 +46,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/> 
         public void AddChannel(int serverId, ChannelIconDto channelIcon)
         {
-            var result = CheckServerRequest(serverId, PermissionType.CanManageChannels);
+            var result = CheckServerRequest(serverId, PermissionTypes.CanManageChannels);
             _errorHandler.HandleChatError(result);
 
             var newChannel = new Channel(channelIcon);
@@ -58,7 +58,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/>
         public void AddMessage(int channelId, int serverId, MessageDto message)
         {
-            var result = CheckChannelRequest(channelId, serverId, PermissionType.CanWrite);
+            var result = CheckChannelRequest(channelId, serverId, PermissionTypes.CanWrite);
             _errorHandler.HandleChatError(result);
 
             var newMessage = new Message(message, _user);
@@ -79,7 +79,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/>
         public void DeleteChannel(int channelId, int serverId)
         {
-            var result = CheckChannelRequest(channelId, serverId, PermissionType.CanManageChannels);
+            var result = CheckChannelRequest(channelId, serverId, PermissionTypes.CanManageChannels);
             _errorHandler.HandleChatError(result);
 
             _repoProxy.ChannelRepository.Delete(_repoProxy.ChannelRepository.Find(channelId));
@@ -89,7 +89,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/> 
         public void DeleteServer(int serverId)
         {
-            var result = CheckServerRequest(serverId, PermissionType.CanManageServer);
+            var result = CheckServerRequest(serverId, PermissionTypes.CanManageServer);
             _errorHandler.HandleChatError(result);
 
             _repoProxy.ServerRepository.Delete(_repoProxy.ServerRepository.Find(serverId));
@@ -99,7 +99,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc />>
         public void DeleteMessage(int messageId, int channelId, int serverId)
         {
-            var result = CheckChannelRequest(channelId, serverId, PermissionType.CanManageChannels);
+            var result = CheckChannelRequest(channelId, serverId, PermissionTypes.CanManageChannels);
             _errorHandler.HandleChatError(result);
 
             _repoProxy.MessageRepository.Delete(_repoProxy.MessageRepository.Find(messageId));
@@ -110,12 +110,12 @@ namespace RedPoint.Chat.Services
         /// Checks if user has enough permissions to perform requested server action.
         /// </summary>
         /// <param name="serverId">ID of the requested server.</param>
-        /// <param name="permissionType">Type of permission to be checked for.</param>
+        /// <param name="permissionTypes">Type of permission to be checked for.</param>
         /// <returns></returns>
-        private ChatError CheckServerRequest(int serverId, PermissionType permissionType)
+        private ChatError CheckServerRequest(int serverId, PermissionTypes permissionTypes)
         {
             var server = _repoProxy.TryFindingServer(serverId, _user);
-            return _requestValidator.IsServerRequestValid(server, _user, permissionType);
+            return _requestValidator.IsServerRequestValid(server, _user, permissionTypes);
         }
 
         /// <summary>
@@ -123,13 +123,13 @@ namespace RedPoint.Chat.Services
         /// </summary>
         /// <param name="channelId">ID of the requested channel.</param>
         /// <param name="serverId">ID of the server containing the channel.</param>
-        /// <param name="permissionType">Type of permission to be checked for.</param>
+        /// <param name="permissionTypes">Type of permission to be checked for.</param>
         /// <returns></returns>
-        private ChatError CheckChannelRequest(int channelId, int serverId, PermissionType permissionType)
+        private ChatError CheckChannelRequest(int channelId, int serverId, PermissionTypes permissionTypes)
         {
             var channel = _repoProxy.TryFindingChannel(channelId, _user);
             var server = _repoProxy.TryFindingServer(serverId, _user);
-            return _requestValidator.IsChannelRequestValid(channel, server, _user, permissionType);
+            return _requestValidator.IsChannelRequestValid(channel, server, _user, permissionTypes);
         }
     }
 }

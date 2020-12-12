@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Data.Repository;
 
@@ -11,7 +14,7 @@ namespace RedPoint.Chat.Models.Chat
     /// Contains lists of users, channels, and groups that are part of it.
     /// Can have an image assigned to it.
     /// </summary>
-    public class Server : IEntity, IChatGroups
+    public class Server : IEntity, IGroupEntity
     {
         public int Id { get; set; }
         public HubGroupIdentifier HubGroupId { get; set; }
@@ -21,7 +24,7 @@ namespace RedPoint.Chat.Models.Chat
 
         [Required] public string Description { get; set; }
 
-        public Bitmap Image { get; set; }
+        public byte[] Image { get; private set; }
 
         public List<ChatUser> Users { get; set; }
         public List<Channel> Channels { get; set; }

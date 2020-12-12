@@ -15,9 +15,9 @@ namespace RedPoint.Chat.Services.Security
         /// </summary>
         /// <param name="server">Server that was requested by user.</param>
         /// <param name="user"></param>
-        /// <param name="permissionType">Type of permission to be checked for in user's permissions.</param>
+        /// <param name="permissionTypes">Type of permission to be checked for in user's permissions.</param>
         /// <returns>ChatError object with error details. ChatErrorType is set to NoError on valid requests.</returns>
-        ChatError IsServerRequestValid(Server server, ChatUser user, PermissionType permissionType);
+        ChatError IsServerRequestValid(Server server, ChatUser user, PermissionTypes permissionTypes);
 
         
         /// <summary>
@@ -26,9 +26,9 @@ namespace RedPoint.Chat.Services.Security
         /// <param name="channel">Channel that was requested by user.</param>
         /// <param name="server">Server that contains requested channel.</param>
         /// <param name="user"></param>
-        /// <param name="permissionType">Type of permission to be checked for in user's permissions/</param>
+        /// <param name="permissionTypes">Type of permission to be checked for in user's permissions/</param>
         /// <returns>ChatError object with error details. ChatErrorType is set to NoError on valid requests.</returns>
         ChatError IsChannelRequestValid(Channel channel, Server server, ChatUser user,
-            PermissionType permissionType);
+            PermissionTypes permissionTypes);
     }
 }

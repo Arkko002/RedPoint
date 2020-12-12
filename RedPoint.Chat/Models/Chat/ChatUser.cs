@@ -20,6 +20,6 @@ namespace RedPoint.Chat.Models.Chat
         public List<Server> Servers { get; set; }
         public UserSettings UserSettings { get; set; }
 
-        public Bitmap Image { get; set; }
+        public byte[] Image { get; set; }
     }
 }
