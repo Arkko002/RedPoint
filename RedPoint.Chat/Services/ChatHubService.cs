@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
-using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services.Security;
 using RedPoint.Data.UnitOfWork;
 
@@ -13,7 +12,6 @@ namespace RedPoint.Chat.Services
     /// <inheritdoc />
     public class ChatHubService : IChatHubService
     {
-        private readonly IChatErrorHandler _errorHandler;
         private readonly IChatEntityRepositoryProxy _repoProxy;
         private readonly IChatRequestValidator _requestValidator;
 
@@ -26,14 +24,12 @@ namespace RedPoint.Chat.Services
             UserManager<ChatUser> userManager,
             IChatEntityRepositoryProxy repoProxy,
             IChatRequestValidator requestValidator,
-            IChatErrorHandler errorHandler,
             IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _repoProxy = repoProxy;
             _requestValidator = requestValidator;
-            _errorHandler = errorHandler;
 
             AssignChatUser(httpContextAccessor.HttpContext.User).ConfigureAwait(false);
         }
@@ -46,8 +42,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/> 
         public void AddChannel(int serverId, ChannelIconDto channelIcon)
         {
-            var result = CheckServerRequest(serverId, PermissionTypes.CanManageChannels);
-            _errorHandler.HandleChatError(result);
+            CheckServerRequest(serverId, PermissionTypes.CanManageChannels);
 
             var newChannel = new Channel(channelIcon);
 
@@ -58,8 +53,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/>
         public void AddMessage(int channelId, int serverId, MessageDto message)
         {
-            var result = CheckChannelRequest(channelId, serverId, PermissionTypes.CanWrite);
-            _errorHandler.HandleChatError(result);
+            CheckChannelRequest(channelId, serverId, PermissionTypes.CanWrite);
 
             var newMessage = new Message(message, _user);
 
@@ -79,8 +73,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/>
         public void DeleteChannel(int channelId, int serverId)
         {
-            var result = CheckChannelRequest(channelId, serverId, PermissionTypes.CanManageChannels);
-            _errorHandler.HandleChatError(result);
+            CheckChannelRequest(channelId, serverId, PermissionTypes.CanManageChannels);
 
             _repoProxy.ChannelRepository.Delete(_repoProxy.ChannelRepository.Find(channelId));
             _unitOfWork.Submit();
@@ -89,8 +82,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/> 
         public void DeleteServer(int serverId)
         {
-            var result = CheckServerRequest(serverId, PermissionTypes.CanManageServer);
-            _errorHandler.HandleChatError(result);
+            CheckServerRequest(serverId, PermissionTypes.CanManageServer);
 
             _repoProxy.ServerRepository.Delete(_repoProxy.ServerRepository.Find(serverId));
             _unitOfWork.Submit();
@@ -99,8 +91,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc />>
         public void DeleteMessage(int messageId, int channelId, int serverId)
         {
-            var result = CheckChannelRequest(channelId, serverId, PermissionTypes.CanManageChannels);
-            _errorHandler.HandleChatError(result);
+            CheckChannelRequest(channelId, serverId, PermissionTypes.CanManageChannels);
 
             _repoProxy.MessageRepository.Delete(_repoProxy.MessageRepository.Find(messageId));
             _unitOfWork.Submit();
@@ -112,10 +103,10 @@ namespace RedPoint.Chat.Services
         /// <param name="serverId">ID of the requested server.</param>
         /// <param name="permissionTypes">Type of permission to be checked for.</param>
         /// <returns></returns>
-        private ChatError CheckServerRequest(int serverId, PermissionTypes permissionTypes)
+        private void CheckServerRequest(int serverId, PermissionTypes permissionTypes)
         {
             var server = _repoProxy.TryFindingServer(serverId, _user);
-            return _requestValidator.IsServerRequestValid(server, _user, permissionTypes);
+            _requestValidator.IsServerRequestValid(server, _user, permissionTypes);
         }
 
         /// <summary>
@@ -125,11 +116,11 @@ namespace RedPoint.Chat.Services
         /// <param name="serverId">ID of the server containing the channel.</param>
         /// <param name="permissionTypes">Type of permission to be checked for.</param>
         /// <returns></returns>
-        private ChatError CheckChannelRequest(int channelId, int serverId, PermissionTypes permissionTypes)
+        private void CheckChannelRequest(int channelId, int serverId, PermissionTypes permissionTypes)
         {
             var channel = _repoProxy.TryFindingChannel(channelId, _user);
             var server = _repoProxy.TryFindingServer(serverId, _user);
-            return _requestValidator.IsChannelRequestValid(channel, server, _user, permissionTypes);
+            _requestValidator.IsChannelRequestValid(channel, server, _user, permissionTypes);
         }
     }
 }

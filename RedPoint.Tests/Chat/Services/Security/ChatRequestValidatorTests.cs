@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Moq;
+using RedPoint.Chat.Exceptions.Security;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services.Security;
@@ -10,13 +12,13 @@ namespace RedPoint.Tests.Chat.Services.Security
     {
         public ChatRequestValidatorTests()
         {
-            _validator = new ChatRequestValidator();
+            _validator = new Mock<ChatRequestValidator>();
         }
 
-        private readonly ChatRequestValidator _validator;
+        private readonly Mock<ChatRequestValidator> _validator;
 
         [Fact]
-        public void NoChannelPermission_ShouldReturnNoPermissionType()
+        public void NoChannelPermission_ShouldThrowLackOfPermission()
         {
             var user = new ChatUser();
 
@@ -33,13 +35,12 @@ namespace RedPoint.Tests.Chat.Services.Security
 
             user.Groups = new List<Group> { group };
 
-            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
-
-            Assert.True(returnError.ErrorType == ChatErrorType.NoPermission);
+            Assert.Throws<LackOfPermissionException>(() =>
+                _validator.Object.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView));
         }
 
         [Fact]
-        public void NoServerPermission_ShouldReturnNoPermissionType()
+        public void NoServerPermission_ShouldThrowLackOFPermission()
         {
             var user = new ChatUser();
 
@@ -49,36 +50,33 @@ namespace RedPoint.Tests.Chat.Services.Security
             var server = new Server();
             server.Users.Add(user);
 
-            var returnError = _validator.IsServerRequestValid(server, user, PermissionTypes.CanView);
-
-            Assert.True(returnError.ErrorType == ChatErrorType.NoPermission);
+            Assert.Throws<LackOfPermissionException>(() =>
+                _validator.Object.IsServerRequestValid(server, user, PermissionTypes.CanView));
         }
 
         [Fact]
-        public void UserNotInChannelsServer_ShouldReturnUserNotInServerType()
+        public void UserNotInChannelsServer_ShouldThrowUserMembership()
         {
             var user = new ChatUser();
             var server = new Server();
             var channel = new Channel();
 
-            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
-
-            Assert.True(returnError.ErrorType == ChatErrorType.UserNotInServer);
+            Assert.Throws<UserMembershipException>(() =>
+                _validator.Object.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView));
         }
 
         [Fact]
-        public void UserNotInServer_ShouldReturnUserNotInServerType()
+        public void UserNotInServer_ShouldThrowUserMembership()
         {
             var server = new Server();
             var user = new ChatUser();
 
-            var returnError = _validator.IsServerRequestValid(server, user, PermissionTypes.IsAdmin);
-
-            Assert.True(returnError.ErrorType == ChatErrorType.UserNotInServer);
+            Assert.Throws<UserMembershipException>(() =>
+                _validator.Object.IsServerRequestValid(server, user, PermissionTypes.IsAdmin));
         }
 
         [Fact]
-        public void ValidChannelRequest_ShouldReturnNoErrorType()
+        public void ValidChannelRequest_ShouldReturn()
         {
             var user = new ChatUser();
 
@@ -96,14 +94,15 @@ namespace RedPoint.Tests.Chat.Services.Security
 
             user.Groups = new List<Group>();
             user.Groups.Add(group);
-
-            var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
-
-            Assert.True(returnError.ErrorType == ChatErrorType.NoError);
+            
+           _validator.Object.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
+           
+           //Will only assert on valid request
+           Assert.True(true);
         }
 
         [Fact]
-        public void ValidServerRequest_ShouldReturnNoErrorType()
+        public void ValidServerRequest_ShouldReturn()
         {
             var user = new ChatUser();
 
@@ -117,9 +116,10 @@ namespace RedPoint.Tests.Chat.Services.Security
             server.Users.Add(user);
             server.Groups = new List<Group> { group };
 
-            var returnError = _validator.IsServerRequestValid(server, user, PermissionTypes.IsAdmin);
+            _validator.Object.IsServerRequestValid(server, user, PermissionTypes.IsAdmin);
 
-            Assert.True(returnError.ErrorType == ChatErrorType.NoError);
+            //Will only assert on valid request
+            Assert.True(true);
         }
     }
 }

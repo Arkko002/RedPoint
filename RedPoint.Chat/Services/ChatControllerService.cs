@@ -14,7 +14,6 @@ namespace RedPoint.Chat.Services
     /// <inheritdoc cref="IChatControllerService"/>
     public class ChatControllerService : IChatControllerService
     {
-        private readonly IChatErrorHandler _errorHandler;
         private readonly IChatEntityRepositoryProxy _repoProxy;
         private readonly IChatRequestValidator _requestValidator;
 
@@ -30,13 +29,11 @@ namespace RedPoint.Chat.Services
         public ChatControllerService(UserManager<ChatUser> userManager,
             IChatEntityRepositoryProxy repoProxy,
             IChatRequestValidator requestValidator,
-            IChatErrorHandler errorHandler,
             IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _repoProxy = repoProxy;
             _requestValidator = requestValidator;
-            _errorHandler = errorHandler;
             
 
             AssignChatUser(httpContextAccessor.HttpContext.User).ConfigureAwait(false);
@@ -69,12 +66,7 @@ namespace RedPoint.Chat.Services
             var channel = _repoProxy.TryFindingChannel(channelId, _user);
             var server = _repoProxy.TryFindingServer(serverId, _user);
 
-            var result = _requestValidator.IsChannelRequestValid(channel, server, _user, PermissionTypes.CanView);
-
-            if (result.ErrorType != ChatErrorType.NoError)
-            {
-                _errorHandler.HandleChatError(result);
-            }
+            _requestValidator.IsChannelRequestValid(channel, server, _user, PermissionTypes.CanView);
 
             //TODO Pagination, return 20-40 messages in one batch
             return dtoFactory.CreateDtoList(channel.Messages);
