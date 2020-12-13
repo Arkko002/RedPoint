@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using RedPoint.Chat.Exceptions.Security;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Errors;
 
@@ -10,58 +11,46 @@ namespace RedPoint.Chat.Services.Security
     public class ChatRequestValidator : IChatRequestValidator
     {
         /// <inheritdoc/>
-        public ChatError IsServerRequestValid(Server server, ChatUser user, PermissionTypes permissionTypes)
+        public void IsServerRequestValid(Server server, ChatUser user, PermissionTypes permission)
         {
-            if (!server.Users.Contains(user))
-            {
-                return new ChatError(ChatErrorType.UserNotInServer,
-                    user,
-                    LogLevel.Warn,
-                    $"ID: {user.Id} tried to access server {server.Id} without joining first");
-            }
+            CheckMembership(user, server);
 
             var userPermissions = GetUserPermissionsOnEntity(user, server);
-            if (!IsUserPermitted(userPermissions, permissionTypes))
+            if (!IsUserPermitted(userPermissions, permission))
             {
-                return new ChatError(ChatErrorType.NoPermission,
-                    user,
-                    LogLevel.Warn,
-                    $"ID: {user.Id} tried to access server {server.Id} without permission");
+                throw new LackOfPermissionException("User lacks permission to perform requested action.", user.UserName,
+                    user.Id, server.Name, server.Id, permission); 
             }
-
-            return new ChatError(ChatErrorType.NoError);
         }
 
         /// <inheritdoc/>
-        public ChatError IsChannelRequestValid(Channel channel, Server server, ChatUser user,
-            PermissionTypes permissionTypes)
+        public void IsChannelRequestValid(Channel channel, Server server, ChatUser user,
+            PermissionTypes permission)
+        {
+            CheckMembership(user, server);
+
+            //Combines global server permissions with channel-specific permissions
+            var userPermissions = GetUserPermissionsOnEntity(user, server).Concat(GetUserPermissionsOnEntity(user, channel));
+            if (!IsUserPermitted(userPermissions, permission))
+            {
+                throw new LackOfPermissionException("User lacks permission to perform requested action.", user.UserName,
+                    user.Id, channel.Name, channel.Id, permission);
+            }
+        }
+
+        /// <summary>
+        /// Checks if user is on the server's list of users.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="server"></param>
+        /// <exception cref="UserMembershipException">Thrown when user is not a part of the server.</exception>
+        private static void CheckMembership(ChatUser user, Server server)
         {
             if (!server.Users.Contains(user))
             {
-                return new ChatError(ChatErrorType.UserNotInServer,
-                    user,
-                    LogLevel.Warn,
-                    $"ID: {user.Id} tried to access server {server.Id} without joining first");
+                throw new UserMembershipException("User is not a part of the server.", user.UserName, user.Id,
+                    server.Name, server.Id);
             }
-
-            if (!server.Channels.Contains(channel))
-            {
-                return new ChatError(ChatErrorType.ChannelNotFound,
-                    user,
-                    LogLevel.Warn,
-                    $"ID: {user.Id} tried to access channel {channel.Id} that isn't part of server {server.Id}");
-            }
-
-            var userPermissions = GetUserPermissionsOnEntity(user, channel);
-            if (!IsUserPermitted(userPermissions, permissionTypes))
-            {
-                return new ChatError(ChatErrorType.NoPermission,
-                    user,
-                    LogLevel.Warn,
-                    $"ID: {user.Id} tried to access channel {channel.Id} without permission");
-            }
-
-            return new ChatError(ChatErrorType.NoError);
         }
 
         /// <summary>
@@ -82,7 +71,7 @@ namespace RedPoint.Chat.Services.Security
 
             return userPermissions;
         }
-
+        
         /// <summary>
         /// Checks for occurence of an expected permission in the provided list of permissions.
         /// Returns true if user is an admin regardless of occurrence of expected permission. 
