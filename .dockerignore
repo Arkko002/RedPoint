@@ -1,0 +1,8 @@
+bin/
+obj/
+Docs/
+node_modules/
+.idea/
+.github/
+.git/
+RedPoint.Tests/
