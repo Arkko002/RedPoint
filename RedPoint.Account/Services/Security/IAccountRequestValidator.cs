@@ -14,13 +14,13 @@ namespace RedPoint.Account.Services.Security
         /// </summary>
         /// <param name="model"></param>
         /// <returns>AccountError object with error details. AccountErrorType is set to NoError on valid request.</returns>
-        Task<AccountError> IsRegisterRequestValid(UserRegisterDto model);
-        
+        Task IsRegisterRequestValid(UserRegisterDto model);
+
         /// <summary>
         /// Performs internal check of user's login request.
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns>AccountError object with error details. AccountErrorType is set to NoError on valid request.</returns>
-        Task<AccountError> IsLoginRequestValid(UserLoginDto requestDto);
+        Task IsLoginRequestValid(UserLoginDto requestDto);
     }
 }

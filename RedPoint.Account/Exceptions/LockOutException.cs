@@ -4,17 +4,16 @@ namespace RedPoint.Account.Exceptions
 {
     public class LockOutException : Exception
     {
-        #nullable enable
-        public LockOutException()
+        public LockOutException(string? message, string username) : base(message)
         {
+            Username = username;
         }
 
-        public LockOutException(string? message) : base(message)
+        public LockOutException(string? message, Exception? innerException, string username) : base(message, innerException)
         {
+            Username = username;
         }
 
-        public LockOutException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
+        public string Username { get; }
     }
 }

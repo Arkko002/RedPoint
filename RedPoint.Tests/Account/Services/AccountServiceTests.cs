@@ -21,8 +21,8 @@ namespace RedPoint.Tests.Account.Services
     {
         private readonly AccountService _service;
         private readonly Mock<MockUserManager<IdentityUser>> _userManager;
+        private readonly Mock<MockSignInManager<IdentityUser>> _signInManager;
         private readonly Mock<IAccountRequestValidator> _requestValidator;
-        private readonly Mock<IAccountErrorHandler> _errorHandler;
         private readonly Mock<ITokenGenerator> _tokenGenerator;
 
         public AccountServiceTests()
@@ -42,24 +42,23 @@ namespace RedPoint.Tests.Account.Services
                     It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
 
-            _requestValidator = new Mock<IAccountRequestValidator>();
-            _tokenGenerator = new Mock<ITokenGenerator>();
-            _tokenGenerator.Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<IdentityUser>()))
-                .Returns("Token");
+            _signInManager = new Mock<MockSignInManager<IdentityUser>>();                
 
+            _requestValidator = new Mock<IAccountRequestValidator>();
             _requestValidator.Setup(x => x.IsLoginRequestValid(It.IsAny<UserLoginDto>()))
                 .Returns(Task.FromResult(new AccountError(AccountErrorType.NoError)));
             _requestValidator.Setup(x => x.IsRegisterRequestValid(It.IsAny<UserRegisterDto>()))
                 .Returns(Task.FromResult(new AccountError(AccountErrorType.NoError)));
-
-            _errorHandler = new Mock<IAccountErrorHandler>();
-
+                
+            _tokenGenerator = new Mock<ITokenGenerator>();
+            _tokenGenerator.Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<IdentityUser>()))
+                .Returns("Token");
             _tokenGenerator.Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<IdentityUser>()))
                 .Returns("Token");
 
             _service = new AccountService(_userManager.Object,
                 _requestValidator.Object,
-                _errorHandler.Object,
+                _signInManager.Object,
                 _tokenGenerator.Object);
         }
 
@@ -75,7 +74,6 @@ namespace RedPoint.Tests.Account.Services
             _service.Login(dto);
 
             _requestValidator.Verify(x => x.IsLoginRequestValid(dto), Times.AtLeastOnce);
-            _errorHandler.Verify(x => x.HandleError(It.IsAny<AccountError>()), Times.AtLeastOnce);
             _tokenGenerator.Verify(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<IdentityUser>()),
                 Times.AtLeastOnce);
         }
@@ -92,7 +90,6 @@ namespace RedPoint.Tests.Account.Services
             _service.Register(dto);
 
             _requestValidator.Verify(x => x.IsRegisterRequestValid(dto), Times.AtLeastOnce);
-            _errorHandler.Verify(x => x.HandleError(It.IsAny<AccountError>()), Times.AtLeastOnce);
             _tokenGenerator.Verify(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<IdentityUser>()),
                 Times.AtLeastOnce);
         }

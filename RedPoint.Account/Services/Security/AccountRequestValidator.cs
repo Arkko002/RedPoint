@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using RedPoint.Account.Exceptions;
 using RedPoint.Account.Models.Account;
 using RedPoint.Account.Models.Errors;
 
@@ -13,65 +14,62 @@ namespace RedPoint.Account.Services.Security
         private readonly IAccountSecurityConfigurationProvider _provider;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserValidator<IdentityUser> _userValidator;
 
         public AccountRequestValidator(IAccountSecurityConfigurationProvider provider,
         SignInManager<IdentityUser> signInManager,
+        UserValidator<IdentityUser> userValidator,
         UserManager<IdentityUser> userManager)
         {
             _provider = provider;
             _signInManager = signInManager;
+            _userValidator = userValidator;
             _userManager = userManager;
         }
 
         /// <inheritdoc/>
-        public async Task<AccountError> IsLoginRequestValid(UserLoginDto model)
+        public async Task IsLoginRequestValid(UserLoginDto model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+            var user = await _userManager.FindByNameAsync(model.Username);
 
-            if (result.Succeeded)
+            if (!await _signInManager.CanSignInAsync(user))
             {
-                return new AccountError(AccountErrorType.NoError);
-            }
-
-            if (result.IsLockedOut)
+                throw new AccountLoginException("User can't sign in.", model.Username);
+            } 
+            if (!await _signInManager.UserManager.CheckPasswordAsync(user, model.Password))
             {
-                var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
-
-                return new AccountError(AccountErrorType.UserLockedOut,
-                    LogLevel.Warning,
-                    $"{appUser.Id} was locked out of account.",
-                    appUser);
+                throw new AccountLoginException("Provided password was incorrect.", model.Username);
             }
-
-            //TODO Other possible errors 
-            return new AccountError(AccountErrorType.LoginFailure);
+            if (await _signInManager.UserManager.IsLockedOutAsync(user))
+            {
+                throw new LockOutException("Account was locked out.", model.Username);
+            }
         }
 
         /// <inheritdoc/>
-        public async Task<AccountError> IsRegisterRequestValid(UserRegisterDto model)
+        public async Task IsRegisterRequestValid(UserRegisterDto model)
         {
             var passwordList = _provider.GetBlacklistedPasswords();
 
             if (passwordList.Contains(model.Password))
             {
-                return new AccountError(AccountErrorType.PasswordTooWeak);
+                throw new AccountCreationException("Provided password is too weak.");
             }
             
             var user = new IdentityUser
             {
                 UserName = model.Username
             };
+            
+            var validationResult = await _userValidator.ValidateAsync(_userManager, user);
 
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
+            if (validationResult.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
-                return new AccountError(AccountErrorType.NoError);
+                return;
             }
             
-            //TODO other possible errors
-            return new AccountError(AccountErrorType.RegisterFailure);
+            throw new AccountCreationException("One or multiple errors occured during account creation",
+                validationResult.Errors.Select(x => x.Description));
         }
     }
 }

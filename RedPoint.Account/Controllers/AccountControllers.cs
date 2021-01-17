@@ -9,7 +9,6 @@ namespace RedPoint.Account.Controllers
     /// <summary>
     /// Controller for account-related functionality.
     /// </summary>
-    //TODO Change the return values of controller, possibly to IActionResult
     [Route("{controller}/{action}")]
     public class AccountController : ControllerBase
     {
