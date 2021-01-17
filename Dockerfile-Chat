@@ -6,7 +6,7 @@ COPY RedPoint.Middleware/*.csproj ./RedPoint.Middleware/
 COPY RedPoint.Data/*.csproj ./RedPoint.Data/
 RUN dotnet restore RedPoint.Chat/*.csproj
 
-COPY RedPoint.Account ./RedPoint.Account/
+COPY RedPoint.Chat ./RedPoint.Chat/
 COPY RedPoint.Middleware ./RedPoint.Middleware/
 COPY RedPoint.Data ./RedPoint.Data/
 RUN dotnet publish RedPoint.Chat/*.csproj -c Release -o out
