@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
@@ -8,42 +9,38 @@ using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
-using RedPoint.Tests.Mocks;
 using Xunit;
 
 namespace RedPoint.Tests.Chat.Services
 {
     public class ChatControllerServiceTests
     {
-        private readonly Mock<IChatErrorHandler> _errorHandler;
         private readonly Mock<IChatEntityRepositoryProxy> _repoProxy;
         private readonly Mock<IChatRequestValidator> _requestValidator;
-        private readonly Mock<MockUserManager<ChatUser>> _userManager;
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessor;
-        private readonly ChatUser _user;
 
-        private ChatControllerService _service;
+        private readonly ChatControllerService _service;
 
         public ChatControllerServiceTests()
         {
-            _userManager = new Mock<MockUserManager<ChatUser>>();
+            var userManager = new Mock<UserManager<ChatUser>>(new Mock<IUserStore<ChatUser>>().Object,
+                null, null, null, null, null, null, null, null);
             _repoProxy = new Mock<IChatEntityRepositoryProxy>();
             _requestValidator = new Mock<IChatRequestValidator>();
-            _errorHandler = new Mock<IChatErrorHandler>();
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            var errorHandler = new Mock<IChatErrorHandler>();
+            var httpContextAccessor = new Mock<IHttpContextAccessor>();
 
-            _user = new ChatUser();
-            _user.Groups = new List<Group>();
-            _user.Servers = new List<Server>();
-            _user.Messages = new List<Message>();
+            var user = new ChatUser();
+            user.Groups = new List<Group>();
+            user.Servers = new List<Server>();
+            user.Messages = new List<Message>();
 
-            _httpContextAccessor.Setup(x => x.HttpContext.User).Returns(new ClaimsPrincipal());
+            httpContextAccessor.Setup(x => x.HttpContext.User).Returns(new ClaimsPrincipal());
 
-            _userManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                .ReturnsAsync(_user);
+            userManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .ReturnsAsync(user);
 
-            _service = new ChatControllerService(_userManager.Object, _repoProxy.Object, _requestValidator.Object,
-                _errorHandler.Object, _httpContextAccessor.Object);
+            _service = new ChatControllerService(userManager.Object, _repoProxy.Object, _requestValidator.Object,
+                errorHandler.Object, httpContextAccessor.Object);
         }
 
         [Fact]

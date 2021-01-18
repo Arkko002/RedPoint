@@ -8,12 +8,12 @@ namespace RedPoint.Tests.Chat.Services.Security
 {
     public class ChatRequestValidatorTests
     {
+        private readonly ChatRequestValidator _validator;
+
         public ChatRequestValidatorTests()
         {
             _validator = new ChatRequestValidator();
         }
-
-        private readonly ChatRequestValidator _validator;
 
         [Fact]
         public void NoChannelPermission_ShouldReturnNoPermissionType()
@@ -25,13 +25,13 @@ namespace RedPoint.Tests.Chat.Services.Security
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group> { group };
+            server.Groups = new List<Group> {group};
 
             var channel = new Channel();
             server.Channels.Add(channel);
-            channel.Groups = new List<Group> { group };
+            channel.Groups = new List<Group> {group};
 
-            user.Groups = new List<Group> { group };
+            user.Groups = new List<Group> {group};
 
             var returnError = _validator.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
 
@@ -88,11 +88,11 @@ namespace RedPoint.Tests.Chat.Services.Security
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group> { group };
+            server.Groups = new List<Group> {group};
 
             var channel = new Channel();
             server.Channels.Add(channel);
-            channel.Groups = new List<Group> { group };
+            channel.Groups = new List<Group> {group};
 
             user.Groups = new List<Group>();
             user.Groups.Add(group);
@@ -111,11 +111,11 @@ namespace RedPoint.Tests.Chat.Services.Security
             group.GroupPermissions |= PermissionTypes.IsAdmin;
             group.Users.Add(user);
 
-            user.Groups = new List<Group> { group };
+            user.Groups = new List<Group> {group};
 
             var server = new Server();
             server.Users.Add(user);
-            server.Groups = new List<Group> { group };
+            server.Groups = new List<Group> {group};
 
             var returnError = _validator.IsServerRequestValid(server, user, PermissionTypes.IsAdmin);
 

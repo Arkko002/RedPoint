@@ -8,12 +8,12 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 {
     public class ServerIconDtoFactoryTests
     {
+        private readonly ServerIconDtoFactory _factory;
+
         public ServerIconDtoFactoryTests()
         {
             _factory = new ServerIconDtoFactory();
         }
-
-        private readonly ServerIconDtoFactory _factory;
 
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
@@ -40,14 +40,14 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var list = new List<Server>
             {
-                new Server
+                new()
                 {
                     Id = 1234,
                     Name = "testName",
                     Description = "testDescription",
                     IsVisible = true
                 },
-                new Server
+                new()
                 {
                     Id = 12345,
                     Name = "testName2",

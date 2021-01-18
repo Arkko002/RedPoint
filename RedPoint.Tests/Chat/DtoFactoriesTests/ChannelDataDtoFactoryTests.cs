@@ -9,19 +9,19 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 {
     public class ChannelDataDtoFactoryTests
     {
+        private readonly ChannelDataDtoFactory _factory;
+
         public ChannelDataDtoFactoryTests()
         {
             var mockMessageFactory = new Mock<IChatDtoFactory<Message, MessageDto>>();
 
-            var messageList = new List<MessageDto> { new MessageDto { Text = "CALLED" } };
+            var messageList = new List<MessageDto> {new() {Text = "CALLED"}};
             mockMessageFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Message>>()))
                 .Returns(messageList);
 
 
             _factory = new ChannelDataDtoFactory(mockMessageFactory.Object);
         }
-
-        private readonly ChannelDataDtoFactory _factory;
 
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
@@ -43,11 +43,11 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var list = new List<Channel>
             {
-                new Channel
+                new()
                 {
                     Id = 1234
                 },
-                new Channel
+                new()
                 {
                     Id = 12345
                 }

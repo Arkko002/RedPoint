@@ -11,14 +11,15 @@ namespace RedPoint.Tests.Chat.Controllers
 {
     public class ChatControllerTests
     {
+        private readonly ChatController _controller;
+
+        private readonly Mock<IChatControllerService> _service;
+
         public ChatControllerTests()
         {
             _service = new Mock<IChatControllerService>();
             _controller = new ChatController(_service.Object);
         }
-
-        private readonly Mock<IChatControllerService> _service;
-        private readonly ChatController _controller;
 
         [Fact]
         public void GetChannelMessages_ShouldCallService()
@@ -29,7 +30,8 @@ namespace RedPoint.Tests.Chat.Controllers
 
             _controller.GetChannelMessages(1, 1, new MessageDtoFactory());
 
-            _service.Verify(x => x.GetChannelMessages(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<MessageDtoFactory>()), Times.Once);
+            _service.Verify(x => x.GetChannelMessages(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<MessageDtoFactory>()),
+                Times.Once);
         }
 
         [Fact]
@@ -41,7 +43,8 @@ namespace RedPoint.Tests.Chat.Controllers
 
             _controller.GetServer(1, new ServerDataDtoFactory(new ChannelIconDtoFactory(), new UserDtoFactory()));
 
-            _service.Verify(x => x.GetServerData(It.IsAny<int>(), It.IsAny<IChatDtoFactory<Server, ServerDataDto>>()), Times.Once);
+            _service.Verify(x => x.GetServerData(It.IsAny<int>(), It.IsAny<IChatDtoFactory<Server, ServerDataDto>>()),
+                Times.Once);
         }
 
         [Fact]

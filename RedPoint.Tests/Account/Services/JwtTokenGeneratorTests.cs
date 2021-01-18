@@ -11,6 +11,8 @@ namespace RedPoint.Tests.Account.Services
 {
     public class JwtTokenGeneratorTests
     {
+        private readonly JwtTokenGenerator _tokenGenerator;
+
         public JwtTokenGeneratorTests()
         {
             var configuration = new MockConfiguration("none")
@@ -23,15 +25,13 @@ namespace RedPoint.Tests.Account.Services
             _tokenGenerator = new JwtTokenGenerator(configuration);
         }
 
-        private readonly JwtTokenGenerator _tokenGenerator;
-
         //TODO finish checking key signing
         [Fact]
         public void GenerateToken_ShouldReturnTokenString()
         {
             const string username = "testUsername";
 
-            var identityUser = new IdentityUser { Id = "testId" };
+            var identityUser = new IdentityUser {Id = "testId"};
 
             var expires = DateTime.Now.AddDays(1);
 

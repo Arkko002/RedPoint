@@ -1,16 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Moq;
-using NLog.Fluent;
 using RedPoint.Account.Exceptions;
 using RedPoint.Account.Models.Account;
-using RedPoint.Account.Models.Errors;
 using RedPoint.Account.Services.Security;
-using RedPoint.Tests.Mocks;
 using Xunit;
 
 namespace RedPoint.Tests.Account.Services.Security
@@ -21,15 +17,13 @@ namespace RedPoint.Tests.Account.Services.Security
         private readonly IdentityUser _identityUser = new() {Id = "1", UserName = "Username"};
         private readonly UserLoginDto _loginDto = new() {Username = "Username", Password = "Password"};
         private readonly UserRegisterDto _registerDto = new() {Username = "Username", Password = "Password"};
-        
-        private readonly Mock<MockUserManager<IdentityUser>> _userManager;
-        private readonly Mock<MockSignInManager<IdentityUser>> _signInManager;
-        private readonly Mock<UserValidator<IdentityUser>> _userValidator;
 
         private readonly AccountRequestValidator _requestValidator;
+        private readonly Mock<SignInManager<IdentityUser>> _signInManager;
 
-        private readonly Mock<IdentityResult> _identityResult;
-        
+        private readonly Mock<UserManager<IdentityUser>> _userManager;
+        private readonly Mock<UserValidator<IdentityUser>> _userValidator;
+
         public AccountRequestValidatorTests()
         {
             var configurationProvider = new Mock<IAccountSecurityConfigurationProvider>();
@@ -41,7 +35,9 @@ namespace RedPoint.Tests.Account.Services.Security
                 _identityUser
             }.AsQueryable();
 
-            _userManager = new Mock<MockUserManager<IdentityUser>>();
+            _userManager = new Mock<UserManager<IdentityUser>>(new Mock<IUserStore<IdentityUser>>().Object,
+                null, null, null, null, null, null, null, null);
+            _userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(_identityUser);
             _userManager.Setup(x => x.Users).Returns(users);
             _userManager.Setup(x => x.CreateAsync(It.IsAny<IdentityUser>(),
                     It.IsAny<string>()))
@@ -50,15 +46,17 @@ namespace RedPoint.Tests.Account.Services.Security
                 .ReturnsAsync(true);
             _userManager.Setup(x => x.IsLockedOutAsync(_identityUser))
                 .ReturnsAsync(false);
-                
-            _signInManager = new Mock<MockSignInManager<IdentityUser>>(MockBehavior.Loose, _userManager);
+
+            var contextAccessor = new Mock<IHttpContextAccessor>();
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<IdentityUser>>();
+            _signInManager = new Mock<SignInManager<IdentityUser>>(_userManager.Object, contextAccessor.Object,
+                userPrincipalFactory.Object,
+                null, null, null, null);
             _signInManager.Setup(x => x.CanSignInAsync(_identityUser))
                 .ReturnsAsync(true);
-                
-            _userValidator = new Mock<UserValidator<IdentityUser>>();
 
-            _identityResult = new Mock<IdentityResult>();
-            
+            _userValidator = new Mock<UserValidator<IdentityUser>>(new IdentityErrorDescriber());
+
             _requestValidator = new AccountRequestValidator(configurationProvider.Object, _signInManager.Object,
                 _userValidator.Object, _userManager.Object);
         }
@@ -73,41 +71,37 @@ namespace RedPoint.Tests.Account.Services.Security
         }
 
         [Fact]
-        public void LoginRequest_LockedOut_ShouldThrowLockedOut()
+        public async void LoginRequest_LockedOut_ShouldThrowLockedOut()
         {
             _userManager.Setup(x => x.IsLockedOutAsync(_identityUser))
                 .ReturnsAsync(true);
 
-            Assert.Throws<LockOutException>(
-                () => _requestValidator.IsLoginRequestValid(_loginDto).ConfigureAwait(false));
+            await Assert.ThrowsAsync<LockOutException>(() => _requestValidator.IsLoginRequestValid(_loginDto));
         }
 
         [Fact]
-        public void LoginRequest_CantSignIn_ShouldThrowAccountLogin()
+        public async void LoginRequest_CantSignIn_ShouldThrowAccountLogin()
         {
             _signInManager.Setup(x => x.CanSignInAsync(_identityUser))
                 .ReturnsAsync(false);
 
-            Assert.Throws<AccountLoginException>(() =>
-                _requestValidator.IsLoginRequestValid(_loginDto).ConfigureAwait(false));
+            await Assert.ThrowsAsync<AccountLoginException>(() => _requestValidator.IsLoginRequestValid(_loginDto));
         }
 
         [Fact]
-        public void LoginRequest_BadPassword_ShouldThrowAccountLogin()
+        public async void LoginRequest_BadPassword_ShouldThrowAccountLogin()
         {
             _userManager.Setup(x => x.CheckPasswordAsync(_identityUser, It.IsAny<string>()))
                 .ReturnsAsync(false);
 
-            Assert.Throws<AccountLoginException>(() =>
-                _requestValidator.IsLoginRequestValid(_loginDto).ConfigureAwait(false));
+            await Assert.ThrowsAsync<AccountLoginException>(() => _requestValidator.IsLoginRequestValid(_loginDto));
         }
 
         [Fact]
         public async void RegisterRequest_ValidRequest_ShouldReturn()
         {
-            _identityResult.Setup(x => x.Succeeded).Returns(true);
-            _userValidator.Setup(x => x.ValidateAsync(_userManager.Object, _identityUser))
-                .ReturnsAsync(_identityResult.Object);
+            _userValidator.Setup(x => x.ValidateAsync(It.IsAny<UserManager<IdentityUser>>(), It.IsAny<IdentityUser>()))
+                .ReturnsAsync(IdentityResult.Success);
 
             await _requestValidator.IsRegisterRequestValid(_registerDto);
 
@@ -116,7 +110,7 @@ namespace RedPoint.Tests.Account.Services.Security
         }
 
         [Fact]
-        public void RegisterRequest_WeakPassword_ShouldThrowAccountCreation()
+        public async void RegisterRequest_WeakPassword_ShouldThrowAccountCreation()
         {
             var user = new UserRegisterDto
             {
@@ -124,12 +118,11 @@ namespace RedPoint.Tests.Account.Services.Security
                 Password = InsecurePassword
             };
 
-            Assert.Throws<AccountCreationException>(() =>
-                _requestValidator.IsRegisterRequestValid(user).ConfigureAwait(false));
+            await Assert.ThrowsAsync<AccountCreationException>(() => _requestValidator.IsRegisterRequestValid(user));
         }
 
         [Fact]
-        public void RegisterRequest_ValidationError_ShouldThrowAccountCreationWithListOfErrors()
+        public async void RegisterRequest_ValidationError_ShouldThrowAccountCreationWithListOfErrors()
         {
             var errors = new List<IdentityError>
             {
@@ -139,13 +132,15 @@ namespace RedPoint.Tests.Account.Services.Security
                     Description = "TestDescription"
                 }
             };
-            _identityResult.Setup(x => x.Errors).Returns(errors);
-            _identityResult.Setup(x => x.Succeeded).Returns(false);
-            _userValidator.Setup(x => x.ValidateAsync(_userManager.Object, _identityUser))
-                .ReturnsAsync(_identityResult.Object);
+            _userValidator.Setup(x => x.ValidateAsync(It.IsAny<UserManager<IdentityUser>>(), It.IsAny<IdentityUser>()))
+                .ReturnsAsync(IdentityResult.Failed(errors.ToArray()));
 
-            void Act() => _requestValidator.IsRegisterRequestValid(_registerDto);
-            var exception = Assert.Throws<AccountCreationException>(Act);                
+            Task Act()
+            {
+                return _requestValidator.IsRegisterRequestValid(_registerDto);
+            }
+
+            var exception = await Assert.ThrowsAsync<AccountCreationException>(Act);
             Assert.True(exception.Errors.All(x => x == "TestDescription"));
         }
     }

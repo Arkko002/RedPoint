@@ -17,14 +17,15 @@ namespace RedPoint.Tests.Chat.Services
         private readonly ChatErrorHandler _errorHandler;
         private readonly ChatUser _user;
 
-        public ChatErrorHandlerTests() 
+        public ChatErrorHandlerTests()
         {
-            var configPath = Path.Join(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName, "nlog.config");
+            var configPath = Path.Join(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName,
+                "nlog.config");
             var logFactory = new LogFactory();
             logFactory.Configuration = new XmlLoggingConfiguration(configPath, logFactory);
 
             var logger = logFactory.GetCurrentClassLogger();
-            _user = new ChatUser() { UserName = "testUsername" };
+            _user = new ChatUser {UserName = "testUsername"};
             _errorHandler = new ChatErrorHandler(logger);
         }
 
