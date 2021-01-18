@@ -9,23 +9,23 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 {
     public class ServerDataDtoFactoryTests
     {
+        private readonly ServerDataDtoFactory _factory;
+
         public ServerDataDtoFactoryTests()
         {
             var mockChannelDtoFactory = new Mock<IChatDtoFactory<Channel, ChannelIconDto>>();
             var mockUserDtoFactory = new Mock<IChatDtoFactory<ChatUser, ChatUserDto>>();
 
-            var channelDtoList = new List<ChannelIconDto> { new ChannelIconDto { Name = "CALLED" } };
+            var channelDtoList = new List<ChannelIconDto> {new() {Name = "CALLED"}};
             mockChannelDtoFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Channel>>()))
                 .Returns(channelDtoList);
 
-            var userDtoList = new List<ChatUserDto> { new ChatUserDto { Username = "CALLED" } };
+            var userDtoList = new List<ChatUserDto> {new() {Username = "CALLED"}};
             mockUserDtoFactory.Setup(x => x.CreateDtoList(It.IsAny<List<ChatUser>>()))
                 .Returns(userDtoList);
 
             _factory = new ServerDataDtoFactory(mockChannelDtoFactory.Object, mockUserDtoFactory.Object);
         }
-
-        private readonly ServerDataDtoFactory _factory;
 
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
@@ -47,11 +47,11 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var list = new List<Server>
             {
-                new Server
+                new()
                 {
                     Id = 1234
                 },
-                new Server
+                new()
                 {
                     Id = 12345
                 }

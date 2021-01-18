@@ -9,8 +9,8 @@ namespace RedPoint.Tests.Chat
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { new ChatError(ChatErrorType.ServerNotFound, LogLevel.Fatal, "testMessage") };
-            yield return new object[] { new ChatError(ChatErrorType.ChannelNotFound, LogLevel.Fatal, "testMessage") };
+            yield return new object[] {new ChatError(ChatErrorType.ServerNotFound, LogLevel.Fatal, "testMessage")};
+            yield return new object[] {new ChatError(ChatErrorType.ChannelNotFound, LogLevel.Fatal, "testMessage")};
         }
 
         IEnumerator IEnumerable.GetEnumerator()

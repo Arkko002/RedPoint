@@ -10,12 +10,12 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 {
     public class MessageDtoFactoryTests
     {
+        private readonly MessageDtoFactory _factory;
+
         public MessageDtoFactoryTests()
         {
             _factory = new MessageDtoFactory();
         }
-
-        private readonly MessageDtoFactory _factory;
 
         [Fact]
         public void CreateDto_NullFields_ShouldThrowException()
@@ -55,9 +55,9 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var msgList = new List<Message>
             {
-                new Message {Id = 1, Text = "1", DateTimePosted = DateTime.Today, User = new ChatUser()},
-                new Message {Id = 2, Text = "2", DateTimePosted = DateTime.Today, User = new ChatUser()},
-                new Message {Id = 3, Text = "3", DateTimePosted = DateTime.Today, User = new ChatUser()}
+                new() {Id = 1, Text = "1", DateTimePosted = DateTime.Today, User = new ChatUser()},
+                new() {Id = 2, Text = "2", DateTimePosted = DateTime.Today, User = new ChatUser()},
+                new() {Id = 3, Text = "3", DateTimePosted = DateTime.Today, User = new ChatUser()}
             };
 
             var returnList = _factory.CreateDtoList(msgList);

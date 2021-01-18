@@ -94,7 +94,6 @@ namespace RedPoint.Account
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAccountRequestValidator, AccountRequestValidator>();
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
-            services.AddSingleton<IAccountErrorHandler, AccountErrorHandler>();
             services.AddSingleton<IAccountSecurityConfigurationProvider, AccountSecurityConfigurationProvider>();
 
         }

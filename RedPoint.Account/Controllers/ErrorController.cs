@@ -30,7 +30,7 @@ namespace RedPoint.Account.Controllers
             switch (exception)
             {
                 case InvalidPasswordException p: return Problem(exception.Message, statusCode: 400);
-                case AccountRequestException a: return Problem(exception.Message, statusCode: 400);
+                case AccountLoginException a: return Problem(exception.Message, statusCode: 400);
                 default: return Problem("Unknown server error occured.", statusCode: 500);
             }
         }

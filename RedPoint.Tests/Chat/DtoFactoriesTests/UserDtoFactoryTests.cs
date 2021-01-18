@@ -8,12 +8,12 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 {
     public class UserDtoFactoryTests
     {
+        private readonly UserDtoFactory _factory;
+
         public UserDtoFactoryTests()
         {
             _factory = new UserDtoFactory();
         }
-
-        private readonly UserDtoFactory _factory;
 
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
@@ -40,14 +40,14 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var list = new List<ChatUser>
             {
-                new ChatUser
+                new()
                 {
                     Id = "testId",
                     UserName = "testName",
                     CurrentChannelId = "testChannelId",
                     CurrentServerId = "testServerId"
                 },
-                new ChatUser
+                new()
                 {
                     Id = "testId2",
                     UserName = "testName2",

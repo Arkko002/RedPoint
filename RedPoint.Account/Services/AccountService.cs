@@ -16,40 +16,38 @@ namespace RedPoint.Account.Services
     public class AccountService : IAccountService
     {
         private readonly IAccountRequestValidator _requestValidator;
-        private readonly IAccountErrorHandler _errorHandler;
 
         private readonly ITokenGenerator _tokenGenerator;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
         public AccountService(
             UserManager<IdentityUser> userManager,
             IAccountRequestValidator requestValidator,
-            IAccountErrorHandler errorHandler,
+            SignInManager<IdentityUser> signInManager,
             ITokenGenerator tokenGenerator
         )
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _requestValidator = requestValidator;
             _tokenGenerator = tokenGenerator;
-            _errorHandler = errorHandler;
         }
 
         public async Task<string> Login(UserLoginDto model)
         {
-            var validationResult = await _requestValidator.IsLoginRequestValid(model);
-            _errorHandler.HandleError(validationResult);
-            
-            //TODO Handle login with password hash, not username comparision
+            await _requestValidator.IsLoginRequestValid(model);
+            await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+
             var appUser = _userManager.Users.SingleOrDefault(u => u.UserName == model.Username);
             return _tokenGenerator.GenerateToken(model.Username, appUser);
         }
 
         public async Task<string> Register(UserRegisterDto model)
         {
-            var validationResult = await _requestValidator.IsRegisterRequestValid(model);
-            _errorHandler.HandleError(validationResult);
-
-            //TODO Handle login with password hash, not username comparision
+            await _requestValidator.IsRegisterRequestValid(model);
+            await _userManager.CreateAsync(new IdentityUser(model.Username), model.Password);
+            
             var appUser = _userManager.Users.SingleOrDefault(u => u.UserName == model.Username);
             return _tokenGenerator.GenerateToken(model.Username, appUser);
         }

@@ -4,16 +4,16 @@ namespace RedPoint.Account.Exceptions
 {
     public class InvalidPasswordException : Exception
     {
-        public InvalidPasswordException()
+        public InvalidPasswordException(string? message, string username) : base(message)
         {
+            Username = username;
         }
 
-        public InvalidPasswordException(string message) : base(message)
+        public InvalidPasswordException(string? message, Exception? innerException, string username) : base(message, innerException)
         {
+            Username = username;
         }
 
-        public InvalidPasswordException(string message, Exception inner) : base(message, inner)
-        {
-        }
+        public string Username { get; }
     }
 }
