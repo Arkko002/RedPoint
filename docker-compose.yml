@@ -1,0 +1,30 @@
+services:
+  chat:
+    container_name: redpoint-chat
+    build:
+      context: .
+      dockerfile: Dockerfile-Chat
+    ports:
+    - "5005:443"
+    - "5004:80"
+    
+    
+  admin:
+    container_name: redpoint-admin
+    build:
+      context: .
+      dockerfile: Dockerfile-Admin
+    ports:
+      - "5003:443"
+      - "5002:80"
+    
+  account:
+    container_name: redpoint-account
+    build:
+      context: .
+      dockerfile: Dockerfile-Account
+    ports:
+    - "5001:443"
+    - "5000:80"
+      
+      

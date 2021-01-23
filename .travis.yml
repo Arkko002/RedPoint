@@ -2,13 +2,29 @@ language: csharp
 solution: RedPoint.sln
 mono: none
 dotnet: 5.0
-
 dist: xenial
 os: linux
 
+services:
+- docker
+
 install:
-  - dotnet restore
+- dotnet restore
 
 script:
-  - dotnet build
-  - dotnet test RedPoint.Tests/RedPoint.Tests.csproj
+- dotnet build
+- dotnet test RedPoint.Tests/RedPoint.Tests.csproj
+
+after_script:
+  - docker-compose up
+
+deploy:
+  provider: script
+  script: bash docker_push
+  on:
+    branch: master
+
+env:
+  - DOCKER_USERNAME=arkko002
+  global:
+    secure: B3rH831fL/lgtcEFaaWWGIrmzAv5L3sF72hOvk/OnVQGWBOIoILXu7bRtt36GrpMMy3MIPFKnxwvH9NR+J5qVpyGfkRgusbptnNR6skWF1vZi8E35t1DPMAULC6l3VGlC9K6D+zAg72Lf0eDkLZFrv/avmiYAgiedD8HldEIHPEqg7i3JECOBJtuAWC94TWfxgekcjQGVMxzo+YhaH1skLxb95z43LELDkXnw7PLUZT9lbywuIqQNEiU2dPuM64Hcuf9KoMSzFZvOvPQ9dTBKvHVtZx+2QjmHL3cLeyeA8bwI+N2E86E6XsUA7f4wfc1/YI4u399hg2LBM8sYCZ6LIe3xewpQTsCsNewsU/2xRBwMcnBxIcNUq8OB+pZKElyvxFS3LKZCgfK5XnbhAuRruiKxgenSK5gt9DIQoEwPuFZHv0f9bNILwkH94lobyuAVA9cdtGMQJ2lSN+ng4GwFZUGOJbzKtp5FA9d2A2bxRw0EBB1ThcuW/sCiQ6neuFuRoYmhIoxtq1SQ0znJ5nC+ltkJ/8KhHu0Obz4U2j4GsDi/Wor9xq4nwAQj4saOidmbC2OcI+4wLyehkXC+bi65U/vqh4go3Njt85pY3dSMlqGEbKBVKvYTMdifvkoADuBOftrvm/g0iNCxiFbt9mJ82mqpByf1+cA43Xb3/JuNZA=
