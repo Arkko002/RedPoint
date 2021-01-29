@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using NLog;
 using RedPoint.Chat.Exceptions.Security;
 using RedPoint.Chat.Models.Chat;
-using RedPoint.Chat.Models.Errors;
 
 namespace RedPoint.Chat.Services.Security
 {
