@@ -35,10 +35,19 @@ namespace RedPoint.Account.Controllers
 
         [HttpPost]
         [Authorize]
-        //TODO
-        public async Task<object> Delete([FromBody] UserLoginDto model)
+        public async Task<IActionResult> Update([FromBody] UserUpdateDto model)
         {
-            return await _accountService.Delete(model);
+            await _accountService.Update(model);
+            return Ok();
+        }
+        
+        
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Delete([FromBody] UserLoginDto model)
+        {
+            await _accountService.Delete(model);
+            return Ok();
         }
     }
 }

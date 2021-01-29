@@ -19,8 +19,10 @@ namespace RedPoint.Account.Services.Security
         /// <summary>
         /// Performs internal check of user's login request.
         /// </summary>
-        /// <param name="requestDto"></param>
+        /// <param name="model"></param>
         /// <returns>AccountError object with error details. AccountErrorType is set to NoError on valid request.</returns>
-        Task IsLoginRequestValid(UserLoginDto requestDto);
+        Task IsLoginRequestValid(UserLoginDto model);
+
+        Task IsUpdateRequestValid(UserUpdateDto model);
     }
 }

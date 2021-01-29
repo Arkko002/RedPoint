@@ -52,10 +52,18 @@ namespace RedPoint.Account.Services
             return _tokenGenerator.GenerateToken(model.Username, appUser);
         }
 
-        //TODO
-        public Task<bool> Delete(UserLoginDto model)
+        public Task Update(UserUpdateDto model)
         {
             throw new NotImplementedException();
         }
+
+        public async Task Delete(UserLoginDto model)
+        {
+            await _requestValidator.IsLoginRequestValid(model);
+
+            var user = await _userManager.FindByNameAsync(model.Username);
+            await _userManager.DeleteAsync(user);
+        }
+
     }
 }

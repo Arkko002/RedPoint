@@ -21,6 +21,9 @@ namespace RedPoint.Account.Services
         /// <param name="model"></param>
         /// <returns>JWT token on successful register.</returns>
         Task<string> Register(UserRegisterDto model);
-        Task<bool> Delete(UserLoginDto model);
+
+        Task Update(UserUpdateDto model);
+        
+        Task Delete(UserLoginDto model);
     }
 }

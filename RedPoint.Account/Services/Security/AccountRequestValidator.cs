@@ -46,6 +46,11 @@ namespace RedPoint.Account.Services.Security
             }
         }
 
+        public Task IsUpdateRequestValid(UserUpdateDto model)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public async Task IsRegisterRequestValid(UserRegisterDto model)
         {

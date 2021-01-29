@@ -21,8 +21,7 @@ namespace RedPoint.Tests.Account.Controllers
         [Fact]
         public void Delete_ShouldCallDeleteService()
         {
-            _service.Setup(x => x.Delete(It.IsAny<UserLoginDto>()))
-                .ReturnsAsync(true);
+            _service.Setup(x => x.Delete(It.IsAny<UserLoginDto>()));
 
             var returnValue = _controller.Delete(new UserLoginDto {Username = "test", Password = "test"}).Result;
 
