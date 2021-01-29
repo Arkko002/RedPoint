@@ -1,7 +1,6 @@
-using NLog;
 using RedPoint.Chat.Data;
+using RedPoint.Chat.Exceptions;
 using RedPoint.Chat.Models.Chat;
-using RedPoint.Chat.Models.Errors;
 using RedPoint.Data.Repository;
 
 namespace RedPoint.Chat.Services
@@ -13,20 +12,16 @@ namespace RedPoint.Chat.Services
     /// </summary>
     public class ChatEntityRepositoryProxy : IChatEntityRepositoryProxy
     {
-        private readonly IChatErrorHandler _errorHandler;
-
         public EntityRepository<Channel, ChatDbContext> ChannelRepository { get; }
         public EntityRepository<Message, ChatDbContext> MessageRepository { get; }
         public EntityRepository<Server, ChatDbContext> ServerRepository { get; }
         public ChatEntityRepositoryProxy(EntityRepository<Server, ChatDbContext> serverRepo,
             EntityRepository<Channel, ChatDbContext> channelRepo,
-            EntityRepository<Message, ChatDbContext> messageRepo,
-            IChatErrorHandler errorHandler)
+            EntityRepository<Message, ChatDbContext> messageRepo)
         {
             ChannelRepository = channelRepo;
             MessageRepository = messageRepo;
             ServerRepository = serverRepo;
-            _errorHandler = errorHandler;
         }
         
         /// <summary>
@@ -41,12 +36,7 @@ namespace RedPoint.Chat.Services
 
             if (server == null)
             {
-                var chatError = new ChatError(ChatErrorType.ServerNotFound,
-                    requestingUser,
-                    LogLevel.Warn, 
-                    $"Non-existing server (ID: {serverId}) requested by {requestingUser.Id}");
-
-                _errorHandler.HandleChatError(chatError);
+                throw new EntityNotFoundException("Requested server was not found.", serverId);
             }
 
             return server;
@@ -64,12 +54,7 @@ namespace RedPoint.Chat.Services
 
             if (channel == null)
             {
-                var chatError = new ChatError(ChatErrorType.ChannelNotFound,
-                    requestingUser,
-                    LogLevel.Warn,
-                    $"Non-existing channel (ID: {channelId}) requested by {requestingUser.Id}");
-
-                _errorHandler.HandleChatError(chatError);
+                throw new EntityNotFoundException("Requested channel was not found.", channelId);
             }
 
             return channel;
@@ -87,12 +72,7 @@ namespace RedPoint.Chat.Services
 
             if (message == null)
             {
-                var chatError = new ChatError(ChatErrorType.MessageNotFound,
-                    requestingUser,
-                    LogLevel.Warn,
-                    $"Non-existing message (ID: {messageId}) requested by {requestingUser.Id}");
-
-                _errorHandler.HandleChatError(chatError);
+                throw new EntityNotFoundException("Requested message was not found.", messageId);
             }
 
             return message;

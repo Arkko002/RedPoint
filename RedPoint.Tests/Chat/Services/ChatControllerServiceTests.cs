@@ -26,7 +26,6 @@ namespace RedPoint.Tests.Chat.Services
                 null, null, null, null, null, null, null, null);
             _repoProxy = new Mock<IChatEntityRepositoryProxy>();
             _requestValidator = new Mock<IChatRequestValidator>();
-            var errorHandler = new Mock<IChatErrorHandler>();
             var httpContextAccessor = new Mock<IHttpContextAccessor>();
 
             var user = new ChatUser();
@@ -40,7 +39,7 @@ namespace RedPoint.Tests.Chat.Services
                 .ReturnsAsync(user);
 
             _service = new ChatControllerService(userManager.Object, _repoProxy.Object, _requestValidator.Object,
-                errorHandler.Object, httpContextAccessor.Object);
+                httpContextAccessor.Object);
         }
 
         [Fact]
@@ -78,9 +77,6 @@ namespace RedPoint.Tests.Chat.Services
                 .Returns(new Channel());
             _repoProxy.Setup(x => x.TryFindingServer(It.IsAny<int>(), It.IsAny<ChatUser>()))
                 .Returns(new Server());
-            _requestValidator.Setup(x => x.IsChannelRequestValid(It.IsAny<Channel>(), It.IsAny<Server>(),
-                    It.IsAny<ChatUser>(), It.IsAny<PermissionTypes>()))
-                .Returns(new ChatError(ChatErrorType.NoError));
 
             var mockFactory = new Mock<IChatDtoFactory<Message, MessageDto>>();
             mockFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Message>>()))
