@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using RedPoint.Account.Models.Account;
-using RedPoint.Account.Models.Errors;
 
 namespace RedPoint.Account.Services.Security
 {

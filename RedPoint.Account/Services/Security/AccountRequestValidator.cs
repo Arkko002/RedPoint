@@ -1,10 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using RedPoint.Account.Exceptions;
 using RedPoint.Account.Models.Account;
-using RedPoint.Account.Models.Errors;
 
 namespace RedPoint.Account.Services.Security
 {

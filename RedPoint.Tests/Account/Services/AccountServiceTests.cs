@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using RedPoint.Account.Models.Account;
-using RedPoint.Account.Models.Errors;
 using RedPoint.Account.Services;
 using RedPoint.Account.Services.Security;
 using Xunit;
@@ -45,9 +44,9 @@ namespace RedPoint.Tests.Account.Services
 
             _requestValidator = new Mock<IAccountRequestValidator>();
             _requestValidator.Setup(x => x.IsLoginRequestValid(It.IsAny<UserLoginDto>()))
-                .Returns(Task.FromResult(new AccountError(AccountErrorType.NoError)));
+                .Returns(Task.CompletedTask);
             _requestValidator.Setup(x => x.IsRegisterRequestValid(It.IsAny<UserRegisterDto>()))
-                .Returns(Task.FromResult(new AccountError(AccountErrorType.NoError)));
+                .Returns(Task.CompletedTask);
 
             _tokenGenerator = new Mock<ITokenGenerator>();
             _tokenGenerator.Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<IdentityUser>()))
