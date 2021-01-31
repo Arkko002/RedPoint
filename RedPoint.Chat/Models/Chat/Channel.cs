@@ -4,6 +4,7 @@ using RedPoint.Data.Repository;
 
 namespace RedPoint.Chat.Models.Chat
 {
+    //TODO!!! References to entities containing child entity, update DTOs, update factories
     /// <summary>
     /// Contains list of messages that were wrote in this channel.
     /// Can have separate permissions assigned per group basis.
@@ -11,7 +12,9 @@ namespace RedPoint.Chat.Models.Chat
     public class Channel : IEntity, IGroupEntity
     {
         public int Id { get; set; }
-        public HubGroupIdentifier HubGroupId { get; set; }
+        
+        public Server Server { get; }
+        public HubGroupIdentifier HubGroupId { get; }
 
         /// <summary>
         /// Name of the channel
@@ -24,8 +27,9 @@ namespace RedPoint.Chat.Models.Chat
         public List<Message> Messages { get; set; }
         public List<Group> Groups { get; set; }
         
-        public Channel()
+        public Channel(Server server)
         {
+            Server = server;
             HubGroupId = new HubGroupIdentifier();
             InitializeLists();
         }

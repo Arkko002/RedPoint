@@ -7,6 +7,8 @@ namespace RedPoint.Chat.Models.Chat.Dto
     public class ChannelIconDto : IDto
     {
         public int Id { get; set; }
+        
+        public int ServerId { get; set; }
         public HubGroupIdentifier HubGroupId { get; set; }
 
 

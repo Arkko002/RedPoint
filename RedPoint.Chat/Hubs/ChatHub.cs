@@ -1,5 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using RedPoint.Chat.Data;
+using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services;
 
@@ -18,12 +21,13 @@ namespace RedPoint.Chat.Hubs
         Task MessageDeleted(int messageId);
         Task ChannelDeleted(int channelId);
 
-        Task ChannelChanged(string channelUniqueId);
-        Task ServerChanged(string serverUniqueId);
+        Task ChannelChanged(string channelId);
+        Task ServerChanged(string serverId);
 
         Task JoinedServer(ServerIconDto serverIcon);
     }
 
+    //TODO Rework this with UniqueIDs generated with hashing
     /// <summary>
     /// Implements real-time chat functionality.
     /// </summary>
@@ -31,50 +35,63 @@ namespace RedPoint.Chat.Hubs
     {
         private readonly IChatHubService _chatService;
 
-        public ChatHub(IChatHubService chatService)
+        private readonly ChatEntityRepositoryProxy<Message, ChatDbContext> _messageRepo;
+        private readonly ChatEntityRepositoryProxy<Channel, ChatDbContext> _channelRepo;
+        private readonly ChatEntityRepositoryProxy<Server, ChatDbContext> _serverRepo;
+
+        public ChatHub(IChatHubService chatService,
+            ChatEntityRepositoryProxy<Message, ChatDbContext> messageRepo,
+            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
+            ChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo,
+            ChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
         {
             _chatService = chatService;
+            _messageRepo = messageRepo;
+            _channelRepo = channelRepo;
+            _serverRepo = serverRepo;
+            
+            _chatService.AssignChatUserFromToken((JwtSecurityToken)Context.Items["UserToken"], userRepo);
         }
 
         public Task AddServer(ServerIconDto serverIcon)
         {
-            _chatService.AddServer(serverIcon);
+            _chatService.AddServer(serverIcon, _serverRepo);
 
             Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId.IdString);
             return Clients.Group(serverIcon.HubGroupId.IdString).ServerAdded(serverIcon);
         }
 
-        public Task AddMessage(MessageDto message, string channelUniqueId, int channelId, int serverId)
+        public Task AddMessage(MessageDto message, string channelUniqueId)
         {
-            _chatService.AddMessage(channelId, serverId, message);
+            _chatService.AddMessage(message, _messageRepo, _channelRepo);
 
             return Clients.Group(channelUniqueId).MessageAdded(message);
         }
 
-        public Task AddChannel(ChannelIconDto channelIcon, string serverUniqueId, int serverId)
+        public Task AddChannel(ChannelIconDto channelIcon)
         {
-            _chatService.AddChannel(serverId, channelIcon);
+            _chatService.AddChannel(channelIcon, _channelRepo, _serverRepo);
 
             return Clients.Group(serverUniqueId).ChannelAdded(channelIcon);
         }
 
         public Task DeleteServer(int serverId, string serverGroupId)
         {
-            _chatService.DeleteServer(serverId);
+            _chatService.DeleteServer(serverId, _serverRepo);
 
             return Clients.Group(serverGroupId).ServerDeleted(serverId);
         }
 
-        public Task DeleteMessage(int messageId, int channelId, int serverId, string channelGroupId)
+        public Task DeleteMessage(int messageId, string channelGroupId)
         {
-            _chatService.DeleteMessage(messageId, channelId, serverId);
+            _chatService.DeleteMessage(messageId, _messageRepo);
 
             return Clients.Group(channelGroupId).MessageDeleted(messageId);
         }
 
-        public Task DeleteChannel(int channelId, int serverId, string serverGroupId)
+        public Task DeleteChannel(int channelId, string serverGroupId)
         {
-            _chatService.DeleteChannel(channelId, serverId);
+            _chatService.DeleteChannel(channelId, _channelRepo);
 
             return Clients.Group(serverGroupId).ChannelDeleted(channelId);
         }

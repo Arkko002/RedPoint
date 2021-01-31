@@ -1,6 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RedPoint.Chat.Data;
+using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 
@@ -14,10 +16,11 @@ namespace RedPoint.Chat.Controllers
     {
         private readonly IChatControllerService _chatService;
 
-        public ChatController(IChatControllerService chatService)
+        public ChatController(IChatControllerService chatService,
+            ChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
         {
             _chatService = chatService;
-            _chatService.AssignUserFromToken((JwtSecurityToken)HttpContext.Items["UserToken"]);
+            _chatService.AssignUserFromToken((JwtSecurityToken)HttpContext.Items["UserToken"], userRepo);
         }
 
         /// <summary>
@@ -44,9 +47,10 @@ namespace RedPoint.Chat.Controllers
         [HttpGet]
         [Route("chat/server/{serverId}")]
         public IActionResult GetServer(int serverId,
-            [FromServices] ServerDataDtoFactory dataDtoFactory)
+            [FromServices] ServerDataDtoFactory dataDtoFactory,
+            [FromServices] ChatEntityRepositoryProxy<Server, ChatDbContext> repo)
         {
-            var dto = _chatService.GetServerData(serverId, dataDtoFactory);
+            var dto = _chatService.GetServerData(serverId, dataDtoFactory, repo);
 
             return Ok(dto);
         }
@@ -55,15 +59,15 @@ namespace RedPoint.Chat.Controllers
         /// Gets messages from a given channel, on a given server.
         /// </summary>
         /// <param name="channelId">ID of the channel that is part of the server</param>
-        /// <param name="serverId">ID of the server</param>
         /// <param name="messageDtoFactory">Factory handling creation of MessageDto</param>
         /// <returns></returns>
         [HttpGet]
         [Route("chat/server/{serverId}/{channelId}")]
-        public IActionResult GetChannelMessages(int channelId, int serverId,
-            [FromServices] MessageDtoFactory messageDtoFactory)
+        public IActionResult GetChannelMessages(int channelId,
+            [FromServices] MessageDtoFactory messageDtoFactory,
+            [FromServices] ChatEntityRepositoryProxy<Channel, ChatDbContext> repo)
         {
-            var dto = _chatService.GetChannelMessages(channelId, serverId, messageDtoFactory);
+            var dto = _chatService.GetChannelMessages(channelId, messageDtoFactory, repo);
 
             return Ok(dto);
         }

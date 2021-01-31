@@ -4,16 +4,16 @@ namespace RedPoint.Chat.Exceptions
 {
     public class EntityNotFoundException : Exception
     {
-        public EntityNotFoundException(string? message, int requestedId) : base(message)
+        public EntityNotFoundException(string? message, object[] requestedId) : base(message)
         {
-            RequestedId = requestedId;
+            RequestedIds = requestedId;
         }
 
-        public EntityNotFoundException(string? message, Exception? innerException, int requestedId) : base(message, innerException)
+        public EntityNotFoundException(string? message, Exception? innerException, object[] requestedId) : base(message, innerException)
         {
-            RequestedId = requestedId;
+            RequestedIds = requestedId;
         }
 
-        public int RequestedId { get; }
+        public object[] RequestedIds { get; }
     }
 }

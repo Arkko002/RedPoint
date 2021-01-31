@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using RedPoint.Chat.Data;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Models.Errors;
@@ -17,22 +19,18 @@ namespace RedPoint.Chat.Services
     [Authorize]
     public class ChatControllerService : IChatControllerService
     {
-        private readonly IChatEntityRepositoryProxy _repoProxy;
         private readonly IChatRequestValidator _requestValidator;
 
         private ChatUser _user;
 
-        public ChatControllerService(IChatEntityRepositoryProxy repoProxy,
-            IChatRequestValidator requestValidator)
+        public ChatControllerService(IChatRequestValidator requestValidator)
         {
-            _repoProxy = repoProxy;
             _requestValidator = requestValidator;
         }
 
-        public void AssignUserFromToken(JwtSecurityToken userToken)
+        public void AssignUserFromToken(JwtSecurityToken userToken, ChatEntityRepositoryProxy<ChatUser, ChatDbContext> repoProxy)
         {
-            //TODO proper proxy
-            _user = _repoProxy.TryFindingUser(userToken.Id);
+            _user = repoProxy.Find(userToken.Id);
         }
 
         /// <inheritdoc/>
@@ -42,22 +40,24 @@ namespace RedPoint.Chat.Services
         }
 
         /// <inheritdoc/>
-        public ServerDataDto GetServerData(int serverId, IChatDtoFactory<Server, ServerDataDto> dtoFactory)
+        public ServerDataDto GetServerData(int serverId,
+            IChatDtoFactory<Server, ServerDataDto> dtoFactory,
+            ChatEntityRepositoryProxy<Server, ChatDbContext> repoProxy)
         {
-            var server = _repoProxy.TryFindingServer(serverId, _user);
+            var server = repoProxy.Find(serverId);
 
             //TODO validator, error handling
             return dtoFactory.CreateDto(server);
         }
 
         /// <inheritdoc/>
-        public List<MessageDto> GetChannelMessages(int channelId, int serverId,
-            IChatDtoFactory<Message, MessageDto> dtoFactory)
+        public List<MessageDto> GetChannelMessages(int channelId,
+            IChatDtoFactory<Message, MessageDto> dtoFactory,
+            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo)
         {
-            var channel = _repoProxy.TryFindingChannel(channelId, _user);
-            var server = _repoProxy.TryFindingServer(serverId, _user);
+            var channel = channelRepo.Find(channelId);
 
-            _requestValidator.IsChannelRequestValid(channel, server, _user, PermissionTypes.CanView);
+            _requestValidator.IsChannelRequestValid(channel, channel.Server, _user, PermissionTypes.CanView);
 
             //TODO Pagination, return 20-40 messages in one batch
             return dtoFactory.CreateDtoList(channel.Messages);

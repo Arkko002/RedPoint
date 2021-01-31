@@ -1,5 +1,6 @@
 ﻿using System;
 using RedPoint.Chat.Models.Chat.Dto;
+using RedPoint.Chat.Services;
 using RedPoint.Data.Repository;
 
 namespace RedPoint.Chat.Models.Chat
@@ -10,22 +11,28 @@ namespace RedPoint.Chat.Models.Chat
     /// </summary>
     public class Message : IEntity
     {
-        public Message()
-        {
-        }
-
-        public Message(MessageDto messageDto, ChatUser user)
-        {
-            DateTimePosted = DateTime.Parse(messageDto.DateTimePosted);
-            Text = messageDto.Text;
-            User = user;
-        }
-
+        
         public int Id { get; set; }
 
         public DateTime DateTimePosted { get; set; }
         public string Text { get; set; }
 
         public ChatUser User { get; set; }
+        
+        public Channel Channel { get; }
+
+        public Message(Channel channel)
+        {
+            Channel = channel;
+        }
+
+        public Message(MessageDto messageDto, ChatUser user)
+        {
+            DateTimePosted = DateTime.Parse(messageDto.DateTimePosted);
+            Text = messageDto.Text;
+            
+            User = user;
+        }
+
     }
 }

@@ -1,18 +1,13 @@
+using Microsoft.EntityFrameworkCore;
 using RedPoint.Chat.Data;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Data.Repository;
 
 namespace RedPoint.Chat.Services
 {
-    public interface IChatEntityRepositoryProxy
+    public interface IChatEntityRepositoryProxy<TEntity, TContext> : IRepository<TEntity>
+        where TEntity : class, IEntity 
+        where TContext: DbContext
     {
-        EntityRepository<Server, ChatDbContext> ServerRepository { get; }
-        EntityRepository<Channel, ChatDbContext> ChannelRepository { get; }
-        EntityRepository<Message, ChatDbContext> MessageRepository { get; }
-
-
-        Channel TryFindingChannel(int channelId, ChatUser requestingUser);
-        Message TryFindingMessage(int messageId, ChatUser requestingUser);
-        Server TryFindingServer(int serverId, ChatUser requestingUser);
     }
 }

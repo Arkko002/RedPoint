@@ -1,7 +1,7 @@
-using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using RedPoint.Chat.Data;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services.Security;
@@ -12,115 +12,89 @@ namespace RedPoint.Chat.Services
     /// <inheritdoc />
     public class ChatHubService : IChatHubService
     {
-        private readonly IChatEntityRepositoryProxy _repoProxy;
         private readonly IChatRequestValidator _requestValidator;
 
         private readonly EntityUnitOfWork _unitOfWork;
-        private readonly UserManager<ChatUser> _userManager;
 
         private ChatUser _user;
 
-        public ChatHubService(EntityUnitOfWork unitOfWork,
-            UserManager<ChatUser> userManager,
-            IChatEntityRepositoryProxy repoProxy,
-            IChatRequestValidator requestValidator,
-            IHttpContextAccessor httpContextAccessor)
+        public ChatHubService(EntityUnitOfWork unitOfWork, IChatRequestValidator requestValidator)
         {
             _unitOfWork = unitOfWork;
-            _userManager = userManager;
-            _repoProxy = repoProxy;
             _requestValidator = requestValidator;
-
-            AssignChatUser(httpContextAccessor.HttpContext.User).ConfigureAwait(false);
         }
         
-        private async Task AssignChatUser(ClaimsPrincipal user)
+        public void AssignChatUserFromToken(JwtSecurityToken token, ChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo)
         {
-            _user = await _userManager.GetUserAsync(user);
+            _user = repo.Find(token.Id);
         }
 
         /// <inheritdoc/> 
-        public void AddChannel(int serverId, ChannelIconDto channelIcon)
+        public void AddChannel(ChannelIconDto channelIcon,
+            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
+            ChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo)
         {
-            CheckServerRequest(serverId, PermissionTypes.CanManageChannels);
-
+            var server = serverRepo.Find(channelIcon.ServerId);
+            _requestValidator.IsServerRequestValid(server, _user, PermissionTypes.CanManageChannels);
+            
             var newChannel = new Channel(channelIcon);
 
-            _repoProxy.ChannelRepository.Add(newChannel);
+            channelRepo.Add(newChannel);
             _unitOfWork.Submit();
         }
 
         /// <inheritdoc/>
-        public void AddMessage(int channelId, int serverId, MessageDto message)
+        public void AddMessage(MessageDto message,
+            ChatEntityRepositoryProxy<Message, ChatDbContext> messageRepo,
+            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo)
         {
-            CheckChannelRequest(channelId, serverId, PermissionTypes.CanWrite);
+            var channel = channelRepo.Find(message.ChannelId);
+            _requestValidator.IsChannelRequestValid(channel, channel.Server, _user, PermissionTypes.CanWrite);
 
             var newMessage = new Message(message, _user);
 
-            _repoProxy.MessageRepository.Add(newMessage);
+            messageRepo.Add(newMessage);
             _unitOfWork.Submit();
         }
 
         /// <inheritdoc/>
-        public void AddServer(ServerIconDto serverIcon)
+        public void AddServer(ServerIconDto serverIcon, ChatEntityRepositoryProxy<Server, ChatDbContext> repo)
         {
             var newServer = new Server(serverIcon);
 
-            _repoProxy.ServerRepository.Add(newServer);
+            repo.Add(newServer);
             _unitOfWork.Submit();
         }
 
         /// <inheritdoc/>
-        public void DeleteChannel(int channelId, int serverId)
+        public void DeleteChannel(int channelId, ChatEntityRepositoryProxy<Channel, ChatDbContext> repo)
         {
-            CheckChannelRequest(channelId, serverId, PermissionTypes.CanManageChannels);
-
-            _repoProxy.ChannelRepository.Delete(_repoProxy.ChannelRepository.Find(channelId));
+            var channel = repo.Find(channelId);
+            _requestValidator.IsServerRequestValid(channel.Server, _user, PermissionTypes.CanManageChannels);
+            
+            repo.Delete(channel);
             _unitOfWork.Submit();
         }
-
+        
         /// <inheritdoc/> 
-        public void DeleteServer(int serverId)
+        public void DeleteServer(int serverId, ChatEntityRepositoryProxy<Server, ChatDbContext> repo)
         {
-            CheckServerRequest(serverId, PermissionTypes.CanManageServer);
-
-            _repoProxy.ServerRepository.Delete(_repoProxy.ServerRepository.Find(serverId));
+            var server = repo.Find(serverId);
+            _requestValidator.IsServerRequestValid(server, _user, PermissionTypes.CanManageServer);
+                
+            repo.Delete(repo.Find(serverId));
             _unitOfWork.Submit();
         }
         
         /// <inheritdoc />>
-        public void DeleteMessage(int messageId, int channelId, int serverId)
+        public void DeleteMessage(int messageId, ChatEntityRepositoryProxy<Message, ChatDbContext> repo)
         {
-            CheckChannelRequest(channelId, serverId, PermissionTypes.CanManageChannels);
 
-            _repoProxy.MessageRepository.Delete(_repoProxy.MessageRepository.Find(messageId));
+            var message = repo.Find(messageId);
+            _requestValidator.IsChannelRequestValid(message.Channel, message.Channel.Server, _user, PermissionTypes.CanWrite);
+            
+            repo.Delete(message);
             _unitOfWork.Submit();
-        }
-
-        /// <summary>
-        /// Checks if user has enough permissions to perform requested server action.
-        /// </summary>
-        /// <param name="serverId">ID of the requested server.</param>
-        /// <param name="permissionTypes">Type of permission to be checked for.</param>
-        /// <returns></returns>
-        private void CheckServerRequest(int serverId, PermissionTypes permissionTypes)
-        {
-            var server = _repoProxy.TryFindingServer(serverId, _user);
-            _requestValidator.IsServerRequestValid(server, _user, permissionTypes);
-        }
-
-        /// <summary>
-        /// Check if user has enough permissions to perform requested channel action.
-        /// </summary>
-        /// <param name="channelId">ID of the requested channel.</param>
-        /// <param name="serverId">ID of the server containing the channel.</param>
-        /// <param name="permissionTypes">Type of permission to be checked for.</param>
-        /// <returns></returns>
-        private void CheckChannelRequest(int channelId, int serverId, PermissionTypes permissionTypes)
-        {
-            var channel = _repoProxy.TryFindingChannel(channelId, _user);
-            var server = _repoProxy.TryFindingServer(serverId, _user);
-            _requestValidator.IsChannelRequestValid(channel, server, _user, permissionTypes);
         }
     }
 }
