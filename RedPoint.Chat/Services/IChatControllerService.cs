@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services.DtoFactories;
@@ -10,6 +11,12 @@ namespace RedPoint.Chat.Services
     /// </summary>
     public interface IChatControllerService
     {
+        /// <summary>
+        /// Finds and stores ChatUser of this session using claims provided in the JWT token.
+        /// </summary>
+        /// <param name="userToken"></param>
+        void AssignUserFromToken(JwtSecurityToken userToken);
+        
         /// <summary>
         /// Gets a list of server DTOs stripped of internal data that current user is part of.
         /// </summary>

@@ -9,9 +9,9 @@ using Microsoft.Extensions.Hosting;
 using RedPoint.Account.Services;
 using RedPoint.Account.Services.Security;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
@@ -65,27 +65,35 @@ namespace RedPoint.Account
                 options.User.RequireUniqueEmail = false;
             });
 
+
+            var rsa = RSA.Create();
+            rsa.ImportRSAPublicKey(Convert.FromBase64String(Configuration["Jwt:PublicKey"]),
+                out int _);
+            services.AddSingleton(_ => new RsaSecurityKey(rsa));
+            
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            }).AddJwtBearer("Asymmetric",options =>
             {
+                SecurityKey signingKey = new RsaSecurityKey(rsa);
+                
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
+                
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    RequireExpirationTime = true,
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = Configuration["Jwt:Issuer"],
                     ValidAudience = Configuration["Jwt:Issuer"],
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])), // TODO!!! set proper key
+                    IssuerSigningKey = signingKey,
                     ClockSkew = TimeSpan.Zero
                 };
             });

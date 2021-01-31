@@ -11,6 +11,7 @@ namespace RedPoint.Chat.Data
         {
         }
 
+        public DbSet<ChatUser> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Channel> Channels { get; set; }
         public DbSet<Group> Groups { get; set; }

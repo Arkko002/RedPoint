@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using RedPoint.Chat.Models.Chat;
@@ -12,36 +14,25 @@ using RedPoint.Chat.Services.Security;
 namespace RedPoint.Chat.Services
 {
     /// <inheritdoc cref="IChatControllerService"/>
+    [Authorize]
     public class ChatControllerService : IChatControllerService
     {
         private readonly IChatEntityRepositoryProxy _repoProxy;
         private readonly IChatRequestValidator _requestValidator;
 
-        private readonly UserManager<ChatUser> _userManager;
-
-        /// <summary>
-        /// Current user is provided by <c>UserManager</c> on <c>ChatControllerService</c> creation.
-        /// </summary>
         private ChatUser _user;
 
-        //TODO Remove usage of UserManager from Chat Area, move all account activity including verification of
-        //users to Account Area
-        public ChatControllerService(UserManager<ChatUser> userManager,
-            IChatEntityRepositoryProxy repoProxy,
-            IChatRequestValidator requestValidator,
-            IHttpContextAccessor httpContextAccessor)
+        public ChatControllerService(IChatEntityRepositoryProxy repoProxy,
+            IChatRequestValidator requestValidator)
         {
-            _userManager = userManager;
             _repoProxy = repoProxy;
             _requestValidator = requestValidator;
-            
-
-            AssignChatUser(httpContextAccessor.HttpContext.User).ConfigureAwait(false);
         }
 
-        private async Task AssignChatUser(ClaimsPrincipal user)
+        public void AssignUserFromToken(JwtSecurityToken userToken)
         {
-            _user = await _userManager.GetUserAsync(user);
+            //TODO proper proxy
+            _user = _repoProxy.TryFindingUser(userToken.Id);
         }
 
         /// <inheritdoc/>

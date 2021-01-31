@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -34,11 +35,15 @@ namespace RedPoint.Middleware
         private void AttachUserToContext(HttpContext context, string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            
+            RSA rsa = RSA.Create();
+            rsa.ImportRSAPublicKey(Convert.FromBase64String(_configuration["Jwt:PublicKey"]), out int _);
+            
             tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
+                
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = new RsaSecurityKey(rsa),
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ClockSkew = TimeSpan.Zero

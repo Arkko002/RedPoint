@@ -1,11 +1,15 @@
 using System;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using RedPoint.Chat.Data;
 using RedPoint.Chat.Hubs;
@@ -41,7 +45,7 @@ namespace RedPoint.Chat
                     .EnableDetailedErrors()
                     .EnableSensitiveDataLogging()
             );
-
+            
             services.AddScoped(typeof(IChatDtoFactory<Channel, ChannelIconDto>), typeof(ChannelIconDtoFactory));
             services.AddScoped(typeof(IChatDtoFactory<Channel, ChannelDataDto>), typeof(ChannelDataDtoFactory));
 
@@ -74,11 +78,10 @@ namespace RedPoint.Chat
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
             app.UseHttpsRedirection();
-
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseMiddleware<JwtVerificationMiddleware>();
 
             app.UseEndpoints(endpoints =>

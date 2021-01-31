@@ -7,7 +7,6 @@ using RedPoint.Account.Models.Account;
 
 namespace RedPoint.Account.Services
 {
-    //TODO Add Update, Delete actions
     /// <inheritdoc/>
     public class AccountService : IAccountService
     {

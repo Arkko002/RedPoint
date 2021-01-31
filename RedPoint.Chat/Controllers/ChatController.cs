@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
@@ -16,6 +17,7 @@ namespace RedPoint.Chat.Controllers
         public ChatController(IChatControllerService chatService)
         {
             _chatService = chatService;
+            _chatService.AssignUserFromToken((JwtSecurityToken)HttpContext.Items["UserToken"]);
         }
 
         /// <summary>
