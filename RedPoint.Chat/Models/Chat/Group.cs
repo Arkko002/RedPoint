@@ -11,7 +11,6 @@ namespace RedPoint.Chat.Models.Chat
     public class Group : IEntity
     {
         public int Id { get; set; }
-        public HubGroupIdentifier HubGroupId { get; set; }
 
         public string Name { get; set; }
         public Server Server { get; set; }
@@ -31,8 +30,6 @@ namespace RedPoint.Chat.Models.Chat
         
         public Group()
         {
-            HubGroupId = new HubGroupIdentifier();
-
             if (Name == "Default")
             {
                 IsDefaultGroup = false;

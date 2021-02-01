@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
+using System.Security.Cryptography;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Data.Repository;
 
@@ -14,16 +12,14 @@ namespace RedPoint.Chat.Models.Chat
     /// Contains lists of users, channels, and groups that are part of it.
     /// Can have an image assigned to it.
     /// </summary>
-    public class Server : IEntity, IGroupEntity
+    public class Server : IEntity, IGroupEntity, IHubGroupIdentifier
     {
         public int Id { get; set; }
-        public HubGroupIdentifier HubGroupId { get; set; }
+        public string GroupId { get; private set; }
 
 
         [Required] public string Name { get; set; }
-
         [Required] public string Description { get; set; }
-
         public byte[] Image { get; private set; }
 
         public List<ChatUser> Users { get; set; }
@@ -52,10 +48,27 @@ namespace RedPoint.Chat.Models.Chat
         
         private void InitializeVariables()
         {
-            HubGroupId = new HubGroupIdentifier();
+            GroupId = ComputeHash();
             Users = new List<ChatUser>();
             Groups = new List<Group>();
             Channels = new List<Channel>();
+        }
+        
+        public string ComputeHash()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(Id);
+                    writer.Write(Name);
+                }
+                
+                HashAlgorithm algo = SHA256.Create();
+                var hash = algo.ComputeHash(ms.ToArray());
+
+                return System.Text.Encoding.UTF8.GetString(hash);
+            }
         }
     }
 }

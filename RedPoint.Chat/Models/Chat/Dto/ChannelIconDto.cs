@@ -9,7 +9,7 @@ namespace RedPoint.Chat.Models.Chat.Dto
         public int Id { get; set; }
         
         public int ServerId { get; set; }
-        public HubGroupIdentifier HubGroupId { get; set; }
+        public string HubGroupId { get; set; }
 
 
         public string Name { get; set; }

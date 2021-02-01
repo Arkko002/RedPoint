@@ -54,8 +54,8 @@ namespace RedPoint.Chat.Hubs
         {
             _chatService.AddServer(serverIcon, _serverRepo);
 
-            Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId.IdString);
-            return Clients.Group(serverIcon.HubGroupId.IdString).ServerAdded(serverIcon);
+            Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId);
+            return Clients.Group(serverIcon.HubGroupId).ServerAdded(serverIcon);
         }
 
         public Task AddMessage(MessageDto message, string channelUniqueId)
@@ -69,14 +69,14 @@ namespace RedPoint.Chat.Hubs
         {
             _chatService.AddChannel(channelIcon, _channelRepo, _serverRepo);
 
-            //TODO asd
-            return Clients.Group("asd").ChannelAdded(channelIcon);
+            Groups.AddToGroupAsync(Context.ConnectionId, channelIcon.HubGroupId);
+            return Clients.Group(channelIcon.HubGroupId).ChannelAdded(channelIcon);
         }
 
         public Task DeleteServer(int serverId, string serverGroupId)
         {
             _chatService.DeleteServer(serverId, _serverRepo);
-
+            
             return Clients.Group(serverGroupId).ServerDeleted(serverId);
         }
 
@@ -112,7 +112,7 @@ namespace RedPoint.Chat.Hubs
 
         public Task JoinServer(ServerIconDto serverIcon)
         {
-            Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId.IdString);
+            Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId);
 
             return Clients.Caller.JoinedServer(serverIcon);
         }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Security.Cryptography;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Data.Repository;
 
@@ -9,12 +11,12 @@ namespace RedPoint.Chat.Models.Chat
     /// Contains list of messages that were wrote in this channel.
     /// Can have separate permissions assigned per group basis.
     /// </summary>
-    public class Channel : IEntity, IGroupEntity
+    public class Channel : IEntity, IGroupEntity, IHubGroupIdentifier
     {
         public int Id { get; set; }
+        public string GroupId { get; private set; }
         
         public Server Server { get; }
-        public HubGroupIdentifier HubGroupId { get; }
 
         /// <summary>
         /// Name of the channel
@@ -30,7 +32,6 @@ namespace RedPoint.Chat.Models.Chat
         public Channel(Server server)
         {
             Server = server;
-            HubGroupId = new HubGroupIdentifier();
             InitializeLists();
         }
 
@@ -40,13 +41,30 @@ namespace RedPoint.Chat.Models.Chat
 
             Name = channelIconDto.Name;
             Description = channelIconDto.Description;
-            HubGroupId = channelIconDto.HubGroupId;
         }
 
         private void InitializeLists()
         {
+            GroupId = ComputeHash();
             Messages = new List<Message>();
             Groups = new List<Group>();
+        }
+
+        public string ComputeHash()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(Id);
+                    writer.Write(Name);
+                }
+                
+                HashAlgorithm algo = SHA256.Create();
+                var hash = algo.ComputeHash(ms.ToArray());
+
+                return System.Text.Encoding.UTF8.GetString(hash);
+            }
         }
     }
 }
