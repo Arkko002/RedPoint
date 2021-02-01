@@ -11,48 +11,46 @@ namespace RedPoint.Chat.Services
     public interface IChatHubService
     {
 
-        void AssignChatUserFromToken(JwtSecurityToken token, ChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo);
-        
         /// <summary>
         /// Creates a server from provided <c>ServerIconDto</c> and adds it to the server repository. 
         /// </summary>
         /// <param name="serverIcon"></param>
-        void AddServer(ServerIconDto serverIcon, ChatEntityRepositoryProxy<Server, ChatDbContext> repo);
+        void AddServer(ServerIconDto serverIcon, IChatEntityRepositoryProxy<Server, ChatDbContext> repo);
         
         /// <summary>
         /// Creates a message from provided <c>MessageDto</c> and adds it to the message repository.
         /// </summary>
         /// <param name="message"></param>
         void AddMessage(MessageDto message,
-            ChatEntityRepositoryProxy<Message, ChatDbContext> messageRepo,
-            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo);
+            IChatEntityRepositoryProxy<Message, ChatDbContext> messageRepo,
+            IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo);
 
         /// <summary>
         /// Creates a channel from provided <c>ChannelIconDto</c> and adds it to the channel repository. 
         /// </summary>
         /// <param name="channelIcon"></param>
         void AddChannel(ChannelIconDto channelIcon,
-            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
-            ChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo);
+            IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
+            IChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo);
 
         
         /// <summary>
         /// Deletes the channel from channel repository.
         /// </summary>
         /// <param name="channelId">ID of the deleted channel.</param>
-        void DeleteChannel(int channelId, ChatEntityRepositoryProxy<Channel, ChatDbContext> repo);
+        void DeleteChannel(int channelId, IChatEntityRepositoryProxy<Channel, ChatDbContext> repo);
         
         /// <summary>
         /// Deletes the server from server repository.
         /// </summary>
         /// <param name="serverId">ID of the deleted server.</param>
-        void DeleteServer(int serverId, ChatEntityRepositoryProxy<Server, ChatDbContext> repo);
+        void DeleteServer(int serverId, IChatEntityRepositoryProxy<Server, ChatDbContext> repo);
         
         
         /// <summary>
         /// Deletes the message from message repository.
         /// </summary>
         /// <param name="messageId">ID of the deleted message.</param>
-        void DeleteMessage(int messageId, ChatEntityRepositoryProxy<Message, ChatDbContext> repo);
+        void DeleteMessage(int messageId, IChatEntityRepositoryProxy<Message, ChatDbContext> repo);
     }
 }

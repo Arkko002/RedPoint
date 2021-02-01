@@ -16,11 +16,9 @@ namespace RedPoint.Chat.Controllers
     {
         private readonly IChatControllerService _chatService;
 
-        public ChatController(IChatControllerService chatService,
-            ChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
+        public ChatController(IChatControllerService chatService)
         {
             _chatService = chatService;
-            _chatService.AssignUserFromToken((JwtSecurityToken)HttpContext.Items["UserToken"], userRepo);
         }
 
         /// <summary>

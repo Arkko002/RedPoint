@@ -35,22 +35,19 @@ namespace RedPoint.Chat.Hubs
     {
         private readonly IChatHubService _chatService;
 
-        private readonly ChatEntityRepositoryProxy<Message, ChatDbContext> _messageRepo;
-        private readonly ChatEntityRepositoryProxy<Channel, ChatDbContext> _channelRepo;
-        private readonly ChatEntityRepositoryProxy<Server, ChatDbContext> _serverRepo;
+        private readonly IChatEntityRepositoryProxy<Message, ChatDbContext> _messageRepo;
+        private readonly IChatEntityRepositoryProxy<Channel, ChatDbContext> _channelRepo;
+        private readonly IChatEntityRepositoryProxy<Server, ChatDbContext> _serverRepo;
 
         public ChatHub(IChatHubService chatService,
-            ChatEntityRepositoryProxy<Message, ChatDbContext> messageRepo,
-            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
-            ChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo,
-            ChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
+            IChatEntityRepositoryProxy<Message, ChatDbContext> messageRepo,
+            IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
+            IChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo)
         {
             _chatService = chatService;
             _messageRepo = messageRepo;
             _channelRepo = channelRepo;
             _serverRepo = serverRepo;
-            
-            _chatService.AssignChatUserFromToken((JwtSecurityToken)Context.Items["UserToken"], userRepo);
         }
 
         public Task AddServer(ServerIconDto serverIcon)
@@ -72,7 +69,8 @@ namespace RedPoint.Chat.Hubs
         {
             _chatService.AddChannel(channelIcon, _channelRepo, _serverRepo);
 
-            return Clients.Group(serverUniqueId).ChannelAdded(channelIcon);
+            //TODO asd
+            return Clients.Group("asd").ChannelAdded(channelIcon);
         }
 
         public Task DeleteServer(int serverId, string serverGroupId)

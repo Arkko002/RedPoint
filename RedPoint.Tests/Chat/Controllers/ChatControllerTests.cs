@@ -1,6 +1,10 @@
+using System.Web;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using RedPoint.Chat.Controllers;
+using RedPoint.Chat.Data;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services;
@@ -17,6 +21,11 @@ namespace RedPoint.Tests.Chat.Controllers
 
         public ChatControllerTests()
         {
+            var userRepo = new Mock<IChatEntityRepositoryProxy<ChatUser, ChatDbContext>>();
+            userRepo.Setup(x => x.Find(It.IsAny<object[]>()))
+                .Returns(new ChatUser());
+
+            
             _service = new Mock<IChatControllerService>();
             _controller = new ChatController(_service.Object);
         }
@@ -25,12 +34,16 @@ namespace RedPoint.Tests.Chat.Controllers
         public void GetChannelMessages_ShouldCallService()
         {
             var mockList = new List<MessageDto>();
-            _service.Setup(x => x.GetChannelMessages(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<MessageDtoFactory>()))
+            _service.Setup(x => x.GetChannelMessages(It.IsAny<int>(),
+                    It.IsAny<IChatDtoFactory<Message,MessageDto>>(),
+                    It.IsAny<ChatEntityRepositoryProxy<Channel,ChatDbContext>>()))
                 .Returns(mockList);
 
-            _controller.GetChannelMessages(1, 1, new MessageDtoFactory());
+            _controller.GetChannelMessages(1, null, null);
 
-            _service.Verify(x => x.GetChannelMessages(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<MessageDtoFactory>()),
+            _service.Verify(x => x.GetChannelMessages(It.IsAny<int>(),
+                    It.IsAny<IChatDtoFactory<Message,MessageDto>>(),
+                    It.IsAny<ChatEntityRepositoryProxy<Channel,ChatDbContext>>()),
                 Times.Once);
         }
 
@@ -38,12 +51,14 @@ namespace RedPoint.Tests.Chat.Controllers
         public void GetServers_ShouldCallService()
         {
             var mockData = new ServerDataDto();
-            _service.Setup(x => x.GetServerData(It.IsAny<int>(), It.IsAny<IChatDtoFactory<Server, ServerDataDto>>()))
+            _service.Setup(x => x.GetServerData(It.IsAny<int>(), It.IsAny<IChatDtoFactory<Server,ServerDataDto>>(), It.IsAny<ChatEntityRepositoryProxy<Server,ChatDbContext>>()))
                 .Returns(mockData);
 
-            _controller.GetServer(1, new ServerDataDtoFactory(new ChannelIconDtoFactory(), new UserDtoFactory()));
+            _controller.GetServer(1, null, null);
 
-            _service.Verify(x => x.GetServerData(It.IsAny<int>(), It.IsAny<IChatDtoFactory<Server, ServerDataDto>>()),
+            _service.Verify(x => x.GetServerData(It.IsAny<int>(),
+                    It.IsAny<IChatDtoFactory<Server,ServerDataDto>>(),
+                    It.IsAny<ChatEntityRepositoryProxy<Server,ChatDbContext>>()),
                 Times.Once);
         }
 
@@ -53,8 +68,8 @@ namespace RedPoint.Tests.Chat.Controllers
             var mockList = new List<ServerIconDto>();
             _service.Setup(x => x.GetUserServers(It.IsAny<IChatDtoFactory<Server, ServerIconDto>>()))
                 .Returns(mockList);
-
-            var returnValue = _controller.GetUserServers(new ServerIconDtoFactory());
+            
+            _controller.GetUserServers(null);
 
             _service.Verify(x => x.GetUserServers(It.IsAny<IChatDtoFactory<Server, ServerIconDto>>()), Times.Once);
         }

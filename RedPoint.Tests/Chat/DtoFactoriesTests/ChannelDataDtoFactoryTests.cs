@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Moq;
 using RedPoint.Chat.Models.Chat;
@@ -13,29 +14,37 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 
         public ChannelDataDtoFactoryTests()
         {
-            var mockMessageFactory = new Mock<IChatDtoFactory<Message, MessageDto>>();
-
-            var messageList = new List<MessageDto> {new() {Text = "CALLED"}};
-            mockMessageFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Message>>()))
-                .Returns(messageList);
-
-
-            _factory = new ChannelDataDtoFactory(mockMessageFactory.Object);
+            var messageFactory = new MessageDtoFactory();
+            
+            _factory = new ChannelDataDtoFactory(messageFactory);
         }
 
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
         {
-            var channel = new Channel
+            var server = new Server();
+            var channel = new Channel(server)
             {
                 Id = 1234
+            };
+
+            channel.Messages = new List<Message>()
+            {
+                new Message(channel)
+                {
+                    Id = 1,
+                    DateTimePosted = DateTime.Now,
+                    Text = "test",
+                    User = new ChatUser()
+                }
             };
 
             var dto = _factory.CreateDto(channel);
 
             Assert.IsType<ChannelDataDto>(dto);
             Assert.True(dto.Id == 1234);
-            Assert.True(dto.Messages[0].Text == "CALLED");
+            Assert.True(dto.Messages[0].ChannelId == channel.Id);
+            Assert.Same(server, channel.Server);
         }
 
         [Fact]
@@ -43,11 +52,11 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var list = new List<Channel>
             {
-                new()
+                new(new Server())
                 {
                     Id = 1234
                 },
-                new()
+                new(new Server())
                 {
                     Id = 12345
                 }

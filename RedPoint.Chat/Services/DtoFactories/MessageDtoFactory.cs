@@ -18,7 +18,8 @@ namespace RedPoint.Chat.Services.DtoFactories
                 Id = sourceObject.Id,
                 DateTimePosted = sourceObject.DateTimePosted.ToString(CultureInfo.InvariantCulture),
                 Text = sourceObject.Text,
-                UserId = sourceObject.User.Id
+                UserId = sourceObject.User.Id,
+                ChannelId = sourceObject.Channel.Id
             };
 
             return messageDto;

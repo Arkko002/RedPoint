@@ -29,7 +29,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             server.Users.Add(user);
             server.Groups = new List<Group> { group };
 
-            var channel = new Channel();
+            var channel = new Channel(server);
             server.Channels.Add(channel);
             channel.Groups = new List<Group> { group };
 
@@ -59,7 +59,7 @@ namespace RedPoint.Tests.Chat.Services.Security
         {
             var user = new ChatUser();
             var server = new Server();
-            var channel = new Channel();
+            var channel = new Channel(server);
 
             Assert.Throws<UserMembershipException>(() =>
                 _validator.Object.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView));
@@ -88,7 +88,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             server.Users.Add(user);
             server.Groups = new List<Group> { group };
 
-            var channel = new Channel();
+            var channel = new Channel(server);
             server.Channels.Add(channel);
             channel.Groups = new List<Group> { group };
 

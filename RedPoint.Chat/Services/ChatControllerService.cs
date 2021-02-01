@@ -23,14 +23,13 @@ namespace RedPoint.Chat.Services
 
         private ChatUser _user;
 
-        public ChatControllerService(IChatRequestValidator requestValidator)
+        public ChatControllerService(IChatRequestValidator requestValidator,
+            IHttpContextAccessor httpContextAccessor,
+            IChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
         {
             _requestValidator = requestValidator;
-        }
-
-        public void AssignUserFromToken(JwtSecurityToken userToken, ChatEntityRepositoryProxy<ChatUser, ChatDbContext> repoProxy)
-        {
-            _user = repoProxy.Find(userToken.Id);
+            var token = (JwtSecurityToken) httpContextAccessor.HttpContext.Items["UserToken"];
+            _user = userRepo.Find(token.Id);
         }
 
         /// <inheritdoc/>
@@ -42,7 +41,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/>
         public ServerDataDto GetServerData(int serverId,
             IChatDtoFactory<Server, ServerDataDto> dtoFactory,
-            ChatEntityRepositoryProxy<Server, ChatDbContext> repoProxy)
+            IChatEntityRepositoryProxy<Server, ChatDbContext> repoProxy)
         {
             var server = repoProxy.Find(serverId);
 
@@ -53,7 +52,7 @@ namespace RedPoint.Chat.Services
         /// <inheritdoc/>
         public List<MessageDto> GetChannelMessages(int channelId,
             IChatDtoFactory<Message, MessageDto> dtoFactory,
-            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo)
+            IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo)
         {
             var channel = channelRepo.Find(channelId);
 

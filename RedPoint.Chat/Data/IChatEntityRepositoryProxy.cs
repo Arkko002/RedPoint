@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using RedPoint.Chat.Data;
-using RedPoint.Chat.Models.Chat;
 using RedPoint.Data.Repository;
 
-namespace RedPoint.Chat.Services
+namespace RedPoint.Chat.Data
 {
     public interface IChatEntityRepositoryProxy<TEntity, TContext> : IRepository<TEntity>
         where TEntity : class, IEntity 

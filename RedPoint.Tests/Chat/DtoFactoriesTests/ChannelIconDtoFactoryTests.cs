@@ -18,7 +18,8 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
         {
-            var channel = new Channel
+            var server = new Server();
+            var channel = new Channel(server)
             {
                 Id = 1234,
                 Name = "testName",
@@ -31,6 +32,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
             Assert.True(dto.Id == 1234);
             Assert.True(dto.Name == "testName");
             Assert.True(dto.Description == "testDescription");
+            Assert.Same(server, channel.Server);
         }
 
         [Fact]
@@ -38,13 +40,13 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var list = new List<Channel>
             {
-                new()
+                new(new Server())
                 {
                     Id = 1234,
                     Name = "testName2",
                     Description = "testDescription2"
                 },
-                new()
+                new(new Server())
                 {
                     Id = 12345,
                     Name = "testName",

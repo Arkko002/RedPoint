@@ -15,12 +15,6 @@ namespace RedPoint.Chat.Services
     public interface IChatControllerService
     {
         /// <summary>
-        /// Finds and stores ChatUser of this session using claims provided in the JWT token.
-        /// </summary>
-        /// <param name="userToken"></param>
-        void AssignUserFromToken(JwtSecurityToken userToken, ChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo);
-        
-        /// <summary>
         /// Gets a list of server DTOs stripped of internal data that current user is part of.
         /// </summary>
         /// <param name="dtoFactory">Factory handling creation of <c>ServerIconDto</c></param>
@@ -33,7 +27,7 @@ namespace RedPoint.Chat.Services
         /// <param name="dtoFactory">Factory handling creation of <c>ServerDataDto</c></param>
         ServerDataDto GetServerData(int serverId,
             IChatDtoFactory<Server, ServerDataDto> dtoFactory,
-            ChatEntityRepositoryProxy<Server, ChatDbContext> repo);
+            IChatEntityRepositoryProxy<Server, ChatDbContext> repo);
 
         /// <summary>
         /// Gets a list of message DTOs from a channel with provided ID.
@@ -43,6 +37,6 @@ namespace RedPoint.Chat.Services
         /// <param name="dtoFactory">Factory handling creation of <c>MessageDto</c></param>
         List<MessageDto> GetChannelMessages(int channelId,
             IChatDtoFactory<Message, MessageDto> dtoFactory,
-            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo);
+            IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo);
     }
 }

@@ -1,11 +1,9 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using RedPoint.Chat.Data;
 using RedPoint.Chat.Exceptions;
-using RedPoint.Chat.Models.Chat;
 using RedPoint.Data.Repository;
 
-namespace RedPoint.Chat.Services
+namespace RedPoint.Chat.Data
 {
     //TODO Improper implementation of proxy pattern
     /// <summary>

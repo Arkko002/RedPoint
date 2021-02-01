@@ -32,7 +32,9 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
                 Id = "testId"
             };
 
-            var msg = new Message
+            var channel = new Channel(new Server());
+            
+            var msg = new Message(channel)
             {
                 Id = 123,
                 DateTimePosted = DateTime.Today,
@@ -47,6 +49,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
             Assert.True(returnDto.DateTimePosted == DateTime.Today.ToString(CultureInfo.InvariantCulture));
             Assert.True(returnDto.Text == "test");
             Assert.True(returnDto.UserId == user.Id);
+            Assert.True(returnDto.ChannelId == msg.Channel.Id);
         }
 
 
@@ -55,9 +58,9 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var msgList = new List<Message>
             {
-                new() {Id = 1, Text = "1", DateTimePosted = DateTime.Today, User = new ChatUser()},
-                new() {Id = 2, Text = "2", DateTimePosted = DateTime.Today, User = new ChatUser()},
-                new() {Id = 3, Text = "3", DateTimePosted = DateTime.Today, User = new ChatUser()}
+                new(new Channel(new Server())) {Id = 1, Text = "1", DateTimePosted = DateTime.Today, User = new ChatUser()},
+                new(new Channel(new Server())) {Id = 2, Text = "2", DateTimePosted = DateTime.Today, User = new ChatUser()},
+                new(new Channel(new Server())) {Id = 3, Text = "3", DateTimePosted = DateTime.Today, User = new ChatUser()}
             };
 
             var returnList = _factory.CreateDtoList(msgList);

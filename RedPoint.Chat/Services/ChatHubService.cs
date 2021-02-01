@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RedPoint.Chat.Data;
 using RedPoint.Chat.Models.Chat;
@@ -18,21 +19,22 @@ namespace RedPoint.Chat.Services
 
         private ChatUser _user;
 
-        public ChatHubService(EntityUnitOfWork unitOfWork, IChatRequestValidator requestValidator)
+        public ChatHubService(EntityUnitOfWork unitOfWork,
+            IChatRequestValidator requestValidator,
+            HttpContextAccessor contextAccessor,
+            IChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo)
         {
             _unitOfWork = unitOfWork;
             _requestValidator = requestValidator;
-        }
-        
-        public void AssignChatUserFromToken(JwtSecurityToken token, ChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo)
-        {
+
+            var token = (JwtSecurityToken)contextAccessor.HttpContext.Items["UserToken"];
             _user = repo.Find(token.Id);
         }
 
         /// <inheritdoc/> 
         public void AddChannel(ChannelIconDto channelIcon,
-            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
-            ChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo)
+            IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
+            IChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo)
         {
             var server = serverRepo.Find(channelIcon.ServerId);
             _requestValidator.IsServerRequestValid(server, _user, PermissionTypes.CanManageChannels);
@@ -45,8 +47,8 @@ namespace RedPoint.Chat.Services
 
         /// <inheritdoc/>
         public void AddMessage(MessageDto message,
-            ChatEntityRepositoryProxy<Message, ChatDbContext> messageRepo,
-            ChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo)
+            IChatEntityRepositoryProxy<Message, ChatDbContext> messageRepo,
+            IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo)
         {
             var channel = channelRepo.Find(message.ChannelId);
             _requestValidator.IsChannelRequestValid(channel, channel.Server, _user, PermissionTypes.CanWrite);
@@ -58,7 +60,7 @@ namespace RedPoint.Chat.Services
         }
 
         /// <inheritdoc/>
-        public void AddServer(ServerIconDto serverIcon, ChatEntityRepositoryProxy<Server, ChatDbContext> repo)
+        public void AddServer(ServerIconDto serverIcon, IChatEntityRepositoryProxy<Server, ChatDbContext> repo)
         {
             var newServer = new Server(serverIcon);
 
@@ -67,7 +69,7 @@ namespace RedPoint.Chat.Services
         }
 
         /// <inheritdoc/>
-        public void DeleteChannel(int channelId, ChatEntityRepositoryProxy<Channel, ChatDbContext> repo)
+        public void DeleteChannel(int channelId, IChatEntityRepositoryProxy<Channel, ChatDbContext> repo)
         {
             var channel = repo.Find(channelId);
             _requestValidator.IsServerRequestValid(channel.Server, _user, PermissionTypes.CanManageChannels);
@@ -77,7 +79,7 @@ namespace RedPoint.Chat.Services
         }
         
         /// <inheritdoc/> 
-        public void DeleteServer(int serverId, ChatEntityRepositoryProxy<Server, ChatDbContext> repo)
+        public void DeleteServer(int serverId, IChatEntityRepositoryProxy<Server, ChatDbContext> repo)
         {
             var server = repo.Find(serverId);
             _requestValidator.IsServerRequestValid(server, _user, PermissionTypes.CanManageServer);
@@ -87,7 +89,7 @@ namespace RedPoint.Chat.Services
         }
         
         /// <inheritdoc />>
-        public void DeleteMessage(int messageId, ChatEntityRepositoryProxy<Message, ChatDbContext> repo)
+        public void DeleteMessage(int messageId, IChatEntityRepositoryProxy<Message, ChatDbContext> repo)
         {
 
             var message = repo.Find(messageId);
