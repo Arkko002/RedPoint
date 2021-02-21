@@ -19,7 +19,7 @@ namespace RedPoint.Chat.Models.Chat
 
 
         [Required] public string Name { get; set; }
-        [Required] public string Description { get; set; }
+        public string Description { get; set; }
         public byte[] Image { get; private set; }
 
         public List<ChatUser> Users { get; set; }
@@ -31,8 +31,10 @@ namespace RedPoint.Chat.Models.Chat
         public bool IsVisible { get; set; }
         public List<Group> Groups { get; set; }
         
-        public Server()
+        public Server(string name)
         {
+            Name = name;
+            
             InitializeVariables();
         }
 

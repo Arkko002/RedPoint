@@ -18,7 +18,8 @@ namespace RedPoint.Chat.Services.DtoFactories
                 Name = sourceObject.Name,
                 Description = sourceObject.Description,
                 Image = sourceObject.Image,
-                IsVisible = sourceObject.IsVisible
+                IsVisible = sourceObject.IsVisible,
+                HubGroupId = sourceObject.GroupId
             };
 
             return serverDto;

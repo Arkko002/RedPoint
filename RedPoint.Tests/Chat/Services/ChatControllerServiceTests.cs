@@ -57,7 +57,7 @@ namespace RedPoint.Tests.Chat.Services
             var mockRepo = new Mock<IChatEntityRepositoryProxy<Server, ChatDbContext>>();
 
             mockRepo.Setup(x => x.Find(It.IsAny<object[]>()))
-                .Returns(new Server());
+                .Returns(new Server("Test"));
             mockFactory.Setup(x => x.CreateDto(It.IsAny<Server>()))
                 .Returns(new ServerDataDto());
 
@@ -76,7 +76,7 @@ namespace RedPoint.Tests.Chat.Services
             mockFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Message>>()))
                 .Returns(new List<MessageDto>());
             mockRepo.Setup(x => x.Find(It.IsAny<object[]>()))
-                .Returns(new Channel(new Server()));
+                .Returns(new Channel(new Server("Test"), "Test"));
 
             _service.GetChannelMessages(1, mockFactory.Object, mockRepo.Object);
 

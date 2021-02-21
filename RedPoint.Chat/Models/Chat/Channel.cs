@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Security.Cryptography;
 using RedPoint.Chat.Models.Chat.Dto;
@@ -21,6 +22,7 @@ namespace RedPoint.Chat.Models.Chat
         /// <summary>
         /// Name of the channel
         /// </summary>
+        [Required]
         public string Name { get; set; }
         /// <summary>
         /// Description of channel. Can be empty.
@@ -29,21 +31,21 @@ namespace RedPoint.Chat.Models.Chat
         public List<Message> Messages { get; set; }
         public List<Group> Groups { get; set; }
         
-        public Channel(Server server)
+        public Channel(Server server, string name)
         {
             Server = server;
-            InitializeLists();
+            Name = name;
+            InitializeVariables();
         }
 
         public Channel(ChannelIconDto channelIconDto)
         {
-            InitializeLists();
-
             Name = channelIconDto.Name;
             Description = channelIconDto.Description;
+            InitializeVariables();
         }
 
-        private void InitializeLists()
+        private void InitializeVariables()
         {
             GroupId = ComputeHash();
             Messages = new List<Message>();

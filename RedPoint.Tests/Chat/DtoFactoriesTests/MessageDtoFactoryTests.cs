@@ -32,7 +32,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
                 Id = "testId"
             };
 
-            var channel = new Channel(new Server());
+            var channel = new Channel(new Server("Test"), "Test");
             
             var msg = new Message(channel)
             {
@@ -58,9 +58,9 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var msgList = new List<Message>
             {
-                new(new Channel(new Server())) {Id = 1, Text = "1", DateTimePosted = DateTime.Today, User = new ChatUser()},
-                new(new Channel(new Server())) {Id = 2, Text = "2", DateTimePosted = DateTime.Today, User = new ChatUser()},
-                new(new Channel(new Server())) {Id = 3, Text = "3", DateTimePosted = DateTime.Today, User = new ChatUser()}
+                new(new Channel(new Server("Test"), "Test")) {Id = 1, Text = "1", DateTimePosted = DateTime.Today, User = new ChatUser()},
+                new(new Channel(new Server("Test"), "Test")) {Id = 2, Text = "2", DateTimePosted = DateTime.Today, User = new ChatUser()},
+                new(new Channel(new Server("Test"), "Test")) {Id = 3, Text = "3", DateTimePosted = DateTime.Today, User = new ChatUser()}
             };
 
             var returnList = _factory.CreateDtoList(msgList);

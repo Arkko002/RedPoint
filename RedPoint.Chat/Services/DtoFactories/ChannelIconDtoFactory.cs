@@ -16,7 +16,8 @@ namespace RedPoint.Chat.Services.DtoFactories
             {
                 Id = sourceObject.Id,
                 Name = sourceObject.Name,
-                Description = sourceObject.Description
+                Description = sourceObject.Description,
+                HubGroupId = sourceObject.GroupId
             };
 
             return channelDto;

@@ -25,11 +25,11 @@ namespace RedPoint.Tests.Chat.Services.Security
             var group = new Group();
             group.Users.Add(user);
 
-            var server = new Server();
+            var server = new Server("Test");
             server.Users.Add(user);
             server.Groups = new List<Group> { group };
 
-            var channel = new Channel(server);
+            var channel = new Channel(server, "Test");
             server.Channels.Add(channel);
             channel.Groups = new List<Group> { group };
 
@@ -47,7 +47,7 @@ namespace RedPoint.Tests.Chat.Services.Security
             var group = new Group();
             group.Users.Add(user);
 
-            var server = new Server();
+            var server = new Server("Test");
             server.Users.Add(user);
 
             Assert.Throws<LackOfPermissionException>(() =>
@@ -58,8 +58,8 @@ namespace RedPoint.Tests.Chat.Services.Security
         public void UserNotInChannelsServer_ShouldThrowUserMembership()
         {
             var user = new ChatUser();
-            var server = new Server();
-            var channel = new Channel(server);
+            var server = new Server("Test");
+            var channel = new Channel(server, "Test");
 
             Assert.Throws<UserMembershipException>(() =>
                 _validator.Object.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView));
@@ -68,7 +68,7 @@ namespace RedPoint.Tests.Chat.Services.Security
         [Fact]
         public void UserNotInServer_ShouldThrowUserMembership()
         {
-            var server = new Server();
+            var server = new Server("Test");
             var user = new ChatUser();
 
             Assert.Throws<UserMembershipException>(() =>
@@ -84,11 +84,11 @@ namespace RedPoint.Tests.Chat.Services.Security
             group.GroupPermissions |= PermissionTypes.IsAdmin;
             group.Users.Add(user);
 
-            var server = new Server();
+            var server = new Server("Test");
             server.Users.Add(user);
             server.Groups = new List<Group> { group };
 
-            var channel = new Channel(server);
+            var channel = new Channel(server, "Test");
             server.Channels.Add(channel);
             channel.Groups = new List<Group> { group };
 
@@ -112,7 +112,7 @@ namespace RedPoint.Tests.Chat.Services.Security
 
             user.Groups = new List<Group> { group };
 
-            var server = new Server();
+            var server = new Server("Test");
             server.Users.Add(user);
             server.Groups = new List<Group> { group };
 

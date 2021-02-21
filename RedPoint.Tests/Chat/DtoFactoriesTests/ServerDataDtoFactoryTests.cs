@@ -30,7 +30,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
         {
-            var server = new Server
+            var server = new Server("Test")
             {
                 Id = 1234
             };
@@ -47,11 +47,11 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
         {
             var list = new List<Server>
             {
-                new()
+                new("Test")
                 {
                     Id = 1234
                 },
-                new()
+                new("Test")
                 {
                     Id = 12345
                 }
