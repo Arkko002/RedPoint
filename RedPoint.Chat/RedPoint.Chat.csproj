@@ -39,6 +39,12 @@
     <None Remove="_site\**" />
     <None Remove="toc.yml" />
     <None Remove="index.md" />
+    <None Update="public.pem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="private.pem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Remove="articles\**" />
@@ -48,5 +54,8 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="_site\manifest.json" />
     <_ContentIncludedByDefault Remove="_site\search-stopwords.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Keys" />
   </ItemGroup>
 </Project>

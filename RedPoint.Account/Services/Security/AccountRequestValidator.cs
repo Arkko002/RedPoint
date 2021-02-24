@@ -12,16 +12,13 @@ namespace RedPoint.Account.Services.Security
         private readonly IAccountSecurityConfigurationProvider _provider;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly UserValidator<IdentityUser> _userValidator;
 
         public AccountRequestValidator(IAccountSecurityConfigurationProvider provider,
         SignInManager<IdentityUser> signInManager,
-        UserValidator<IdentityUser> userValidator,
         UserManager<IdentityUser> userManager)
         {
             _provider = provider;
             _signInManager = signInManager;
-            _userValidator = userValidator;
             _userManager = userManager;
         }
 
@@ -63,16 +60,17 @@ namespace RedPoint.Account.Services.Security
             {
                 UserName = model.Username
             };
-            
-            var validationResult = await _userValidator.ValidateAsync(_userManager, user);
 
-            if (validationResult.Succeeded)
+            foreach (var userValidator in _userManager.UserValidators)
             {
-                return;
+                var validationResult = await userValidator.ValidateAsync(_userManager, user);
+                
+                if (!validationResult.Succeeded)
+                {
+                    throw new AccountCreationException("One or multiple errors occured during account creation",
+                        validationResult.Errors.Select(x => x.Description));
+                }
             }
-            
-            throw new AccountCreationException("One or multiple errors occured during account creation",
-                validationResult.Errors.Select(x => x.Description));
         }
     }
 }

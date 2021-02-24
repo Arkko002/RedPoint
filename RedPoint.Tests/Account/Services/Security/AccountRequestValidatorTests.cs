@@ -55,10 +55,9 @@ namespace RedPoint.Tests.Account.Services.Security
             _signInManager.Setup(x => x.CanSignInAsync(_identityUser))
                 .ReturnsAsync(true);
 
-            _userValidator = new Mock<UserValidator<IdentityUser>>(new IdentityErrorDescriber());
 
             _requestValidator = new AccountRequestValidator(configurationProvider.Object, _signInManager.Object,
-                _userValidator.Object, _userManager.Object);
+                 _userManager.Object);
         }
 
         [Fact]
