@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using RedPoint.Account.Services;
 using RedPoint.Account.Services.Security;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -65,12 +66,12 @@ namespace RedPoint.Account
                 options.User.RequireUniqueEmail = false;
             });
 
-
+            //TODO Use jwt middleware for token auth
             var rsa = RSA.Create();
-            rsa.ImportRSAPublicKey(Convert.FromBase64String(Configuration["Jwt:PublicKey"]),
-                out int _);
-            services.AddSingleton(_ => new RsaSecurityKey(rsa));
-            
+            var pemString = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Keys", Configuration.GetValue<String>("Jwt:PublicKey")));
+            rsa.ImportFromPem(pemString);
+            var signingKey = new RsaSecurityKey(rsa);
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(options =>
             {
@@ -79,8 +80,6 @@ namespace RedPoint.Account
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer("Asymmetric",options =>
             {
-                SecurityKey signingKey = new RsaSecurityKey(rsa);
-                
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 

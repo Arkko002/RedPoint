@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -36,14 +37,16 @@ namespace RedPoint.Middleware
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             
-            RSA rsa = RSA.Create();
-            rsa.ImportRSAPublicKey(Convert.FromBase64String(_configuration["Jwt:PublicKey"]), out int _);
+            var rsa = RSA.Create();
+            var pemString = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Keys", _configuration["Jwt:PublicKey"]));
+            rsa.ImportFromPem(pemString);
+            var signingKey = new RsaSecurityKey(rsa);
             
             tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new RsaSecurityKey(rsa),
+                IssuerSigningKey = signingKey,
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ClockSkew = TimeSpan.Zero
