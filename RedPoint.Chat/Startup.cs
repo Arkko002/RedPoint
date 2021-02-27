@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
@@ -36,9 +37,12 @@ namespace RedPoint.Chat
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //TODO Production storage of secrets, this will only work in dev env
+            var builder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("ChatDb"));
+            builder.Password = Configuration["DbPassword"];
+            
             services.AddDbContext<ChatDbContext>(options =>
-                options.UseMySql(
-                        Configuration.GetConnectionString("AccountDb"), 
+                options.UseMySql(builder.ConnectionString,
                         new MariaDbServerVersion(new Version(10, 5, 8)),
                         mySqlOptions => mySqlOptions
                             .CharSetBehavior(CharSetBehavior.NeverAppend))
