@@ -2,17 +2,18 @@
 	<form id="logInForm">
 		<p>
 			<label for="userNameInput">User Name</label>
-			<input id="userNameInput" type="text" v-bind="username" />
+			<input id="userNameInput" type="text" v-model="username" />
 		</p>
 
 		<p>
 			<label for="passwordInput">Password</label>
-			<input id="passwordInput" type="password" v-bind="password" />
+			<input id="passwordInput" type="password" v-model="password" />
 		</p>
 
 		<p>
 			<input
 				v-bind:disabled="!requiredFieldsFilled || loggingIn"
+				v-on:click="submitForm"
 				type="submit"
 				value="Submit"
 			/>
@@ -29,8 +30,8 @@ export default {
 
 	data() {
 		return {
-			username: { type: String },
-			password: { type: String },
+			username: "",
+			password: "",
 		};
 	},
 
@@ -50,12 +51,13 @@ export default {
      * @returns {boolean}
      */
 		requiredFieldsFilled() {
-			if (!this.name) {
-				this.errors.push("Name required.");
-			}
-			if (!this.age) {
-				this.errors.push("Age required.");
-			}
+			//TODO
+			// if (this.username.length === 0) {
+			// 	this.errors.push("Username required.");
+			// }
+			// if (!this.password.length === 0) {
+			// 	this.errors.push("Password required.");
+			// }
 
 			return Boolean(this.username) && Boolean(this.password);
 		},
@@ -64,8 +66,8 @@ export default {
      * Submits the form data to Vuex authentication module.
      */
 		submitForm() {
-			const username = this.username;
-			const password = this.password;
+			const username = this.username.toString();
+			const password = this.password.toString();
 
 			this.$store.dispatch("authentication/login", { username, password });
 		},

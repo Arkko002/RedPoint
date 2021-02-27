@@ -1,6 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
-import router from "./router/router";
+import router from "./router/index";
 import store from "./store/store";
 
 const DEV = process.env.NODE_ENV;

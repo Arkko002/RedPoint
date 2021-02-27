@@ -1,5 +1,5 @@
 import userService from "../../services/user.service";
-import router from "../../router/router";
+import router from "../../router/index";
 
 //TODO Add mapGetters for loggedIn etc.
 //Set user status as logged in if JWT token found in local storage

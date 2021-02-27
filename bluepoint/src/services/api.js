@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-const API_BASE_URL = "TODO"; //TODO
+const API_BASE_URL = "http://localhost:5000"; //TODO
 const DEV = process.env.NODE_ENV;
 
 export default Axios.create({

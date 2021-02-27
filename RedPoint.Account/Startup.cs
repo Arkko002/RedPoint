@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -24,11 +25,13 @@ namespace RedPoint.Account
 {
     public class Startup
     {
-        private readonly string _corsAllowOrigin = "AllowOrigins";
+        private readonly string _corsAllowOrigin = "AllowAll";
+        private readonly IWebHostEnvironment _env;
         
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -41,11 +44,25 @@ namespace RedPoint.Account
             {
                 options.AddPolicy(_corsAllowOrigin, builder =>
                 {
-                    //builder.WithOrigins("http://localhost");
-                    builder.AllowAnyOrigin();
-                    builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();
+                    //builder.WithOrigins("http://localhost").;
+                    builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
                 });
+            });
+            
+            if (!_env.IsDevelopment())
+            {
+                services.AddHttpsRedirection(options =>
+                {
+                    options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                    options.HttpsPort = 443;
+                });
+            }
+
+            services.AddHsts(options =>
+            {
+                options.IncludeSubDomains = true;
             });
 
             //TODO Production storage of secrets, this will only work in dev env
@@ -137,11 +154,12 @@ namespace RedPoint.Account
                 app.UseHsts();
             }
             
-            app.UseHttpsRedirection();
             app.UseRouting();
-
+            
             app.UseCors(_corsAllowOrigin);
             
+            //HTTPS redirection needs to be added after CORS, otherwise CORS breaks
+            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
