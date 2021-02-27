@@ -47,7 +47,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
 	const privatePages = ["/chat"];
 	const authRequired = privatePages.includes(to.path);
-	const loggedIn = localStorage.getItem("user");
+	const loggedIn = localStorage.getItem("userToken");
 
 	if (authRequired && !loggedIn) {
 		return next("/login");

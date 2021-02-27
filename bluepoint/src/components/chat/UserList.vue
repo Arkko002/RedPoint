@@ -1,10 +1,10 @@
 <template>
   <div class="user-container">
     <li v-for="user in userArray" :key="user.id">
-      <label>
-        <input type="button" v-bind:value="user.name" />
-        <img v-bind:src="user.image" />
-      </label>
+			<button class="user-list-button">
+				<img class="user-list-avatar" :src="user.image" alt="{{user.name}}'s avatar"/>
+				<label class="user-list-name" :content="user.name" />
+			</button>
     </li>
   </div>
 </template>

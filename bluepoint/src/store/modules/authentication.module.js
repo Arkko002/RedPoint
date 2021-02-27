@@ -3,7 +3,7 @@ import router from "../../router/index";
 
 //TODO Add mapGetters for loggedIn etc.
 //Set user status as logged in if JWT token found in local storage
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("userToken"));
 const initialState = user
 	? { status: { loggedIn: true }, user }
 	: { status: {}, user: null };

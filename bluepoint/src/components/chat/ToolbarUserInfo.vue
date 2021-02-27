@@ -1,9 +1,7 @@
 <template>
   <div class="user-info-container">
-    <label>
-      <input type="button" v-bind:value="user.name" />
-      <img v-bind:src="user.image" />
-    </label>
+		<img :src="user.image" alt="{{user.name}}'s avatar"/>
+		<input type="button" :value="user.name" />
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar-container">
-    <ToolbarUserInfo />
+    <ToolbarUserInfo :user="chatUser"/>
     <ToolbarSearchField />
   </div>
 </template>
@@ -14,6 +14,7 @@ import ToolbarUserInfo from "./ToolbarUserInfo.vue";
  */
 export default {
 	name: "TheToolbar",
+	props: ["chatUser"],
 	components: {
 		ToolbarSearchField,
 		ToolbarUserInfo

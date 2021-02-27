@@ -7,7 +7,7 @@ import api from "./api";
  */
 function AddUserIfInResponse(response) {
 	if ("token" in response.data) {
-		localStorage.setItem("user", JSON.stringify(response.data));
+		localStorage.setItem("userToken", JSON.stringify(response.data));
 	}
 }
 
@@ -15,7 +15,7 @@ function AddUserIfInResponse(response) {
  * Removes "user" field from local storage.
  */
 function logout() {
-	localStorage.removeItem("user");
+	localStorage.removeItem("userToken");
 }
 
 /**

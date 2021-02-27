@@ -1,11 +1,11 @@
 <template>
-  <div class="server-container">
+  <div class="server-list-container">
     <li v-for="server in serverArray" :key="server.id">
-      <label>
-        <input type="radio" v-bind:value="server.name" />
-        <img v-bind:src="server.image" />
-      </label>
-    </li>
+			<div class="server-list-button">
+				<input class="server-radio-button" type="radio" name="server-radio-button" :value="server.name" />
+				<img class="server-image" :src="server.image" alt="{{server.name}}'s image"/>
+			</div>
+		</li>
   </div>
 </template>
 

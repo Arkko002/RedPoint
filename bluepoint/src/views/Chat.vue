@@ -1,9 +1,9 @@
 <template>
   <div class="chat-container">
-    <TheToolbar v-bind:user="currentUser" />
-    <ServerList v-bind:serverArray="serverArray" />
-    <UserList v-bind:userArray="currentServer.users" />
-    <ChatBox v-bind:messageArray="currentChannel.messages" />
+    <TheToolbar :user="chatUser" />
+    <ServerList :serverArray="serverArray" />
+    <UserList :userArray="currentServer.users" />
+    <ChatBox :messageArray="currentChannel.messages" :chat-user="chatUser"/>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import ChatBox from "@/components/chat/ChatBox.vue";
 import ChatService from "../services/chat.service";
 
 /**
- * Component used as a router view for chat page.
+ * Main chat view, used as a router path for chat page.
  */
 export default {
 	name: "Chat",
@@ -23,21 +23,20 @@ export default {
 		ServerList,
 		UserList,
 		TheToolbar,
-		ChatBox: ChatBox,
+		ChatBox,
 	},
 
 	/**
-   * Initializes chat functionality with user's data pulled from back end.
+   * Initializes chat functionality with data pulled from back end.
    */
 	created() {
 		//TODO Caching
-		this.serverArray = JSON.parse(ChatService.fetchServers());
-		this.currentChannel = JSON.parse(
-			ChatService.fetchChannelData(this.currentUser.currentChannelId)
-		);
-		this.currentServer = JSON.parse(
-			ChatService.fetchServerData(this.currentUser.currentServerId)
-		);
+		this.serverArray = ChatService.fetchServers();
+		
+		this.chatUser = ChatService.fetchChatUser();
+		
+		this.currentChannel = ChatService.fetchChannelData(this.chatUser.currentChannelId);
+		this.currentServer = ChatService.fetchServerData(this.chatUser.currentServerId);
 	},
 
 	beforeDestroy() {
@@ -48,15 +47,11 @@ export default {
 		return {
 			serverArray: null,
 
+			chatUser: null,
 			currentServer: null,
 			currentChannel: null,
+			
 		};
-	},
-  
-	computed: {
-		currentUser() {
-			return localStorage.getItem("user");
-		},
 	},
 };
 </script>

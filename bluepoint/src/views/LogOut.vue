@@ -7,7 +7,7 @@ import router from "@/router/index";
 export default {
 	name: "LogOut",
 	created() {
-		const user = localStorage.getItem("user");
+		const user = localStorage.getItem("userToken");
 
 		if (user == null) {
 			router.push("/");

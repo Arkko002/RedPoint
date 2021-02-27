@@ -1,11 +1,21 @@
 import api from "./api";
 
+export default {
+	fetchServers,
+	fetchServerData,
+	fetchChannelData,
+	fetchChatUser,
+	sendClosingData
+};
+
 /**
  * Retrieves current user's server list from back end.
  */
 function fetchServers() {
 	api.get("chat/servers")
-		.then((response) => { return response;});
+		.then((response) => {
+			return JSON.parse(response);
+		});
 }
 
 /**
@@ -14,7 +24,9 @@ function fetchServers() {
  */
 function fetchServerData(serverId){
 	api.get(`chat/server/${serverId}`)
-		.then((response) => { return response;});
+		.then((response) => {
+			return JSON.parse(response);
+		});
 }
 
 /**
@@ -24,7 +36,20 @@ function fetchServerData(serverId){
  */
 function fetchChannelData(channelId, serverId){
 	api.get(`chat/server/${serverId}/${channelId}`)
-		.then((response) => { return response;});
+		.then((response) => {
+			return JSON.parse(response);
+		});
+}
+
+/**
+ * Retrieves chat-related data of the currently logged in user
+ * based on JWT token in the request header
+ */
+function fetchChatUser(){
+	api.get("chat/user")
+		.then((response) => {
+			return JSON.parse(response);
+		});
 }
 
 /**
@@ -34,12 +59,8 @@ function fetchChannelData(channelId, serverId){
  */
 function sendClosingData(data) {
 	api.post("chat/close", data)
-		.then((response) => { return response;});
+		.then((response) => {
+			return JSON.parse(response);
+		});
 }
 
-export default {
-	fetchServers,
-	fetchServerData,
-	fetchChannelData,
-	sendClosingData
-};
