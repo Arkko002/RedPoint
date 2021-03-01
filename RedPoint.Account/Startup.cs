@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
@@ -23,6 +24,8 @@ namespace RedPoint.Account
 {
     public class Startup
     {
+        private readonly string _corsAllowOrigin = "AllowOrigins";
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,9 +36,24 @@ namespace RedPoint.Account
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //TODO Non-debug CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy(_corsAllowOrigin, builder =>
+                {
+                    //builder.WithOrigins("http://localhost");
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                });
+            });
+
+            //TODO Production storage of secrets, this will only work in dev env
+            var builder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("AccountDb"));
+            builder.Password = Configuration["DbPassword"];
+
             services.AddDbContext<AccountDbContext>(options =>
-                options.UseMySql(
-                        Configuration.GetConnectionString("AccountDb"), 
+                options.UseMySql(builder.ConnectionString,
                         new MariaDbServerVersion(new Version(10, 5, 8)),
                         mySqlOptions => mySqlOptions
                             .CharSetBehavior(CharSetBehavior.NeverAppend))
@@ -122,6 +140,8 @@ namespace RedPoint.Account
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseCors(_corsAllowOrigin);
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
