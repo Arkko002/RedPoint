@@ -29,6 +29,7 @@ namespace RedPoint.Account
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
+                .UseKestrel()
                 .CaptureStartupErrors(true)
                 .UseStartup<Startup>()
                 .UseNLog();
