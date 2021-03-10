@@ -154,12 +154,13 @@ namespace RedPoint.Account
                 app.UseHsts();
             }
             
+            //HTTPS redirection needs to be added after CORS, otherwise CORS breaks
+            app.UseCors(_corsAllowOrigin);
             app.UseRouting();
             
-            app.UseCors(_corsAllowOrigin);
             
-            //HTTPS redirection needs to be added after CORS, otherwise CORS breaks
-            app.UseHttpsRedirection();
+            //TODO HTTPS in prod
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 

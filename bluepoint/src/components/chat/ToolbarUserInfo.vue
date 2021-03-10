@@ -1,6 +1,7 @@
 <template>
   <div class="user-info-container">
-		<img :src="user.image" alt="{{user.name}}'s avatar"/>
+		<!-- TODO alt="{{user.name}}'s avatar"-->
+		<img :src="user.image" />
 		<input type="button" :value="user.name" />
   </div>
 </template>

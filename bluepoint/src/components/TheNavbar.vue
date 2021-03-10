@@ -1,28 +1,17 @@
 <template>
 	<nav class="navbar">
-		<router-link :to="{ name: 'home' }">BluePoint</router-link>
-		<ul v-if="!loggedIn">
-			<li class="nav-item nav-item-auth">
-				<router-link class="nav-link" :to="{ name: 'register' }">Sign Up</router-link>
-			</li>
-			<li class="nav-item nav-item-auth">
-				<router-link class="nav-link" :to="{ name: 'login' }">Sign In</router-link>
-			</li>
-			<li class="nav-item">
-				<router-link class="nav-link" :to="{ name: 'about' }">About</router-link>
-			</li>
-		</ul>
-		<ul v-else>
-			<li class="nav-item">
-				<router-link class="nav-link" :to="{ name: 'chat' }">Chat</router-link>
-			</li>
-			<li class="nav-item nav-item-auth">
-				<router-link class="nav-link" :to="{ name: 'logout' }">Log Out</router-link>
-			</li>
-			<li class="nav-item">
-				<router-link class="nav-link" :to="{ name: 'about' }">About</router-link>
-			</li>
-		</ul>
+<!--		TODO Logo-->
+		<router-link class="navbar-logo navbar-item" :to="{ name: 'home' }">BluePoint</router-link>
+		<div v-if="!loggedIn">
+				<router-link class="navbar-item" :to="{ name: 'register' }">Sign Up</router-link>
+				<router-link class="navbar-item" :to="{ name: 'login' }">Sign In</router-link>
+				<router-link class="navbar-item" :to="{ name: 'about' }">About</router-link>
+		</div>
+		<div v-else>
+				<router-link class="navbar-item" :to="{ name: 'chat' }">Chat</router-link>
+				<router-link class="navbar-item" :to="{ name: 'logout' }">Log Out</router-link>
+				<router-link class="navbar-item" :to="{ name: 'about' }">About</router-link>
+		</div>
 	</nav>
 </template>
 
@@ -38,4 +27,35 @@ export default {
 </script>
 
 // TODO
-<style></style>
+<style>
+.navbar {
+	display: flex;
+}
+
+.navbar-item {
+	flex: 1;
+	padding: 1em;
+}
+
+.navbar-logo {
+  padding: unset;
+}
+
+@media all and (max-width: 600px) {
+	.navbar{
+		flex-wrap: wrap;
+	}
+	
+	.navbar-item {
+		flex-basis: 50%;
+	}
+}
+
+@media all and (max-width: 400px){
+	.navbar-item{
+		flex-basis: 100%;
+	}
+}
+
+</style>
+

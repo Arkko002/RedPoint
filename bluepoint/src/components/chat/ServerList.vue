@@ -3,7 +3,8 @@
     <li v-for="server in serverArray" :key="server.id">
 			<div class="server-list-button">
 				<input class="server-radio-button" type="radio" name="server-radio-button" :value="server.name" />
-				<img class="server-image" :src="server.image" alt="{{server.name}}'s image"/>
+<!--				alt="{{server.name}}'s image"-->
+				<img class="server-image" :src="server.image" />
 			</div>
 		</li>
   </div>

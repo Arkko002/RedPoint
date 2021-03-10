@@ -1,26 +1,26 @@
 <template>
-  <form id="registerForm" @submit="submitForm">
+  <form class="register-form" @submit="submitForm">
     <p>
-      <label for="userNameInput">User Name</label>
-      <input id="userNameInput" type="text" v-model="username" />
+      <label for="name-input">User Name</label>
+      <input id="name-input" type="text" v-model="username" />
     </p>
 
     <p>
-      <label for="passwordInput">Password</label>
-      <input id="passwordInput" type="text" v-model="password" />
+      <label for="password-input">Password</label>
+      <input id="password-input" type="password" v-model="password" />
     </p>
 
     <p>
-      <label for="passwordConfirmationInput">Password Confirmation</label>
+      <label for="password-confirmation-input">Password Confirmation</label>
       <input
-        id="passwordConfirmationInput"
-        type="text"
+        id="password-confirmation-input"
+        type="password"
         v-model="passwordConfirmation"
       />
     </p>
     <p>
-      <label for="emailInput">E-mail</label>
-      <input id="emailInput" type="text" v-model="email" />
+      <label for="email-input">E-mail</label>
+      <input id="email-input" type="text" v-model="email" />
     </p>
 
     <p>
@@ -41,10 +41,10 @@ export default {
 	name: "RegisterForm",
 	data() {
 		return {
-			username: { type: String },
-			password: { type: String },
-			passwordConfirmation: { type: String },
-			email: { type: String }
+			username: "",
+			password: "",
+			passwordConfirmation: "",
+			email: "" 
 		};
 	},
 
@@ -54,7 +54,7 @@ export default {
      * @returns {boolean}
      */
 		requiredFieldsFilled() {
-			if (!this.username || !this.password) return false;
+			if (this.username.length === 0 || this.password.length === 0) return false;
 			return this.password === this.passwordConfirmation;
 		},
 
@@ -89,3 +89,14 @@ export default {
 	}
 };
 </script>
+
+<style>
+.register-form {
+	width: 200px;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+}
+</style>

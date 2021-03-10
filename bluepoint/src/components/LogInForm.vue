@@ -1,13 +1,13 @@
 <template>
-	<form id="logInForm">
+	<form class="login-form">
 		<p>
-			<label for="userNameInput">User Name</label>
-			<input id="userNameInput" type="text" v-model="username" />
+			<label for="name-input">User Name</label>
+			<input id="name-input" type="text" v-model="username" />
 		</p>
 
 		<p>
-			<label for="passwordInput">Password</label>
-			<input id="passwordInput" type="password" v-model="password" />
+			<label for="password-input">Password</label>
+			<input id="password-input" type="password" v-model="password" />
 		</p>
 
 		<p>
@@ -74,3 +74,13 @@ export default {
 	},
 };
 </script>
+
+<style>
+.login-form {
+	width: 200px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+</style>
