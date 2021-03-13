@@ -23,9 +23,9 @@ namespace RedPoint.Account.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("id", user.Id)
+                new Claim("Name", user.UserName)
             };
 
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Jwt:ExpireDays"]));
@@ -40,7 +40,7 @@ namespace RedPoint.Account.Services
                 
                 var token = new JwtSecurityToken(
                     _configuration["Jwt:Issuer"],
-                    _configuration["Jwt:Issuer"],
+                    _configuration["Jwt:Audience"],
                     claims,
                     notBefore,
                     expires,
