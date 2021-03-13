@@ -11,6 +11,8 @@ using RedPoint.Account.Services.Security;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Cryptography;
+using Autofac;
+using Autofac.Multitenant;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
@@ -25,41 +27,55 @@ namespace RedPoint.Account
 {
     public class Startup
     {
-        private readonly string _corsAllowOrigin = "AllowAll";
-        private readonly IWebHostEnvironment _env;
         
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _env = env;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            //TODO Non-debug CORS
             services.AddCors(options =>
             {
-                options.AddPolicy(_corsAllowOrigin, builder =>
+                options.AddPolicy("Debug", builder =>
                 {
-                    //builder.WithOrigins("http://localhost").;
                     builder.AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 });
             });
             
-            if (!_env.IsDevelopment())
-            {
-                services.AddHttpsRedirection(options =>
-                {
-                    options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
-                    options.HttpsPort = 443;
-                });
-            }
+            ConfigureServices(services);
+        }
 
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ProductionPolicy", builder =>
+                {
+                    //TODO Prod CORS
+                    builder.WithOrigins("http://localhost")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+            
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                options.HttpsPort = 443;
+            });
+            
+            ConfigureServices(services);
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddHsts(options =>
             {
                 options.IncludeSubDomains = true;
@@ -101,7 +117,6 @@ namespace RedPoint.Account
                 options.User.RequireUniqueEmail = false;
             });
 
-            //TODO Use jwt middleware for token auth
             var rsa = RSA.Create();
             var pemString = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Keys", Configuration.GetValue<String>("Jwt:PublicKey")));
             rsa.ImportFromPem(pemString);
@@ -133,34 +148,45 @@ namespace RedPoint.Account
             });
 
             services.AddControllers();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IAccountRequestValidator, AccountRequestValidator>();
-            services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
-            services.AddSingleton<IAccountSecurityConfigurationProvider, AccountSecurityConfigurationProvider>();
-
         }
 
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterType<AccountService>().As<IAccountService>();
+            builder.RegisterType<AccountRequestValidator>().As<IAccountRequestValidator>();
+            builder.RegisterType<JwtTokenGenerator>().As<ITokenGenerator>();
+            builder.RegisterType<AccountSecurityConfigurationProvider>().As<IAccountSecurityConfigurationProvider>();
+        }
+
+        //TODO
+        // public static MultitenantContainer ConfigureMultitenantContainer(IContainer container)
+        // {
+        //     var strategy = new MyTeant
+        // }
+
+        public void ConfigureDevelopment(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseExceptionHandler("/error-development");
+            app.UseCors("Debug");
+            
+            Configure(app, env);
+        }
+
+        public void ConfigureProduction(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseExceptionHandler("/error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+            app.UseCors("ProductionPolicy");
+            
+            Configure(app, env);
+        }
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseExceptionHandler("/error-development");
-            }
-            else
-            {
-                app.UseExceptionHandler("/error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-            
-            //HTTPS redirection needs to be added after CORS, otherwise CORS breaks
-            app.UseCors(_corsAllowOrigin);
             app.UseRouting();
             
-            
-            //TODO HTTPS in prod
-            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -169,7 +195,6 @@ namespace RedPoint.Account
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action}");
-                endpoints.MapRazorPages();
             });
         }
     }

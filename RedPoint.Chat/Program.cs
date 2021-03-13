@@ -1,6 +1,8 @@
 using System;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using NLog;
 using NLog.Web;
 
@@ -28,12 +30,16 @@ namespace RedPoint.Chat
             }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        public static IHostBuilder CreateWebHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args)
-                .UseKestrel()
-                .CaptureStartupErrors(true)
-                .UseStartup<Startup>()
+            return Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(builder =>
+                {
+                    builder.UseKestrel();
+                    builder.UseStartup<Startup>();
+                    builder.CaptureStartupErrors(true);
+                })
                 .UseNLog();
         }
     }

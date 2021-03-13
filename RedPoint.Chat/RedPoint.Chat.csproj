@@ -6,6 +6,8 @@
     <UserSecretsId>47d16b5a-fb18-42c4-90b1-df6547f92eac</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Autofac.AspNetCore.Multitenant" Version="5.0.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.2">
