@@ -11,10 +11,4 @@ export default new Vuex.Store({
 		authentication,
 		alert
 	},
-  
-	getters: {
-		loggedIn(state) {
-			return !!state.user;
-		}
-	}
 });

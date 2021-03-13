@@ -1,20 +1,14 @@
-
 <template>
   <div>
-    <TheNavbar/>
-    <Home/>
+		<router-view></router-view>		
   </div>
 </template>
 
 <script>
-import TheNavbar from "@/components/TheNavbar.vue";
-import Home from "@/views/Home.vue";
 
 export default {
 	name: "app",
 	components: {
-		TheNavbar,
-		Home
 	}
 };
 </script>

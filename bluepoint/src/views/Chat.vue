@@ -1,9 +1,10 @@
 <template>
-  <div class="chat-container">
+	<div class="chat-container">
     <TheToolbar :user="chatUser" />
     <ServerList :serverArray="serverArray" />
     <UserList :userArray="currentServer.users" />
     <ChatBox :messageArray="currentChannel.messages" :chat-user="chatUser"/>
+		<router-view></router-view>
   </div>
 </template>
 
@@ -31,22 +32,40 @@ export default {
    */
 	created() {
 		//TODO Caching
-		this.serverArray = ChatService.fetchServers();
+		ChatService.fetchChatUser().then(
+			(user) => {
+				this.chatUser = user;
+			},
+			(error) => {
+				this.$store.dispatch("alert/error", error);
+			});
 		
-		this.chatUser = ChatService.fetchChatUser();
+		ChatService.fetchChannelData(this.chatUser.currentChannelId).then(
+			(channel) => {
+				this.currentChannel = channel;
+			},
+			(error)=> {
+				this.$store.dispatch("alert/error", error);
+			});
 		
-		this.currentChannel = ChatService.fetchChannelData(this.chatUser.currentChannelId);
-		this.currentServer = ChatService.fetchServerData(this.chatUser.currentServerId);
+		
+		ChatService.fetchServerData(this.chatUser.currentServerId).then(
+			(server) => {
+				this.currentServer = server;
+			},
+			(error) => {
+				this.$store.dispatch("alert/error", error);
+			}
+		);
 	},
 
 	beforeDestroy() {
-		ChatService.sendClosingData([this.currentServerId, this.currentChannelId]);
+		//TODO Current server and channel should be updated in back-end model per change
+		// ChatService.sendClosingData([this.currentServerId, this.currentChannelId]);
 	},
 
 	data() {
 		return {
-			serverArray: null,
-
 			chatUser: null,
 			currentServer: null,
 			currentChannel: null,

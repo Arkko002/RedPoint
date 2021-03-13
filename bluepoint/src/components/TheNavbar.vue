@@ -9,7 +9,7 @@
 		</div>
 		<div v-else>
 				<router-link class="navbar-item" :to="{ name: 'chat' }">Chat</router-link>
-				<router-link class="navbar-item" :to="{ name: 'logout' }">Log Out</router-link>
+				<button class="navbar-item" v-on:click="logOut">Log Out</button>
 				<router-link class="navbar-item" :to="{ name: 'about' }">About</router-link>
 		</div>
 	</nav>
@@ -20,13 +20,18 @@ export default {
 	name: "TheNavbar",
 	computed: {
 		loggedIn() {
-			return this.$store.state.loggedIn;
+			return this.$store.state.authentication.status.loggedIn;
+		}
+	},
+	methods: {
+		logOut() {
+			this.$store.dispatch("authentication/logout");
 		}
 	}
 };
 </script>
 
-// TODO
+<!--// TODO-->
 <style>
 .navbar {
 	display: flex;

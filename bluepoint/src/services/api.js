@@ -6,7 +6,7 @@ const DEV = process.env.NODE_ENV;
 export default Axios.create({
 	baseURL: API_BASE_URL,
 	headers: {
-		"Authorization": "Bearer " + JSON.parse(localStorage.getItem("userToken")),
+		"Authorization": "Bearer " + localStorage.getItem("userToken"),
 		"Accept": "application/json",
 		"Content-Type": "application/json"
 	}
