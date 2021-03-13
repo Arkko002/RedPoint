@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RedPoint.Chat.Data;
 using RedPoint.Chat.Models.Chat;
@@ -21,19 +20,15 @@ namespace RedPoint.Chat.Controllers
             _chatService = chatService;
         }
 
-        /// <summary>
-        /// Gets a list of servers assigned to current user.
-        /// Current user is provided by the UserManager using ClaimsPrincipal.
-        /// </summary>
-        /// <param name="iconDtoFactory">Factory handling creation of ServerIconDto.</param>
-        /// <returns>Returns a list of <c>ServerIconDto</c></returns>
         [HttpGet]
-        [Route("chat/servers")]
-        public IActionResult GetUserServers([FromServices] ServerIconDtoFactory iconDtoFactory)
+        [Route("chat/user")]
+        public IActionResult GetChatUser(string id,
+            [FromServices] UserDtoFactory userDtoFactory,
+            [FromServices] ChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo)
         {
-            var dtoList = _chatService.GetUserServers(iconDtoFactory);
+            var user = _chatService.GetChatUser(id, userDtoFactory, repo);
 
-            return Ok(dtoList);
+            return Ok(user);
         }
 
         /// <summary>

@@ -61,17 +61,5 @@ namespace RedPoint.Tests.Chat.Controllers
                     It.IsAny<ChatEntityRepositoryProxy<Server,ChatDbContext>>()),
                 Times.Once);
         }
-
-        [Fact]
-        public void GetUserServers_ShouldCallService()
-        {
-            var mockList = new List<ServerIconDto>();
-            _service.Setup(x => x.GetUserServers(It.IsAny<IChatDtoFactory<Server, ServerIconDto>>()))
-                .Returns(mockList);
-            
-            _controller.GetUserServers(null);
-
-            _service.Verify(x => x.GetUserServers(It.IsAny<IChatDtoFactory<Server, ServerIconDto>>()), Times.Once);
-        }
     }
 }

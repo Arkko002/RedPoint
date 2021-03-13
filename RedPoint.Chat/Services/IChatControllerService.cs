@@ -14,6 +14,10 @@ namespace RedPoint.Chat.Services
     /// </summary>
     public interface IChatControllerService
     {
+        ChatUserDto GetChatUser(string id,
+            IChatDtoFactory<ChatUser, ChatUserDto> dtoFactory,
+            IChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo);
+        
         /// <summary>
         /// Gets a list of server DTOs stripped of internal data that current user is part of.
         /// </summary>

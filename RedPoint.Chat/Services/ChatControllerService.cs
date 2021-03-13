@@ -1,22 +1,20 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using RedPoint.Chat.Data;
+using RedPoint.Chat.Exceptions;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
-using RedPoint.Chat.Models.Errors;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
 
 namespace RedPoint.Chat.Services
 {
+    //TODO Dependency injection directly to services
+    
     /// <inheritdoc cref="IChatControllerService"/>
-    [Authorize]
     public class ChatControllerService : IChatControllerService
     {
         private readonly IChatRequestValidator _requestValidator;
@@ -28,10 +26,42 @@ namespace RedPoint.Chat.Services
             IChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
         {
             _requestValidator = requestValidator;
-            var token = (JwtSecurityToken) httpContextAccessor.HttpContext.Items["UserToken"];
-            _user = userRepo.Find(token.Id);
+
+            var tokenStr = httpContextAccessor.HttpContext.GetTokenAsync("access_token").Result;
+            var token = new JwtSecurityToken(tokenStr);
+            _user = GetUserFromToken(token, userRepo);
+            
         }
 
+        private ChatUser GetUserFromToken(JwtSecurityToken token, IChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
+        {
+            ChatUser user;
+            try
+            {
+                user = userRepo.Find(token.Id);
+            }
+            catch (EntityNotFoundException e)
+            {
+                user = new ChatUser
+                {
+                    Id = token.Subject,
+                    UserName = token.Claims.SingleOrDefault(x => x.Type == "Name").Value
+                };
+                
+                userRepo.Add(user);
+            }
+
+            return user;
+        }
+
+        public ChatUserDto GetChatUser(string id,
+            IChatDtoFactory<ChatUser, ChatUserDto> dtoFactory,
+            IChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
+        {
+            var user = userRepo.Find(id);
+            return dtoFactory.CreateDto(user);
+        }
+        
         /// <inheritdoc/>
         public List<ServerIconDto> GetUserServers(IChatDtoFactory<Server, ServerIconDto> dtoFactory)
         {
