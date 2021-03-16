@@ -1,12 +1,17 @@
 <template>
   <div class="server-list-container">
-    <li v-for="server in servers" :key="server.id">
+  	<div v-if="servers">
+		<li v-for="server in servers" :key="server.id">
 			<div class="server-list-button">
 				<input class="server-radio-button" type="radio" name="server-radio-button" :value="server.name" />
 <!--				alt="{{server.name}}'s image"-->
 				<img class="server-image" :src="server.image" />
 			</div>
 		</li>
+	</div>
+	
+	<!-- TODO Adding servers -->
+	<button class="server-radio-button">Add Server</button>
   </div>
 </template>
 
@@ -17,7 +22,7 @@
 export default {
 	name: "ServerList",
 	props: {
-        servers: Array
-    } 
+		servers: Array
+	} 
 };
 </script>

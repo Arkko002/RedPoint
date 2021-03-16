@@ -2,7 +2,7 @@
   <div class="user-info-container">
 		<!-- TODO alt="{{user.name}}'s avatar"-->
 		<img :src="user.image" />
-		<input type="button" :value="user.name" />
+		<input type="button" :value="user.username" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@
 export default {
 	name: "ToolbarUserInfo",
 	props: {
-        user: Object
-    }
+		user: Object
+	},
 };
 </script>

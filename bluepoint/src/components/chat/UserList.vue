@@ -1,11 +1,13 @@
 <template>
   <div class="user-container">
-    <li v-for="user in userArray" :key="user.id">
+	  <div v-if="users">
+		<li v-for="user in users" :key="user.id">
 			<button class="user-list-button">
-				<img class="user-list-avatar" :src="user.image" alt="{{user.name}}'s avatar"/>
+				<img class="user-list-avatar" :src="user.image" />
 				<label class="user-list-name" :content="user.name" />
 			</button>
-    </li>
+		</li>
+	  </div>
   </div>
 </template>
 
@@ -16,7 +18,7 @@
 export default {
 	name: "UserList",
 	props: {
-        users: Array
-    } 
+		users: Array
+	} 
 };
 </script>

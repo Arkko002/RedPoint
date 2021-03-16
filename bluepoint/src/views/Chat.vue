@@ -1,11 +1,14 @@
 <template>
-	<div class="chat-container" v-if="this.chatUser">
-    <TheToolbar :user="chatUser" />
-    <ServerList :serverArray="chatUser.servers" />
-    <UserList :userArray="currentServer.users" />
-    <ChatBox :messageArray="currentChannel.messages" :chat-user="chatUser"/>
-		<router-view></router-view>
-  </div>
+    <div class="chat-container" v-if="!isFetchingData">
+    <TheToolbar :chatUser="chatUser" />
+    <ServerList :servers="chatUser.servers" />
+    <UserList :users="currentServer.users" />
+    <ChatBox :messages="currentChannel.messages" :chat-user="chatUser"/>
+    </div>
+    <div class="chat-loading" v-else>
+        <!-- TODO Loading animation when data is being fetched-->
+        Data is loading
+    </div>
 </template>
 
 <script>
@@ -30,6 +33,8 @@ export default {
 	
 	data() {
 		return {
+			isFetchingData: true,
+
 			chatUser: null,
 			currentServer: 0,
 			currentChannel: 0,
@@ -40,33 +45,42 @@ export default {
 	methods: {
 		fetchInitData() {
 			//TODO Caching
-			let chatComponent = this;
-			
+			 //TODO Reduce nesting, rework chat.service
+			let chat = this;
+			chat.isFetchingData = true;
+
 			ChatService.fetchChatUser()
 				.then(response => {
-					chatComponent.chatUser = response.data;
-					
-					ChatService.fetchChannelData(chatComponent.chatUser.currentChannelId)
-						.then(response => {
-							chatComponent.currentChannel = response.data;
-						}).catch(error=> {
-							chatComponent.$store.dispatch("alert/error", error);
-						});
-
-					ChatService.fetchServerData(chatComponent.chatUser.currentServerId)
-						.then(response => {
-							chatComponent.currentServer = response;
-						}).catch(error => {
-							chatComponent.$store.dispatch("alert/error", error);
-						});
+					chat.chatUser = response.data;
+					chat.fetchCurrentServer();
+					chat.fetchCurrentChannel();
 				}).catch(error => {
-					chatComponent.$store.dispatch("alert/error", error);
+					chat.$store.dispatch("alert/error", error);
+				}).finally(() => {
+					chat.isFetchingData = false;
+				}) ;
+		},
+
+		fetchCurrentChannel() {
+			ChatService.fetchChannelData(this.chatUser.currentChannelId)
+				.then(response => {
+					this.currentChannel = response.data;
+				}).catch(error=> {
+					this.$store.dispatch("alert/error", error);
+				});
+		},
+
+		fetchCurrentServer() {
+			ChatService.fetchServerData(this.chatUser.currentServerId)
+				.then(response => {
+					this.currentServer = response;
+				}).catch(error => {
+					this.$store.dispatch("alert/error", error);
 				});
 		}
 	},
 	
 	mounted() {
-		//Data fetching has to be wrapped in a component method to preserve component reference in "this" keyword
 		this.fetchInitData();
 	},
 	
