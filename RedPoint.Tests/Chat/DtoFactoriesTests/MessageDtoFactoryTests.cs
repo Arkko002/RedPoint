@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services.DtoFactories;
@@ -66,7 +67,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
             var returnList = _factory.CreateDtoList(msgList);
 
             Assert.IsType<List<MessageDto>>(returnList);
-            Assert.True(returnList.Count == 3);
+            Assert.True(returnList.ToList().Count == 3);
         }
     }
 }

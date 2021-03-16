@@ -14,8 +14,8 @@ namespace RedPoint.Chat.Services
         /// <summary>
         /// Creates a server from provided <c>ServerIconDto</c> and adds it to the server repository. 
         /// </summary>
-        /// <param name="serverIcon"></param>
-        void AddServer(ServerIconDto serverIcon, IChatEntityRepositoryProxy<Server, ChatDbContext> repo);
+        /// <param name="serverInfo"></param>
+        void AddServer(ServerInfoDto serverInfo, IChatEntityRepositoryProxy<Server, ChatDbContext> repo);
         
         /// <summary>
         /// Creates a message from provided <c>MessageDto</c> and adds it to the message repository.
@@ -28,8 +28,8 @@ namespace RedPoint.Chat.Services
         /// <summary>
         /// Creates a channel from provided <c>ChannelIconDto</c> and adds it to the channel repository. 
         /// </summary>
-        /// <param name="channelIcon"></param>
-        void AddChannel(ChannelIconDto channelIcon,
+        /// <param name="channelInfo"></param>
+        void AddChannel(ChannelInfoDto channelInfo,
             IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
             IChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo);
 

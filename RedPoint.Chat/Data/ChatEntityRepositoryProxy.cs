@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RedPoint.Chat.Exceptions;
 using RedPoint.Data.Repository;
+using RedPoint.Data.UnitOfWork;
 
 namespace RedPoint.Chat.Data
 {
@@ -15,17 +16,20 @@ namespace RedPoint.Chat.Data
     {
 
         private EntityRepository<TEntity, TContext> _entityRepository;
-
-        public ChatEntityRepositoryProxy(EntityRepository<TEntity, TContext> entityRepository)
+        private EntityUnitOfWork _unitOfWork;
+        
+        public ChatEntityRepositoryProxy(EntityRepository<TEntity, TContext> entityRepository, EntityUnitOfWork unitOfWork)
         {
             _entityRepository = entityRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public IQueryable<TEntity> Query { get; }
 
         public void Add(TEntity entity)
         {
-            throw new System.NotImplementedException();
+            _entityRepository.Add(entity);
+            _unitOfWork.Submit();
         }
 
         public void Update(TEntity entity)

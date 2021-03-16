@@ -7,12 +7,12 @@ namespace RedPoint.Chat.Services.DtoFactories
     /// <summary>
     /// Factory that creates channel DTOs that don't contain internal channel data.
     /// </summary>
-    public class ChannelIconDtoFactory : IChatDtoFactory<Channel, ChannelIconDto>
+    public class ChannelInfoDtoFactory : IChatDtoFactory<Channel, ChannelInfoDto>
     {
         /// <inheritdoc/>
-        public ChannelIconDto CreateDto(Channel sourceObject)
+        public ChannelInfoDto CreateDto(Channel sourceObject)
         {
-            var channelDto = new ChannelIconDto
+            var channelDto = new ChannelInfoDto
             {
                 Id = sourceObject.Id,
                 Name = sourceObject.Name,
@@ -24,9 +24,9 @@ namespace RedPoint.Chat.Services.DtoFactories
         }
 
         /// <inheritdoc/>
-        public List<ChannelIconDto> CreateDtoList(List<Channel> sourceList)
+        public IEnumerable<ChannelInfoDto> CreateDtoList(IEnumerable<Channel> sourceList)
         {
-            var dtoList = new List<ChannelIconDto>();
+            var dtoList = new List<ChannelInfoDto>();
             foreach (var channel in sourceList)
             {
                 dtoList.Add(CreateDto(channel));

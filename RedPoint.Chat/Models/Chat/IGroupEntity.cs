@@ -4,6 +4,6 @@ namespace RedPoint.Chat.Models.Chat
 {
     public interface IGroupEntity
     {
-        List<Group> Groups { get; set; }
+        IEnumerable<Group> Groups { get; set; }
     }
 }

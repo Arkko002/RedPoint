@@ -4,7 +4,7 @@ namespace RedPoint.Chat.Models.Chat.Dto
     /// Channel DTO that doesn't include internal channel data.
     /// Should be used to transfer data necessary for displaying UI representation of a channel.
     /// </summary>
-    public class ChannelIconDto : IDto
+    public class ChannelInfoDto : IDto
     {
         public int Id { get; set; }
         

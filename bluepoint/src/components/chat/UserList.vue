@@ -15,6 +15,8 @@
  */
 export default {
 	name: "UserList",
-	props: ["userArray"]
+	props: {
+        users: Array
+    } 
 };
 </script>

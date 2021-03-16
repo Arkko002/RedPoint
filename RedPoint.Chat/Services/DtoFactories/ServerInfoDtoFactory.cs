@@ -7,12 +7,12 @@ namespace RedPoint.Chat.Services.DtoFactories
     /// <summary>
     /// Factory that creates server DTOs that don't contain internal server data.
     /// </summary>
-    public class ServerIconDtoFactory : IChatDtoFactory<Server, ServerIconDto>
+    public class ServerInfoDtoFactory : IChatDtoFactory<Server, ServerInfoDto>
     {
         /// <inheritdoc/>
-        public ServerIconDto CreateDto(Server sourceObject)
+        public ServerInfoDto CreateDto(Server sourceObject)
         {
-            var serverDto = new ServerIconDto
+            var serverDto = new ServerInfoDto
             {
                 Id = sourceObject.Id,
                 Name = sourceObject.Name,
@@ -26,9 +26,9 @@ namespace RedPoint.Chat.Services.DtoFactories
         }
 
         /// <inheritdoc/>
-        public List<ServerIconDto> CreateDtoList(List<Server> sourceList)
+        public IEnumerable<ServerInfoDto> CreateDtoList(IEnumerable<Server> sourceList)
         {
-            var dtoList = new List<ServerIconDto>();
+            var dtoList = new List<ServerInfoDto>();
             foreach (var server in sourceList)
             {
                 dtoList.Add(CreateDto(server));

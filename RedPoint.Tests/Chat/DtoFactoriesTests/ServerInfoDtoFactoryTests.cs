@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services.DtoFactories;
@@ -6,59 +7,61 @@ using Xunit;
 
 namespace RedPoint.Tests.Chat.DtoFactoriesTests
 {
-    public class ChannelIconDtoFactoryTests
+    public class ServerInfoDtoFactoryTests
     {
-        private readonly ChannelIconDtoFactory _factory;
+        private readonly ServerInfoDtoFactory _factory;
 
-        public ChannelIconDtoFactoryTests()
+        public ServerInfoDtoFactoryTests()
         {
-            _factory = new ChannelIconDtoFactory();
+            _factory = new ServerInfoDtoFactory();
         }
 
         [Fact]
         public void CreateDto_ValidInput_ShouldReturnDtoObject()
         {
-            var server = new Server("Test");
-            var channel = new Channel(server, "Test")
+            var server = new Server("Test")
             {
                 Id = 1234,
                 Name = "testName",
-                Description = "testDescription"
+                Description = "testDescription",
+                IsVisible = true
             };
 
-            var dto = _factory.CreateDto(channel);
+            var dto = _factory.CreateDto(server);
 
-            Assert.IsType<ChannelIconDto>(dto);
+            Assert.IsType<ServerInfoDto>(dto);
             Assert.True(dto.Id == 1234);
             Assert.True(dto.Name == "testName");
             Assert.True(dto.Description == "testDescription");
             Assert.True(dto.HubGroupId == server.GroupId);
-            Assert.Same(server, channel.Server);
+            Assert.True(dto.IsVisible);
         }
 
         [Fact]
         public void CreateDtoList_ValidInput_ShouldReturnDtoList()
         {
-            var list = new List<Channel>
+            var list = new List<Server>
             {
-                new(new Server("Test"), "Test")
+                new("Test")
                 {
                     Id = 1234,
-                    Name = "testName2",
-                    Description = "testDescription2"
+                    Name = "testName",
+                    Description = "testDescription",
+                    IsVisible = true
                 },
-                new(new Server("Test"), "Test")
+                new("Test")
                 {
                     Id = 12345,
-                    Name = "testName",
-                    Description = "testDescription"
+                    Name = "testName2",
+                    Description = "testDescription2",
+                    IsVisible = true
                 }
             };
 
             var dtoList = _factory.CreateDtoList(list);
 
-            Assert.IsType<List<ChannelIconDto>>(dtoList);
-            Assert.True(dtoList.Count == 2);
+            Assert.IsType<List<ServerInfoDto>>(dtoList);
+            Assert.True(dtoList.ToList().Count == 2);
         }
     }
 }

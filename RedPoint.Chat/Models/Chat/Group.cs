@@ -15,7 +15,7 @@ namespace RedPoint.Chat.Models.Chat
         public string Name { get; set; }
         public Server Server { get; set; }
         
-        public List<ChatUser> Users { get; set; }
+        public IEnumerable<ChatUser> Users { get; set; }
         
         /// <summary>
         /// Stores Flags defining group's permissions/

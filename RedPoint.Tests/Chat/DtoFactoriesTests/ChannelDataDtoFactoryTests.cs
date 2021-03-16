@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
@@ -43,7 +44,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 
             Assert.IsType<ChannelDataDto>(dto);
             Assert.True(dto.Id == 1234);
-            Assert.True(dto.Messages[0].ChannelId == channel.Id);
+            Assert.True(dto.Messages.ToList()[0].ChannelId == channel.Id);
             Assert.Same(server, channel.Server);
         }
 
@@ -65,7 +66,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
             var dtoList = _factory.CreateDtoList(list);
 
             Assert.IsType<List<ChannelDataDto>>(dtoList);
-            Assert.True(dtoList.Count == 2);
+            Assert.True(dtoList.ToList().Count == 2);
         }
     }
 }

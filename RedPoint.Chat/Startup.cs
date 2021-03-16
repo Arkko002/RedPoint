@@ -20,7 +20,9 @@ using RedPoint.Chat.Hubs;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 using RedPoint.Chat.Services.Security;
+using RedPoint.Data;
 using RedPoint.Data.Repository;
+using RedPoint.Data.UnitOfWork;
 
 //TODO Nlog config file
 [assembly: ApiController]
@@ -132,14 +134,30 @@ namespace RedPoint.Chat
         {
             var dataAccess = Assembly.GetExecutingAssembly();
 
-            builder.RegisterAssemblyTypes(dataAccess)
+            //TODO 
+            builder.RegisterAssemblyTypes(dataAccess).AsSelf();
+            builder.RegisterAssemblyTypes(dataAccess).AsImplementedInterfaces();
+            builder.RegisterType<EntityUnitOfWork>().AsSelf();
+            builder.RegisterType<ChatRulesService>().As<RulesService>();
+            
+            builder.RegisterType<ChatDbContext>().As<DbContext>();
+            builder.RegisterGeneric(typeof(EntityRepository<,>)).AsSelf();
+            builder.RegisterGeneric(typeof(ChatEntityRepositoryProxy<,>)).As(typeof(IChatEntityRepositoryProxy<,>));
+
+            builder.RegisterAssemblyTypes(dataAccess).Where(x => x.Name.EndsWith("DtoFactory"))
                 .AsClosedTypesOf(typeof(IChatDtoFactory<,>));
 
-            builder.RegisterAssemblyTypes(dataAccess)
-                .AsClosedTypesOf(typeof(IChatEntityRepositoryProxy<,>));
-
-            builder.RegisterAssemblyTypes(dataAccess)
-                .AsClosedTypesOf(typeof(IRepository<>));
+            // builder.RegisterAssemblyTypes(dataAccess)
+            //     .AsClosedTypesOf(typeof(IChatDtoFactory<,>))
+            //     .AsImplementedInterfaces();
+            //
+            // builder.RegisterAssemblyTypes(dataAccess)
+            //     .AsClosedTypesOf(typeof(IChatEntityRepositoryProxy<,>))
+            //     .AsImplementedInterfaces();
+            //
+            // builder.RegisterAssemblyTypes(dataAccess)
+            //     .AsClosedTypesOf(typeof(IRepository<>))
+            //     .AsImplementedInterfaces();
 
             builder.RegisterType<ChatRequestValidator>().As<IChatRequestValidator>();
             builder.RegisterType<ChatControllerService>().As<IChatControllerService>(); 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
@@ -13,14 +14,14 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 
         public ServerDataDtoFactoryTests()
         {
-            var mockChannelDtoFactory = new Mock<IChatDtoFactory<Channel, ChannelIconDto>>();
-            var mockUserDtoFactory = new Mock<IChatDtoFactory<ChatUser, ChatUserDto>>();
+            var mockChannelDtoFactory = new Mock<IChatDtoFactory<Channel, ChannelInfoDto>>();
+            var mockUserDtoFactory = new Mock<IChatDtoFactory<ChatUser, UserInfoDto>>();
 
-            var channelDtoList = new List<ChannelIconDto> {new() {Name = "CALLED"}};
+            var channelDtoList = new List<ChannelInfoDto> {new() {Name = "CALLED"}};
             mockChannelDtoFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Channel>>()))
                 .Returns(channelDtoList);
 
-            var userDtoList = new List<ChatUserDto> {new() {Username = "CALLED"}};
+            var userDtoList = new List<UserInfoDto> {new() {Username = "CALLED"}};
             mockUserDtoFactory.Setup(x => x.CreateDtoList(It.IsAny<List<ChatUser>>()))
                 .Returns(userDtoList);
 
@@ -38,8 +39,8 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
             var dto = _factory.CreateDto(server);
 
             Assert.IsType<ServerDataDto>(dto);
-            Assert.True(dto.ChannelList[0].Name == "CALLED");
-            Assert.True(dto.UserList[0].Username == "CALLED");
+            Assert.True(dto.ChannelList.ToList()[0].Name == "CALLED");
+            Assert.True(dto.UserList.ToList()[0].Username == "CALLED");
         }
 
         [Fact]
@@ -60,7 +61,7 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
             var dtoList = _factory.CreateDtoList(list);
 
             Assert.IsType<List<ServerDataDto>>(dtoList);
-            Assert.True(dtoList.Count == 2);
+            Assert.True(dtoList.ToList().Count == 2);
         }
     }
 }

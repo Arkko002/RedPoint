@@ -32,14 +32,14 @@ namespace RedPoint.Chat.Services
         }
 
         /// <inheritdoc/> 
-        public void AddChannel(ChannelIconDto channelIcon,
+        public void AddChannel(ChannelInfoDto channelInfo,
             IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo,
             IChatEntityRepositoryProxy<Server, ChatDbContext> serverRepo)
         {
-            var server = serverRepo.Find(channelIcon.ServerId);
+            var server = serverRepo.Find(channelInfo.ServerId);
             _requestValidator.IsServerRequestValid(server, _user, PermissionTypes.CanManageChannels);
             
-            var newChannel = new Channel(channelIcon);
+            var newChannel = new Channel(channelInfo);
 
             channelRepo.Add(newChannel);
             _unitOfWork.Submit();
@@ -60,9 +60,9 @@ namespace RedPoint.Chat.Services
         }
 
         /// <inheritdoc/>
-        public void AddServer(ServerIconDto serverIcon, IChatEntityRepositoryProxy<Server, ChatDbContext> repo)
+        public void AddServer(ServerInfoDto serverInfo, IChatEntityRepositoryProxy<Server, ChatDbContext> repo)
         {
-            var newServer = new Server(serverIcon);
+            var newServer = new Server(serverInfo);
 
             repo.Add(newServer);
             _unitOfWork.Submit();

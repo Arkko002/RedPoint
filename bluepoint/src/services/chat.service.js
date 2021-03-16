@@ -1,5 +1,7 @@
 import api from "./api";
 
+//TODO Possibly remove this as useless interface
+
 export default {
 	fetchChatUser,
 	fetchServerData,
@@ -11,15 +13,7 @@ export default {
  * @param serverId
  */
 function fetchServerData(serverId){
-	return new Promise(function (resolve, reject){
-		api.get(`chat/server/${serverId}`).then(
-			(response) => {
-				resolve(JSON.parse(response.data));
-			},
-			(error) => {
-				reject(error);
-			});
-	});
+	return api.get(`chat/server/${serverId}`);
 }
 
 /**
@@ -28,15 +22,7 @@ function fetchServerData(serverId){
  * @param serverId ID of the server that contains the channel
  */
 function fetchChannelData(channelId, serverId){
-	return new Promise(function (resolve, reject) {
-		api.get(`chat/server/${serverId}/${channelId}`).then(
-			(response) => {
-				resolve(JSON.parse(response.data));
-			},
-			(error) => {
-				reject(error);
-			});
-	});
+	return api.get(`chat/server/${serverId}/${channelId}`);
 }
 
 /**
@@ -44,14 +30,6 @@ function fetchChannelData(channelId, serverId){
  * based on JWT token in the request header
  */
 function fetchChatUser(){
-	return new Promise(function (resolve, reject) {
-		api.get("chat/user").then(
-			(response) => {
-				resolve(JSON.parse(response.data));
-			},
-			(error) => {
-				reject(error);
-			});
-	});
+	return api.get("chat/user/current");
 }
 

@@ -41,9 +41,9 @@ namespace RedPoint.Tests.Chat.Services
         [Fact]
         public void GetUserServers_ShouldCallDtoFactory()
         {
-            var mockFactory = new Mock<IChatDtoFactory<Server, ServerIconDto>>();
+            var mockFactory = new Mock<IChatDtoFactory<Server, ServerInfoDto>>();
             mockFactory.Setup(x => x.CreateDtoList(It.IsAny<List<Server>>()))
-                .Returns(new List<ServerIconDto>());
+                .Returns(new List<ServerInfoDto>());
 
             _service.GetUserServers(mockFactory.Object);
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using RedPoint.Chat.Exceptions.Security;
 using RedPoint.Chat.Models.Chat;
@@ -17,20 +18,21 @@ namespace RedPoint.Tests.Chat.Services.Security
 
         private readonly Mock<ChatRequestValidator> _validator;
 
+        //TODO Rework for IEnumerable changes, remove casting
         [Fact]
         public void NoChannelPermission_ShouldThrowLackOfPermission()
         {
             var user = new ChatUser();
 
             var group = new Group();
-            group.Users.Add(user);
+            group.Users.ToList().Add(user);
 
             var server = new Server("Test");
-            server.Users.Add(user);
+            server.Users.ToList().Add(user);
             server.Groups = new List<Group> { group };
 
             var channel = new Channel(server, "Test");
-            server.Channels.Add(channel);
+            server.Channels.ToList().Add(channel);
             channel.Groups = new List<Group> { group };
 
             user.Groups = new List<Group> { group };
@@ -45,10 +47,10 @@ namespace RedPoint.Tests.Chat.Services.Security
             var user = new ChatUser();
 
             var group = new Group();
-            group.Users.Add(user);
+            group.Users.ToList().Add(user);
 
             var server = new Server("Test");
-            server.Users.Add(user);
+            server.Users.ToList().Add(user);
 
             Assert.Throws<LackOfPermissionException>(() =>
                 _validator.Object.IsServerRequestValid(server, user, PermissionTypes.CanView));
@@ -82,18 +84,18 @@ namespace RedPoint.Tests.Chat.Services.Security
 
             var group = new Group();
             group.GroupPermissions |= PermissionTypes.IsAdmin;
-            group.Users.Add(user);
+            group.Users.ToList().Add(user);
 
             var server = new Server("Test");
-            server.Users.Add(user);
+            server.Users.ToList().Add(user);
             server.Groups = new List<Group> { group };
 
             var channel = new Channel(server, "Test");
-            server.Channels.Add(channel);
+            server.Channels.ToList().Add(channel);
             channel.Groups = new List<Group> { group };
 
             user.Groups = new List<Group>();
-            user.Groups.Add(group);
+            user.Groups.ToList().Add(group);
             
            _validator.Object.IsChannelRequestValid(channel, server, user, PermissionTypes.CanView);
            
@@ -108,12 +110,12 @@ namespace RedPoint.Tests.Chat.Services.Security
 
             var group = new Group();
             group.GroupPermissions |= PermissionTypes.IsAdmin;
-            group.Users.Add(user);
+            group.Users.ToList().Add(user);
 
             user.Groups = new List<Group> { group };
 
             var server = new Server("Test");
-            server.Users.Add(user);
+            server.Users.ToList().Add(user);
             server.Groups = new List<Group> { group };
 
             _validator.Object.IsServerRequestValid(server, user, PermissionTypes.IsAdmin);

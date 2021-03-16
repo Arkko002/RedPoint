@@ -22,14 +22,14 @@ namespace RedPoint.Chat.Models.Chat
         public string Description { get; set; }
         public byte[] Image { get; private set; }
 
-        public List<ChatUser> Users { get; set; }
-        public List<Channel> Channels { get; set; }
+        public IEnumerable<ChatUser> Users { get; set; }
+        public IEnumerable<Channel> Channels { get; set; }
         
         /// <summary>
         /// Determines if server is visible in the server browser
         /// </summary>
         public bool IsVisible { get; set; }
-        public List<Group> Groups { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
         
         public Server(string name)
         {
@@ -38,12 +38,12 @@ namespace RedPoint.Chat.Models.Chat
             InitializeVariables();
         }
 
-        public Server(ServerIconDto serverIconDto)
+        public Server(ServerInfoDto serverInfoDto)
         {
-            Name = serverIconDto.Name;
-            Description = serverIconDto.Description;
-            Image = serverIconDto.Image;
-            IsVisible = serverIconDto.IsVisible;
+            Name = serverInfoDto.Name;
+            Description = serverInfoDto.Description;
+            Image = serverInfoDto.Image;
+            IsVisible = serverInfoDto.IsVisible;
 
             InitializeVariables();
         }

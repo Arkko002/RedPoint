@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RedPoint.Chat.Models.Chat;
 using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services.DtoFactories;
@@ -6,13 +7,13 @@ using Xunit;
 
 namespace RedPoint.Tests.Chat.DtoFactoriesTests
 {
-    public class UserDtoFactoryTests
+    public class UserInfoDtoFactoryTests
     {
-        private readonly UserDtoFactory _factory;
+        private readonly UserInfoDtoFactory _factory;
 
-        public UserDtoFactoryTests()
+        public UserInfoDtoFactoryTests()
         {
-            _factory = new UserDtoFactory();
+            _factory = new UserInfoDtoFactory();
         }
 
         [Fact]
@@ -28,11 +29,9 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 
             var dto = _factory.CreateDto(user);
 
-            Assert.IsType<ChatUserDto>(dto);
+            Assert.IsType<UserInfoDto>(dto);
             Assert.True(dto.AppUserId == "testId");
             Assert.True(dto.Username == "testName");
-            Assert.True(dto.CurrentChannelId == "testChannelId");
-            Assert.True(dto.CurrentServerId == "testServerId");
         }
 
         [Fact]
@@ -58,8 +57,8 @@ namespace RedPoint.Tests.Chat.DtoFactoriesTests
 
             var dtoList = _factory.CreateDtoList(list);
 
-            Assert.IsType<List<ChatUserDto>>(dtoList);
-            Assert.True(dtoList.Count == 2);
+            Assert.IsType<List<UserInfoDto>>(dtoList);
+            Assert.True(dtoList.ToList().Count == 2);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace RedPoint.Chat.Services.DtoFactories
         }
 
         /// <inheritdoc/>
-        public List<MessageDto> CreateDtoList(List<Message> sourceList)
+        public IEnumerable<MessageDto> CreateDtoList(IEnumerable<Message> sourceList)
         {
             var dtoList = new List<MessageDto>();
             foreach (var message in sourceList)

@@ -9,7 +9,7 @@ namespace RedPoint.Chat.Models.Chat.Dto
     {
         public int Id { get; set; }
 
-        public List<ChannelIconDto> ChannelList { get; set; }
-        public List<ChatUserDto> UserList { get; set; }
+        public IEnumerable<ChannelInfoDto> ChannelList { get; set; }
+        public IEnumerable<UserInfoDto> UserList { get; set; }
     }
 }

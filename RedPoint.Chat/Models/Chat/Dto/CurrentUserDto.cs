@@ -1,11 +1,12 @@
-﻿using System.Drawing;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace RedPoint.Chat.Models.Chat.Dto
 {
     /// <summary>
-    ///  ChatUser DTO that doesn't include any sensitive account data.
+    /// Contains information about currently logged in user, includes sensitive data. 
     /// </summary>
-    public class ChatUserDto : IDto
+    public class CurrentUserDto : IDto
     {
         //Use those to retrieve ChatUser
         public string AppUserId { get; set; }
@@ -13,6 +14,9 @@ namespace RedPoint.Chat.Models.Chat.Dto
 
         public string CurrentChannelId { get; set; }
         public string CurrentServerId { get; set; }
+
+        public IEnumerable<ServerInfoDto> Servers {get; set;}
+
         public byte[] Image { get; set; }
     }
 }

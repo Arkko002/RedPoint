@@ -12,6 +12,8 @@
  */
 export default {
 	name: "ToolbarUserInfo",
-	props: ["user"]
+	props: {
+        user: Object
+    }
 };
 </script>

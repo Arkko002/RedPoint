@@ -14,7 +14,9 @@ import ToolbarUserInfo from "./ToolbarUserInfo.vue";
  */
 export default {
 	name: "TheToolbar",
-	props: ["chatUser"],
+	props: {
+        chatUser: Object
+    },
 	components: {
 		ToolbarSearchField,
 		ToolbarUserInfo

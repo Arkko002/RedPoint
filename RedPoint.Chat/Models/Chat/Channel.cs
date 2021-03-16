@@ -28,8 +28,10 @@ namespace RedPoint.Chat.Models.Chat
         /// Description of channel. Can be empty.
         /// </summary>
         public string Description { get; set; }
-        public List<Message> Messages { get; set; }
-        public List<Group> Groups { get; set; }
+        public IEnumerable<Message> Messages { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
+
+        public Channel() {}
         
         public Channel(Server server, string name)
         {
@@ -38,10 +40,10 @@ namespace RedPoint.Chat.Models.Chat
             InitializeVariables();
         }
 
-        public Channel(ChannelIconDto channelIconDto)
+        public Channel(ChannelInfoDto channelInfoDto)
         {
-            Name = channelIconDto.Name;
-            Description = channelIconDto.Description;
+            Name = channelInfoDto.Name;
+            Description = channelInfoDto.Description;
             InitializeVariables();
         }
 

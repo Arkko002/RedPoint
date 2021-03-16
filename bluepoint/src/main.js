@@ -8,7 +8,7 @@ const DEV = process.env.NODE_ENV;
 Vue.config.productionTip = false;
 Vue.config.errorHandler = function (err, vm, info){
 	if (DEV) {
-		console.log(`Error: ${err}  ----  Info: ${info}`);
+		console.log(`Error: ${err}  ----  Info: ${info}  ----- ${vm}`);
 	}
 };
 

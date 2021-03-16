@@ -30,7 +30,7 @@ namespace RedPoint.Chat.Services.DtoFactories
         }
 
         /// <inheritdoc/>
-        public List<ChannelDataDto> CreateDtoList(List<Channel> sourceList)
+        public IEnumerable<ChannelDataDto> CreateDtoList(IEnumerable<Channel> sourceList)
         {
             var dtoList = new List<ChannelDataDto>();
 

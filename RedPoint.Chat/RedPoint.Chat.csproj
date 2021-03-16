@@ -23,7 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RedPoint.Data\RedPoint.Data.csproj" />
-    <ProjectReference Include="..\RedPoint.Middleware\RedPoint.Middleware.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="articles\**" />

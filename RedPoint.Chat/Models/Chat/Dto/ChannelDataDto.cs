@@ -9,6 +9,6 @@ namespace RedPoint.Chat.Models.Chat.Dto
     {
         public int Id { get; set; }
 
-        public List<MessageDto> Messages { get; set; }
+        public IEnumerable<MessageDto> Messages { get; set; }
     }
 }

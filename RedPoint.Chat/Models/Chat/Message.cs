@@ -21,6 +21,8 @@ namespace RedPoint.Chat.Models.Chat
         
         public Channel Channel { get; }
 
+        public Message() {}
+        
         public Message(Channel channel)
         {
             Channel = channel;

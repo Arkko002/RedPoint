@@ -13,9 +13,9 @@ namespace RedPoint.Chat.Hubs
     /// </summary>
     public interface IChatHub
     {
-        Task ServerAdded(ServerIconDto serverIcon);
+        Task ServerAdded(ServerInfoDto serverInfo);
         Task MessageAdded(MessageDto message);
-        Task ChannelAdded(ChannelIconDto channelIcon);
+        Task ChannelAdded(ChannelInfoDto channelInfo);
 
         Task ServerDeleted(int serverId);
         Task MessageDeleted(int messageId);
@@ -24,7 +24,7 @@ namespace RedPoint.Chat.Hubs
         Task ChannelChanged(string channelId);
         Task ServerChanged(string serverId);
 
-        Task JoinedServer(ServerIconDto serverIcon);
+        Task JoinedServer(ServerInfoDto serverInfo);
     }
 
     //TODO Rework this with UniqueIDs generated with hashing
@@ -50,12 +50,12 @@ namespace RedPoint.Chat.Hubs
             _serverRepo = serverRepo;
         }
 
-        public Task AddServer(ServerIconDto serverIcon)
+        public Task AddServer(ServerInfoDto serverInfo)
         {
-            _chatService.AddServer(serverIcon, _serverRepo);
+            _chatService.AddServer(serverInfo, _serverRepo);
 
-            Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId);
-            return Clients.Group(serverIcon.HubGroupId).ServerAdded(serverIcon);
+            Groups.AddToGroupAsync(Context.ConnectionId, serverInfo.HubGroupId);
+            return Clients.Group(serverInfo.HubGroupId).ServerAdded(serverInfo);
         }
 
         public Task AddMessage(MessageDto message, string channelUniqueId)
@@ -65,12 +65,12 @@ namespace RedPoint.Chat.Hubs
             return Clients.Group(channelUniqueId).MessageAdded(message);
         }
 
-        public Task AddChannel(ChannelIconDto channelIcon)
+        public Task AddChannel(ChannelInfoDto channelInfo)
         {
-            _chatService.AddChannel(channelIcon, _channelRepo, _serverRepo);
+            _chatService.AddChannel(channelInfo, _channelRepo, _serverRepo);
 
-            Groups.AddToGroupAsync(Context.ConnectionId, channelIcon.HubGroupId);
-            return Clients.Group(channelIcon.HubGroupId).ChannelAdded(channelIcon);
+            Groups.AddToGroupAsync(Context.ConnectionId, channelInfo.HubGroupId);
+            return Clients.Group(channelInfo.HubGroupId).ChannelAdded(channelInfo);
         }
 
         public Task DeleteServer(int serverId, string serverGroupId)
@@ -110,11 +110,11 @@ namespace RedPoint.Chat.Hubs
             return Clients.Caller.ServerChanged(newServerUniqueId);
         }
 
-        public Task JoinServer(ServerIconDto serverIcon)
+        public Task JoinServer(ServerInfoDto serverInfo)
         {
-            Groups.AddToGroupAsync(Context.ConnectionId, serverIcon.HubGroupId);
+            Groups.AddToGroupAsync(Context.ConnectionId, serverInfo.HubGroupId);
 
-            return Clients.Caller.JoinedServer(serverIcon);
+            return Clients.Caller.JoinedServer(serverInfo);
         }
     }
 }

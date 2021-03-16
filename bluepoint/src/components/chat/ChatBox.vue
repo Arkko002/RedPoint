@@ -27,7 +27,11 @@ import ChatService from "@/services/chat.service";
  */
 export default {
 	name: "ChatBox",
-	props: ["messages", "chatUser", "currentChannel"],
+	props: {
+        messages: Array,
+        chatUser: Object,
+        currentChannel: String
+    }, 
 
 	data() {
 		return {

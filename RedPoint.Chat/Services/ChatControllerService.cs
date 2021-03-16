@@ -29,11 +29,12 @@ namespace RedPoint.Chat.Services
 
             var tokenStr = httpContextAccessor.HttpContext.GetTokenAsync("access_token").Result;
             var token = new JwtSecurityToken(tokenStr);
-            _user = GetUserFromToken(token, userRepo);
+            _user = InitializeChatUser(token, userRepo);
             
         }
 
-        private ChatUser GetUserFromToken(JwtSecurityToken token, IChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
+        private ChatUser InitializeChatUser(JwtSecurityToken token,
+            IChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
         {
             ChatUser user;
             try
@@ -54,8 +55,13 @@ namespace RedPoint.Chat.Services
             return user;
         }
 
-        public ChatUserDto GetChatUser(string id,
-            IChatDtoFactory<ChatUser, ChatUserDto> dtoFactory,
+        public CurrentUserDto GetCurrentUser(IChatDtoFactory<ChatUser, CurrentUserDto> dtoFactory)
+        {
+            return dtoFactory.CreateDto(_user);
+        }
+        
+        public UserInfoDto GetChatUser(string id,
+            IChatDtoFactory<ChatUser, UserInfoDto> dtoFactory,
             IChatEntityRepositoryProxy<ChatUser, ChatDbContext> userRepo)
         {
             var user = userRepo.Find(id);
@@ -63,7 +69,7 @@ namespace RedPoint.Chat.Services
         }
         
         /// <inheritdoc/>
-        public List<ServerIconDto> GetUserServers(IChatDtoFactory<Server, ServerIconDto> dtoFactory)
+        public IEnumerable<ServerInfoDto> GetUserServers(IChatDtoFactory<Server, ServerInfoDto> dtoFactory)
         {
             return dtoFactory.CreateDtoList(_user.Servers);
         }
@@ -80,7 +86,7 @@ namespace RedPoint.Chat.Services
         }
 
         /// <inheritdoc/>
-        public List<MessageDto> GetChannelMessages(int channelId,
+        public IEnumerable<MessageDto> GetChannelMessages(int channelId,
             IChatDtoFactory<Message, MessageDto> dtoFactory,
             IChatEntityRepositoryProxy<Channel, ChatDbContext> channelRepo)
         {

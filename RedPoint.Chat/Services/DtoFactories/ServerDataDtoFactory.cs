@@ -10,11 +10,11 @@ namespace RedPoint.Chat.Services.DtoFactories
     /// </summary>
     public class ServerDataDtoFactory : IChatDtoFactory<Server, ServerDataDto>
     {
-        private readonly IChatDtoFactory<Channel, ChannelIconDto> _channelFactory;
-        private readonly IChatDtoFactory<ChatUser, ChatUserDto> _userFactory;
+        private readonly IChatDtoFactory<Channel, ChannelInfoDto> _channelFactory;
+        private readonly IChatDtoFactory<ChatUser, UserInfoDto> _userFactory;
         
-        public ServerDataDtoFactory(IChatDtoFactory<Channel, ChannelIconDto> channelFactory,
-            IChatDtoFactory<ChatUser, ChatUserDto> userFactory)
+        public ServerDataDtoFactory(IChatDtoFactory<Channel, ChannelInfoDto> channelFactory,
+            IChatDtoFactory<ChatUser, UserInfoDto> userFactory)
         {
             _channelFactory = channelFactory;
             _userFactory = userFactory;
@@ -34,7 +34,7 @@ namespace RedPoint.Chat.Services.DtoFactories
         }
 
         /// <inheritdoc/>
-        public List<ServerDataDto> CreateDtoList(List<Server> sourceList)
+        public IEnumerable<ServerDataDto> CreateDtoList(IEnumerable<Server> sourceList)
         {
             var dtoList = new List<ServerDataDto>();
 

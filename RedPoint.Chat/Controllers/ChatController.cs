@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RedPoint.Chat.Data;
 using RedPoint.Chat.Models.Chat;
+using RedPoint.Chat.Models.Chat.Dto;
 using RedPoint.Chat.Services;
 using RedPoint.Chat.Services.DtoFactories;
 
@@ -21,10 +22,20 @@ namespace RedPoint.Chat.Controllers
         }
 
         [HttpGet]
-        [Route("chat/user")]
+        [Route("chat/user/current")]
+        public IActionResult GetCurrentUser([FromServices] IChatDtoFactory<ChatUser, CurrentUserDto> dtoFactory)
+        {
+            //TODO 
+            var user = _chatService.GetCurrentUser(dtoFactory);
+
+            return Ok(user);
+        }
+
+        [HttpGet]
+        [Route("chat/user/{id}")]
         public IActionResult GetChatUser(string id,
-            [FromServices] UserDtoFactory userDtoFactory,
-            [FromServices] ChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo)
+            [FromServices] IChatDtoFactory<ChatUser, UserInfoDto> userDtoFactory,
+            [FromServices] IChatEntityRepositoryProxy<ChatUser, ChatDbContext> repo)
         {
             var user = _chatService.GetChatUser(id, userDtoFactory, repo);
 
@@ -40,8 +51,8 @@ namespace RedPoint.Chat.Controllers
         [HttpGet]
         [Route("chat/server/{serverId}")]
         public IActionResult GetServer(int serverId,
-            [FromServices] ServerDataDtoFactory dataDtoFactory,
-            [FromServices] ChatEntityRepositoryProxy<Server, ChatDbContext> repo)
+            [FromServices] IChatDtoFactory<Server, ServerDataDto> dataDtoFactory,
+            [FromServices] IChatEntityRepositoryProxy<Server, ChatDbContext> repo)
         {
             var dto = _chatService.GetServerData(serverId, dataDtoFactory, repo);
 
@@ -57,8 +68,8 @@ namespace RedPoint.Chat.Controllers
         [HttpGet]
         [Route("chat/server/{serverId}/{channelId}")]
         public IActionResult GetChannelMessages(int channelId,
-            [FromServices] MessageDtoFactory messageDtoFactory,
-            [FromServices] ChatEntityRepositoryProxy<Channel, ChatDbContext> repo)
+            [FromServices] IChatDtoFactory<Message, MessageDto> messageDtoFactory,
+            [FromServices] IChatEntityRepositoryProxy<Channel, ChatDbContext> repo)
         {
             var dto = _chatService.GetChannelMessages(channelId, messageDtoFactory, repo);
 

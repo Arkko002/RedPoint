@@ -44,7 +44,4 @@
     <PackageReference Include="NLog.Config" Version="4.7.6" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RedPoint.Middleware\RedPoint.Middleware.csproj" />
-  </ItemGroup>
 </Project>

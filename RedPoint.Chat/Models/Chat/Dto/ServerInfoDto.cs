@@ -6,7 +6,7 @@ namespace RedPoint.Chat.Models.Chat.Dto
     /// Server DTO object that doesn't include internal server data.
     /// Should be used to transfer data necessary for displaying UI representation of a server.
     /// </summary>
-    public class ServerIconDto : IDto
+    public class ServerInfoDto : IDto
     {
         public int Id { get; set; }
         public string HubGroupId { get; set; }
