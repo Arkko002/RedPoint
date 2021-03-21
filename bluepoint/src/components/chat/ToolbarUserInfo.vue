@@ -1,8 +1,8 @@
 <template>
-  <div class="user-info-container">
+  <div class="user-info">
 		<!-- TODO alt="{{user.name}}'s avatar"-->
-		<img :src="user.image" />
-		<input type="button" :value="user.username" />
+		<img class="user-info__image" :src="user.image" />
+		<input class="user_info__button" type="button" :value="user.username" />
   </div>
 </template>
 

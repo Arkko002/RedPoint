@@ -1,14 +1,14 @@
 <template>
-  <div class="user-container">
+	<div class="user-list">
 	  <div v-if="users">
 		<li v-for="user in users" :key="user.id">
-			<button class="user-list-button">
-				<img class="user-list-avatar" :src="user.image" />
-				<label class="user-list-name" :content="user.name" />
+			<button class="user-list__button">
+				<img class="user-list__avatar" :src="user.image" />
+				<label class="user-list__name-label" :content="user.name" />
 			</button>
 		</li>
 	  </div>
-  </div>
+	</div>
 </template>
 
 <script>

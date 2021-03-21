@@ -1,22 +1,22 @@
 <template>
-  <div class="chatbox-container">
+  <div class="chatbox">
     <!-- TODO Iterate over last 20 messages, not all of the messages in server -->
 	<div v-if="messages">
 		<li v-for="message in messages" :key="message.id" >
-			<div class="message">
+			<div class="chatbox__message-container">
 				<!-- TODO alt="{{message.user.name}}'s avatar"-->
-				<img :src="message.user.image" class="message-user-image" />
-				<label :value="message.user.username" class="message-user-name"/>
-				<input type="button" :value="message.text" class="message-text"/>
+				<img :src="message.user.image" class="chatbox__user-image" />
+				<label :value="message.user.username" class="chatbox__user-name"/>
+				<input type="button" :value="message.text" class="chatbox__mesage-text"/>
 			</div>
 		</li>
 	</div>
 
-	<div class="message-input-box-div">
+	<div class="chatbox__input-container">
 		<!-- TODO Rider mixes tabs and spaces on newlining HTML tags, that makes ESLint unhappy -->
 		<!-- TODO placeholder="Message {{currentChannel.name}}"-->
-		<input type="text" class="message-box-input" id="messageInput" v-model="message"  v-on:keyup.enter="sendMessage(message)"/>
-    	<button class="message-box-button" :click="sendMessage(message)" />
+		<input type="text" class="chatbox__input-field" v-model="message"  v-on:keyup.enter="sendMessage(message)"/>
+		<button class="chatbox__input-submit" :click="sendMessage(message)" />
     </div>
   </div>
 </template>

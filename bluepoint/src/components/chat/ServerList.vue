@@ -1,17 +1,17 @@
 <template>
-  <div class="server-list-container">
-  	<div v-if="servers">
+  <div class="server-list">
+	<div v-if="servers">
 		<li v-for="server in servers" :key="server.id">
-			<div class="server-list-button">
-				<input class="server-radio-button" type="radio" name="server-radio-button" :value="server.name" />
+			<div class="server-list__button-container">
+				<input class="server-list__radio-button" type="radio" :value="server.name" />
 <!--				alt="{{server.name}}'s image"-->
-				<img class="server-image" :src="server.image" />
+				<img class="server-list__image" :src="server.image" />
 			</div>
 		</li>
 	</div>
 	
 	<!-- TODO Adding servers -->
-	<button class="server-radio-button">Add Server</button>
+	<button class="server-list__add-server-button">Add Server</button>
   </div>
 </template>
 

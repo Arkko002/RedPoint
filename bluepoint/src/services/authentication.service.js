@@ -8,7 +8,7 @@ export default {
 };
 
 /**
- * Removes "user" field from local storage.
+ * Removes the token stored locally.
  */
 function logout() {
 	localStorage.removeItem("userToken");
@@ -49,8 +49,7 @@ function register(username, password, email) {
 			//TODO separate this into a function
 			(response) => {
 				if ("token" in response.data) {
-					let userToken = JSON.stringify(response.data);
-					localStorage.setItem("userToken", userToken);
+					localStorage.setItem("userToken", response.data.token);
 					resolve();
 				}
 				//TODO Proper reject when no token in response

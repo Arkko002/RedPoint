@@ -1,11 +1,11 @@
 <template>
-    <div class="chat-container" v-if="!isFetchingData">
+    <div class="chat" v-if="!isFetchingData">
     <TheToolbar :chatUser="chatUser" />
     <ServerList :servers="chatUser.servers" />
     <UserList :users="currentServer.users" />
     <ChatBox :messages="currentChannel.messages" :chat-user="chatUser"/>
     </div>
-    <div class="chat-loading" v-else>
+    <div class="chat--loading" v-else>
         <!-- TODO Loading animation when data is being fetched-->
         Data is loading
     </div>
@@ -45,7 +45,7 @@ export default {
 	methods: {
 		fetchInitData() {
 			//TODO Caching
-			 //TODO Reduce nesting, rework chat.service
+			//TODO Reduce nesting, rework chat.service
 			let chat = this;
 			chat.isFetchingData = true;
 

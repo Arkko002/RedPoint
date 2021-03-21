@@ -1,6 +1,6 @@
 <template>
-  <div class="toolbar-search-container">
-    <input type="text" />
+  <div class="toolbar-search">
+    <input class="toolbar-search__text-input" type="text" />
     <!--TODO Add dropdown menu with options -->
   </div>
 </template>
