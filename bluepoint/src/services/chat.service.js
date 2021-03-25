@@ -1,7 +1,5 @@
 import api from "./api";
 
-//TODO Possibly remove this as useless interface
-
 export default {
 	fetchChatUser,
 	fetchServerData,

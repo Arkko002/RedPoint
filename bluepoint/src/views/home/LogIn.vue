@@ -89,6 +89,8 @@ export default {
 	background-color: var(--alt-bg-color);
 	border: 1px solid black;
 	border-radius: 10px;
+
+	box-shadow: 5px 5px 3px 1px;
 }
 
 /*TODO CSS duplication between forms, find better place for this css*/

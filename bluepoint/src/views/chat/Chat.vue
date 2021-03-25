@@ -16,7 +16,7 @@ import ServerList from "@/components/chat/ServerList.vue";
 import UserList from "@/components/chat/UserList.vue";
 import TheToolbar from "@/components/chat/TheToolbar.vue";
 import ChatBox from "@/components/chat/ChatBox.vue";
-import ChatService from "../services/chat.service";
+import ChatService from "@/services/chat.service";
 
 
 /**
@@ -77,6 +77,10 @@ export default {
 				}).catch(error => {
 					this.$store.dispatch("alert/error", error);
 				});
+		},
+
+		initaliseHubConnection() {
+
 		}
 	},
 	

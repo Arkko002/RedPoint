@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app">
 	<router-view></router-view>		
   </div>
 </template>
@@ -15,9 +15,9 @@ export default {
 <style>
 :root {
 	/*TODO Proper color scheme and UX design*/
-	--main-bg-color: #323232;
-	--alt-bg-color: #6d6d6d;
-	--highlight-color: #c40a0a;
+	--main-bg-color: #36393f;
+	--alt-bg-color: #65686f;
+	--highlight-color: #820a04;
 	--alt-highlight-color: #20368f`;
 }
 
@@ -25,12 +25,12 @@ export default {
 	box-sizing: border-box;
 }
 
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  background-color: var(--main-bg-color);
+.app {
+	height: 100vh;
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	overflow: auto;
+	background-color: var(--main-bg-color);
 }
 </style>

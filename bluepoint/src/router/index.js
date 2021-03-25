@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "../views/home/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -11,19 +11,24 @@ const routes = [
 		component: Home,
 		children: [
 			{
+				path: "/",
+				name: "main",
+				component: () => import("../views/home/Main.vue")
+			},
+			{
 				path: "/about",
 				name: "about",
-				component: () => import("../views/About.vue")
+				component: () => import("../views/home/About.vue")
 			},
 			{
 				path: "/register",
 				name: "register",
-				component: () => import("../views/Register.vue")
+				component: () => import("../views/home/Register.vue")
 			},
 			{
 				path: "/login",
 				name: "login",
-				component: () => import("../views/LogIn.vue")
+				component: () => import("../views/home/LogIn.vue")
 			},
 		]
 		
@@ -31,7 +36,7 @@ const routes = [
 	{
 		path: "/chat",
 		name: "chat",
-		component: () => import("../views/Chat.vue"),
+		component: () => import("../views/chat/Chat.vue"),
 		// TODO
 		children: []
 	},

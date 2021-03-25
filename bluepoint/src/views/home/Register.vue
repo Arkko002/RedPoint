@@ -3,24 +3,23 @@
 		<form class="register__form" @submit="submitForm">
 
 			<div class="form__item-container">
-				<label class="form__item form__item--label">User Name</label>
-				<input class="form__item form__item--input" type="text" v-model="username" />
+				<label class="form__item form__item--label" for="username">User Name</label>
+				<input class="form__item form__item--input" type="text" v-model="username" id="username"/>
 			</div>
 
 			<div class="form__item-container">
-				<label class="form__item form__item--label">Password</label>
-				<input class="form__item form__item--input" type="password" v-model="password" />
+				<label class="form__item form__item--label" for="password">Password</label>
+				<input class="form__item form__item--input" type="password" v-model="password" id="password"/>
 			</div>
 
 			<div class="form__item-container">
-				<label class="form__item form__item--label">Password Confirmation</label>
-				<input class="form__item form__item--input" type="password" v-model="passwordConfirmation"
-			/>
-
+				<label class="form__item form__item--label" for="passwordConfirmation">Password Confirmation</label>
+				<input class="form__item form__item--input" type="password" v-model="passwordConfirmation" id="passwordConfirmation"/>
 			</div>
-				<div class="form__item-container">
-				<label class="form__item form__item--label">E-mail</label>
-				<input class="form__item form__item--input" type="text" v-model="email" />
+
+			<div class="form__item-container">
+				<label class="form__item form__item--label" for="email">E-mail</label>
+				<input class="form__item form__item--input" type="email" v-model="email" id="email" />
 			</div>
 
 			<div class="form__item-container">
@@ -103,6 +102,8 @@ export default {
 	background-color: var(--alt-bg-color);
 	border: 1px solid black;
 	border-radius: 10px;
+	
+	box-shadow: 5px 5px 3px 1px;
 }
 
 .form__item-container {

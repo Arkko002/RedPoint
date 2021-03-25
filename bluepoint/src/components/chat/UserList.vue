@@ -1,13 +1,13 @@
 <template>
 	<div class="user-list">
-	  <div v-if="users">
+		<div v-if="users">
 		<li v-for="user in users" :key="user.id">
 			<button class="user-list__button">
 				<img class="user-list__avatar" :src="user.image" />
 				<label class="user-list__name-label" :content="user.name" />
 			</button>
 		</li>
-	  </div>
+	</div>
 	</div>
 </template>
 
@@ -19,6 +19,6 @@ export default {
 	name: "UserList",
 	props: {
 		users: Array
-	} 
+	}
 };
 </script>

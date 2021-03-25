@@ -4,8 +4,10 @@
 		<!--Logo and menu button are duplicated to maintain the structure of generated
 		HTML, taking logo out adds complexity to flex CSS-->
 
-		<router-link class="navbar__logo navbar__item" :to="{ name: 'home' }">
-			<img class="logo__image" src="../assets/logo-no-text-50px.png" alt="Home" />
+		<!--Link to main page should point to 'main', not 'home'. Redirecting to 'home' leads to -->
+		<!--page content not displaying, because of content being a sub-path of 'home' in router-->
+		<router-link class="navbar__logo navbar__item" :to="{ name: 'main' }" title="Home">
+			<img class="logo__image" src="@/assets/logo-no-text-50px.png" alt="Home"/>
 		</router-link>
 
 		<input class="navbar__item--menu-button" type="checkbox" v-model="isMenuToggled">
@@ -16,8 +18,8 @@
 	</nav>
 
 	<nav class="navbar" v-else>
-		<router-link class="navbar__logo navbar__item" :to="{ name: 'home' }">
-			<img class="logo__image" src="../assets/logo-no-text-50px.png" alt="Home" />
+		<router-link class="navbar__logo navbar__item" :to="{ name: 'main' }">
+			<img class="logo__image" src="@/assets/logo-no-text-50px.png" alt="Home" />
 		</router-link>
 
 		<input class="navbar__item--menu-button" type="checkbox" v-model="isMenuToggled"> 
@@ -54,7 +56,6 @@ export default {
 <style>
 .navbar {
 	background-color: var(--alt-bg-color);
-	border-bottom: 1px solid black;
 
 	display: flex;
 	flex-direction: row;
@@ -90,7 +91,7 @@ export default {
 @media all and (max-width: 600px) {
 	.navbar {
 		flex-direction: column;
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
 	}
 
 	.collapsed {
@@ -109,11 +110,6 @@ export default {
 
 @media all and (max-width: 400px){
 	/*TODO*/
-	.navbar {
-		overflow: hidden;
-		min-width: 0;
-		min-height: 0;
-	}
 }
 
 </style>
