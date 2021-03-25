@@ -11,6 +11,7 @@
     "styleguide:build": "vue-cli-service styleguidist:build"
   },
   "dependencies": {
+    "@microsoft/signalr": "^5.0.4",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
