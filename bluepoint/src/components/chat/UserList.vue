@@ -12,13 +12,17 @@
 </template>
 
 <script>
+import { HubConnection } from "signalr";
+
 /**
  * Display of server's users, and user list related actions.
  */
 export default {
+	//TODO
 	name: "UserList",
 	props: {
-		users: Array
-	}
+		users: Array,
+		connection: HubConnection
+	},
 };
 </script>

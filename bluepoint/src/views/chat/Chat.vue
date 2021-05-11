@@ -18,11 +18,13 @@ import TheToolbar from "@/components/chat/TheToolbar.vue";
 import ChatBox from "@/components/chat/ChatBox.vue";
 import ChatService from "@/services/chat.service";
 
+import { HubConnection, HubConnectionBuilder } from "signalr";
 
 /**
  * Main chat view, used as a router path for chat page.
  */
 export default {
+	//TODO Store current channel, server in Chat.vue, pass props
 	name: "Chat",
 	components: {
 		ServerList,
@@ -39,6 +41,8 @@ export default {
 			currentServer: 0,
 			currentChannel: 0,
 
+			builder: HubConnectionBuilder,
+			connection: HubConnection
 		};
 	},
 
@@ -78,19 +82,24 @@ export default {
 					this.$store.dispatch("alert/error", error);
 				});
 		},
-
-		initaliseHubConnection() {
-
-		}
 	},
-	
+
+	beforeMount() {
+		this.builder = new HubConnectionBuilder().withAutomaticReconnect().withUrl("/chatHub");
+			
+		this.connection = this.builder.build();
+	},
+
 	mounted() {
 		this.fetchInitData();
+		this.connection.StartAsync();
 	},
 	
 	beforeDestroy() {
 		//TODO Current server and channel should be updated in back-end model per change
 		// ChatService.sendClosingData([this.currentServerId, this.currentChannelId]);
+
+		this.connection.StopAsync();
 	},
 
 	

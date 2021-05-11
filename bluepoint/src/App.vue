@@ -18,7 +18,7 @@ export default {
 	--main-bg-color: #36393f;
 	--alt-bg-color: #65686f;
 	--highlight-color: #820a04;
-	--alt-highlight-color: #20368f`;
+	--alt-highlight-color: #20368f;
 }
 
 * {

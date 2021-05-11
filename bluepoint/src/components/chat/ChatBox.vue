@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { HubConnection } from "signalr";
 import ChatService from "@/services/chat.service";
 
 /**
@@ -32,13 +33,32 @@ export default {
 	props: {
 		messages: Array,
 		chatUser: Object,
-		currentChannel: String
+
+		connection: HubConnection
 	}, 
 
 	data() {
 		return {
 			message: ""
 		};
+	},
+
+	created() {
+		let chatBox = this;
+
+		this.connection.on("MessageAdded", (message) => {
+			//TODO message confirmation
+			chatBox.messages.push(message);
+		});
+
+		this.connection.on("MessageDeleted", (messageId) => {
+			chatBox.messages = chatBox.messages.filter(message => message.Id !== messageId);
+		});
+
+		this.connection.on("ChannelChanged", (channelId) => {
+			//TODO Store current channel, server in Chat.vue, pass props
+			ChatService.fetchChannelData(channelId);
+		});
 	},
 	
 	methods: {
@@ -56,7 +76,12 @@ export default {
 				user: this.chatUser,
 			};
 
-			ChatService.sendMessage(message);
+			this.connection.invoke("AddMessage", message).catch(); //TODO
+		},
+
+		confirmMessage(messageId) {
+			//TODO Add locally, confirm with signalr
+			this.messages[messageId];
 		},
 	},
 };
